@@ -13,12 +13,17 @@ def fetchGoogleSheet(id=GOOGLESHEET_ID, path=TESTPOSTINGS_PATH):
     response = requests.get(sheetUrl)
 
     if response.status_code == 200:
+        print("Test journal downloaded")
         Path(path).parent.mkdir(parents=True, exist_ok=True)
         with open(path, 'wb') as file:
             file.write(
                 response.content[response.content.find(b'\n') + 1:]  # Remove first row
             )
 
-def postings(path=TESTPOSTINGS_PATH):
-    fetchGoogleSheet()
+def postings(path=TESTPOSTINGS_PATH, force=False):
+    file = Path(path)
+
+    if force or not file.exists():
+        fetchGoogleSheet()
+
     return pd.read_csv(path)
