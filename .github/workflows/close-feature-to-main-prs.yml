@@ -1,0 +1,17 @@
+# .github/workflows/close-feature-to-main-prs.yml
+name: Close feature PRs to main
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  close-feature-pr:
+    if: startsWith(github.head_ref, 'feature/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close PR
+        run: gh pr close --comment "Please open pull requests into develop branch instead, thank you."
+        env:
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
