@@ -18,9 +18,13 @@ import chardet #檢查編碼
 #pip install playsound
 #pip install watchdog
 
-folder_path = Path("C:/Users/user/qrcode_scanner/Receipt")
-
-
+#folder_path = Path("C:/Users/user/AI 2025/qrcode_scanner/Receipt")
+relative_path = Path("src/core/qrcode_scanner/Receipt")
+# 您可以使用這個 Path 物件來進行各種操作，例如：
+print(relative_path.exists())  # 檢查這個相對路徑所指的資料夾是否存在
+print(relative_path.is_dir())  # 檢查這個相對路徑是否指向一個資料夾
+print(relative_path.resolve()) # 取得這個相對路徑的絕對路徑 (會根據您目前的工作目錄而定)
+relative_path = Path("src/core/qrcode_scanner/Receipt").resolve()
 
 # 🔽 載入原 receipt 處理邏輯
 def process_new_image(image_path):
@@ -41,9 +45,12 @@ def process_new_image(image_path):
         def putText(img,x, y, text, color=(0, 255, 0)):
             #global img_original # 在彩色圖片上繪製文字
             # 使用支持中文的字体
+            #fontpath = r'C:\Users\user\qrcode_scanner\fonts\DejaVuSans-Bold.ttf'  # 默認字體
             fontpath = r'C:\Users\user\qrcode_scanner\fonts\DejaVuSans-Bold.ttf'  # 默認字體
+            fontpath_relative = Path("qrcode_scanner/fonts/DejaVuSans-Bold.ttf").resolve()
             try:
                 fontpath = r'C:\Users\user\qrcode_scanner\fonts\NotoSansTC-VariableFont_wght.ttf'  # 如果上傳了中文字體
+                fontpath_relative = Path("qrcode_scanner/fonts/NotoSansTC-VariableFont_wght.ttf").resolve()
             except:
                 pass
 
@@ -433,10 +440,10 @@ def wait_for_file_stable(file_path, wait_seconds=2):
 
 
 # 🔍 取得最新圖檔並處理
-def process_latest_image(folder_path):
-    print(f"收到的圖片路徑：{folder_path}")
+def process_latest_image(relative_path):
+    print(f"收到的圖片路徑：{relative_path}")
     print(f"檔案是否存在：{os.path.exists(newest_image)}")
-    folder = Path(folder_path)
+    folder = Path(relative_path)
     img_ext = {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff"}
 
     image_files = [f for f in folder.iterdir() if f.suffix.lower() in img_ext]
@@ -460,8 +467,8 @@ class ImageCreatedHandler(FileSystemEventHandler):
                 time.sleep(0.5)
                 process_new_image(str(file_path))
 
-def start_watch_folder(folder_path):
-    folder = Path(folder_path)
+def start_watch_folder(relative_path):
+    folder = Path(relative_path)
     if not folder.exists():
         folder.mkdir(parents=True)
 
@@ -480,6 +487,6 @@ def start_watch_folder(folder_path):
     observer.join()
 
 if __name__ == "__main__":
-    start_watch_folder(folder_path)
+    start_watch_folder(relative_path)
     image_path = "C:\\Users\\user\\qrcode_scanner\\Receipt\\Receipt_2.jpg"
     process_new_image(image_path)
