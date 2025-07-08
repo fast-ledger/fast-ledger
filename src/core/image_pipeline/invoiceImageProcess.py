@@ -1,5 +1,4 @@
 from ultralytics import YOLO
-from IPython.display import display, Image
 from pathlib import Path
 import numpy as np
 import ultralytics
