@@ -9,6 +9,8 @@ on:
 jobs:
   close-feature-pr:
     if: startsWith(github.head_ref, 'feature/')
+    permissions:
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
