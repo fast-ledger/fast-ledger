@@ -63,43 +63,48 @@ journals = [
 postings = testpostings.postings()
 X = postings
 
-# accuracies = {}
-y_preds = []
-for transformer in transformers:
+results = [None] * len(transformers)
+for i, transformer in enumerate(transformers):
     pipe = Pipeline([
         ('transformer', transformer['func']),
         ('classifier', KNeighborsClassifier(weights='distance'))
     ])
+    results[i] = {
+        'name': transformer['name'],
+        'desc': transformer['desc'],
+        'journal': [None] * len(journals)
+    }
 
     # Evaluation
     # scores = cross_val_score(pipe, X, y, cv=LeaveOneOut(), scoring=make_scorer(accuracy_score))
-    # accuracies[strategy] = sum(scores)
-    for journal in journals:
+    for j, journal in enumerate(journals):
         y = postings[journal]
-        y_pred = predict_journal(pipe, X, y)
-        y_preds.append(y_pred)
+        results[i]['journal'][j] = {
+            'name': journal,
+            'true': y,
+            'pred': predict_journal(pipe, X, y),
+        }
 
-matplotlib.rc('font', family='Microsoft JhengHei', size=6)
-
-plot_index = 0
 total_correct = 0
 total_test = 0
-fig, axes = plt.subplots(
-    len(transformers),
-    len(journals),
-    figsize=(7 * len(journals), 7 * len(transformers)))
-for j, transformer in enumerate(transformers):
-    for i, journal in enumerate(journals):
-        y = postings[journal]
-        y_pred = y_preds[plot_index]
-        correct = sum([i == j for i, j in zip(y, y_pred)])
-        total_correct += correct
-        total_test += len(y)
+transformer_count = len(results)
+journal_count = len(results[0]['journal'])
 
-        ax = axes[j, i]
-        labels = sorted(postings[journal].unique())
+matplotlib.rc('font', family='Microsoft JhengHei', size=6)
+fig, axes = plt.subplots(
+    transformer_count,
+    journal_count,
+    figsize=(7 * transformer_count, 7 * journal_count))
+for i, transformer in enumerate(results):
+    for j, journal in enumerate(transformer['journal']):
+        correct = sum([i == j for i, j in zip(journal['true'], journal['pred'])])
+        total_correct += correct
+        total_test += len(journal['true'])
+
+        ax = axes[i, j]
+        labels = sorted(journal['true'].unique())
         disp = ConfusionMatrixDisplay(
-            confusion_matrix=confusion_matrix(y, y_pred),
+            confusion_matrix=confusion_matrix(journal['true'], journal['pred']),
             display_labels=labels
         )
         disp.plot(
@@ -111,17 +116,16 @@ for j, transformer in enumerate(transformers):
             journal: {2}, {3}/{4} ({5:.2f})""".format(
                 transformer['name'],
                 transformer['desc'],
-                journal,
+                journal['name'],
                 correct,
-                len(y),
-                correct/len(y)
+                len(journal['true']),
+                correct/len(journal['true'])
             ),
             fontsize=10)
         ax.set_xticklabels(labels, rotation=-45, ha='left')
         ax.tick_params('x', labelsize=6)
         ax.tick_params('y', labelsize=6)
 
-        plot_index += 1
 fig.suptitle(
     # """langauge model: {}
     """overall accuracy: {}/{} ({:.2f})""".format(
