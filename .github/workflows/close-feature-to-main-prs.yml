@@ -13,6 +13,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Set up GitHub CLI
+        uses: cli/cli@v3
+      - name: Authenticate gh
+        run: echo "$GH_TOKEN" | gh auth login --with-token
       - name: Close PR
         run: gh pr close $NUMBER --comment "$COMMENT"
         env:
