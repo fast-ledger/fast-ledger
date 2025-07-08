@@ -1,9 +1,7 @@
 import testpostings
 import pandas as pd
-import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-from sentence_transformers import SentenceTransformer
 from sklearn.base import clone
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import FunctionTransformer
@@ -11,6 +9,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import LeaveOneOut, cross_val_score, KFold
 from sklearn.metrics import accuracy_score, make_scorer, confusion_matrix, ConfusionMatrixDisplay
 import warnings
+import embedder
 
 warnings.filterwarnings('ignore') 
 
@@ -36,84 +35,13 @@ def predict_journal(model, X, y):
         preds.extend(model.predict(X_test))
     return preds
 
-### 字串向量化模型 ###
-language_models = [
-    'sentence-transformers/multi-qa-MiniLM-L6-cos-v1',
-    'shibing624/text2vec-base-chinese'
-]
-language_model = language_models[1]
-embedder = SentenceTransformer(language_model)
-
-### 發票向量化 ###
-def embed_item(postings):
-    """embed(商品品項)"""
-    return embedder.encode(postings['商品品項'].to_list())
-
-def embed_company_item(postings):
-    """embed(公司名稱商品品項)"""
-    return embedder.encode((postings['公司名稱'] + postings['商品品項']).to_list())
-
-def embed_company_scope_item(postings):
-    """embed(公司名稱行業1行業2行業3行業4商品品項)"""
-    return embedder.encode(
-        postings[['公司名稱', '行業1', '行業2', '行業3', '行業4', '商品品項']]
-        .fillna('')
-        .apply(lambda x: ''.join(x), axis=1)
-        .to_list()
-    )
-
-# TODO
-# def embed_company_scope_item_desc(postings):
-#     """embed(company: 公司名稱
-#     business scope: 行業1行業2行業3行業4
-#     item: 商品品項)"""
-#     return embedder.encode(
-#         postings[['公司名稱', '行業1', '行業2', '行業3', '行業4', '商品品項']]
-#         .fillna('')
-#         .apply(lambda x: ''.join(x), axis=1)
-#         .to_list()
-#     )
-
-def embed_company_n_item(postings):
-    """embed(公司名稱)+embed(商品品項)"""
-    company_embeddings = embedder.encode(postings['公司名稱'].to_list())
-    item_embeddings = embedder.encode(postings['商品品項'].to_list())
-    return np.array(
-        [company_embeddings[i] + item_embeddings[i] for i in range(len(postings))]
-    )
-
-def embed_company_n_scope_n_item(postings):
-    """embed(公司名稱)+embed(行業1行業2行業3行業4)+embed(商品品項)"""
-    company_embeddings = embedder.encode(postings['公司名稱'].to_list())
-    scope_embeddings = embedder.encode(
-        postings[['行業1', '行業2', '行業3', '行業4']].fillna('')
-        .apply(lambda x: ''.join(x), axis=1).to_list()
-    )
-    item_embeddings = embedder.encode(postings['商品品項'].to_list())
-    return np.array(
-        [company_embeddings[i] + scope_embeddings[i] + item_embeddings[i] for i in range(len(postings))]
-    )
-
-def embed_company_scope_n_item(postings):
-    """embed(公司名稱行業1行業2行業3行業4)+embed(商品品項)"""
-    company_embeddings = embedder.encode(
-        postings[['公司名稱', '行業1', '行業2', '行業3', '行業4']].fillna('')
-        .apply(lambda x: ''.join(x), axis=1).to_list()
-    )
-    item_embeddings = embedder.encode(postings['商品品項'].to_list())
-    return np.array(
-        [company_embeddings[i] + item_embeddings[i] for i in range(len(postings))]
-    )
-
-### 所有發票向量化策略 ###
-
 embed_strategies = [
-    # embed_item,
-    # embed_company_item,
-    embed_company_scope_item,
-    # embed_company_n_item,
-    # embed_company_n_scope_n_item,
-    embed_company_scope_n_item,
+    # embedder.item,
+    # embedder.company_item,
+    embedder.company_scope_item,
+    # embedder.company_n_item,
+    # embedder.company_n_scope_n_item,
+    embedder.company_scope_n_item,
 ]
 
 transformers = [
@@ -195,9 +123,9 @@ for j, transformer in enumerate(transformers):
 
         plot_index += 1
 fig.suptitle(
-    """langauge model: {0}
-    overall accuracy: {1}/{2} ({3:.2f})""".format(
-        language_model,
+    # """langauge model: {}
+    """overall accuracy: {}/{} ({:.2f})""".format(
+    #     language_model,
         total_correct,
         total_test,
         total_correct / total_test
