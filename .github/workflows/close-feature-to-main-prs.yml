@@ -11,9 +11,11 @@ jobs:
     if: startsWith(github.head_ref, 'feature/')
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Close PR
-        run: gh pr close "$NUMBER" --comment "$COMMENT" 
+        run: gh pr close $NUMBER --comment "$COMMENT"
         env:
           NUMBER: ${{ github.event.pull_request.number }}
-          COMMENT: "Please open pull requests into develop branch instead, thank you."
+          COMMENT: Please open pull requests into develop branch instead, thank you.
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
