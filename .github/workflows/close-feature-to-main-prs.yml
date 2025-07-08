@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Close PR
-        run: gh pr close ${{ github.event.pull_request.number }} --comment "Please open pull requests into develop branch instead, thank you."
+        run: gh pr close "$NUMBER" --comment "$COMMENT" 
         env:
-            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUMBER: ${{ github.event.pull_request.number }}
+          COMMENT: "Please open pull requests into develop branch instead, thank you."
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
