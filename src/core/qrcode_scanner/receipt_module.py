@@ -47,10 +47,10 @@ def process_new_image(image_path):
             # 使用支持中文的字体
             #fontpath = r'C:\Users\user\qrcode_scanner\fonts\DejaVuSans-Bold.ttf'  # 默認字體
             fontpath = r'C:\Users\user\qrcode_scanner\fonts\DejaVuSans-Bold.ttf'  # 默認字體
-            fontpath_relative = Path("qrcode_scanner/fonts/DejaVuSans-Bold.ttf").resolve()
+            fontpath_relative = Path("src/core/qrcode_scanner/fonts/DejaVuSans-Bold.ttf").resolve()
             try:
                 fontpath = r'C:\Users\user\qrcode_scanner\fonts\NotoSansTC-VariableFont_wght.ttf'  # 如果上傳了中文字體
-                fontpath_relative = Path("qrcode_scanner/fonts/NotoSansTC-VariableFont_wght.ttf").resolve()
+                fontpath_relative = Path("src/core/qrcode_scanner/fonts/NotoSansTC-VariableFont_wght.ttf").resolve()
             except:
                 pass
 
