@@ -13,12 +13,19 @@ class ImgProcess:
 
     seg_model_label_name_list = []
 
-    _seg_invoice_model = None
-    _cls_angle_model = None
+    _seg_invoice_model_pt = "model/best_seg.pt"
+    _cls_angle_model_pt="model/best_angle_cls.pt"
+    _seg_invoice_model = YOLO(_seg_invoice_model_pt, 'segment')
+    _cls_angle_model = YOLO(_cls_angle_model_pt, 'classify')
 
     __step_result_dict = {'first': [], 'second': [], 'third': [], 'fourth': [], 'final': []}
     
-    def __init__(self, seg_invoice_model_pt="model/best_seg.pt", cls_angle_model_pt="model/best_angle_cls.pt", msg=False):
+    def __init__(self, seg_invoice_model_pt=None, cls_angle_model_pt=None, msg=True):
+        if seg_invoice_model_pt is None:
+            seg_invoice_model_pt = self._seg_invoice_model_pt
+        if cls_angle_model_pt is None:
+            cls_angle_model_pt = self._cls_angle_model_pt
+
         self.show_msg = msg
         if msg:
             print()
@@ -160,11 +167,17 @@ class ImgProcess:
         self._cls_angle_model = cls_angle_model if cls_angle_model is not None else self._cls_angle_model
 
     def set_model_pt(self, seg_invoice_model_pt=None, cls_angle_model_pt=None, show_msg=False):
+        if show_msg:
+            print()
+
         path = self.__locate_path(seg_invoice_model_pt, show_msg)
         self._seg_invoice_model = self.__setYOLO_model(self._seg_invoice_model, path, 'segment')
 
         path = self.__locate_path(cls_angle_model_pt, show_msg)
         self._cls_angle_model = self.__setYOLO_model(self._cls_angle_model, path, 'classify')
+
+        if show_msg:
+            print()
 
 
     def get_src(self):
@@ -221,19 +234,30 @@ class ImgProcess:
             if show_msg:
                 print('Path is None')
             return None
-        if Path(path).exists:
+        
+        if '*' in path[-1]:
+            if Path(path[:-1]).exists():
+                if show_msg:
+                    print(f"Path '{path}', is exist")
+                return path
+            else:
+                if show_msg:
+                    print(f"No '{path}' found")
+                return None
+        
+        if Path(path).exists():
             if show_msg:
-                print(f'path: {path}, is exist')
+                print(f"Path: '{path}', is exist")
             return path
         else:
             if show_msg:
-                print(f"No {path} found")
+                print(f"No '{path}' found")
             return None
 # fmt: on
 
 
 if __name__ == "__main__":
-    process = ImgProcess("model/best_seg.pt", "model/best_angle_cls.pt")
+    process = ImgProcess()
     process("raw_images/*")
 
     all_path = "result/*"
