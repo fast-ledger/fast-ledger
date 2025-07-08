@@ -18,7 +18,7 @@ import chardet #檢查編碼
 #pip install playsound
 #pip install watchdog
 
-folder_path = Path("C:/Users/user/AI2025/Receipt")
+folder_path = Path("C:/Users/user/qrcode_scanner/Receipt")
 
 
 
@@ -41,9 +41,9 @@ def process_new_image(image_path):
         def putText(img,x, y, text, color=(0, 255, 0)):
             #global img_original # 在彩色圖片上繪製文字
             # 使用支持中文的字体
-            fontpath = r'C:\Users\user\AI2025\fonts\DejaVuSans-Bold.ttf'  # 默認字體
+            fontpath = r'C:\Users\user\qrcode_scanner\fonts\DejaVuSans-Bold.ttf'  # 默認字體
             try:
-                fontpath = r'C:\Users\user\AI2025\fonts\NotoSansTC-VariableFont_wght.ttf'  # 如果上傳了中文字體
+                fontpath = r'C:\Users\user\qrcode_scanner\fonts\NotoSansTC-VariableFont_wght.ttf'  # 如果上傳了中文字體
             except:
                 pass
 
@@ -481,5 +481,5 @@ def start_watch_folder(folder_path):
 
 if __name__ == "__main__":
     start_watch_folder(folder_path)
-    image_path = "C:\\Users\\user\\AI2025\\Receipt\\Receipt_1.jpg"
+    image_path = "C:\\Users\\user\\qrcode_scanner\\Receipt\\Receipt_2.jpg"
     process_new_image(image_path)
