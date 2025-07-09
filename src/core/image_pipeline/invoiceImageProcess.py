@@ -10,6 +10,7 @@ import cv2
 # fmt: off
 class ImgProcess:
     __id_list = []
+    __seg_model_label_name_list = []
     __base_dir = Path(__file__).resolve().parent
     __step_result_dict = {'first': [], 'second': [], 'third': [], 'fourth': [], 'final': []}
 
@@ -18,9 +19,6 @@ class ImgProcess:
     _seg_invoice_model = YOLO(_seg_invoice_model_pt, 'segment')
     _cls_angle_model = YOLO(_cls_angle_model_pt, 'classify')
 
-    seg_model_label_name_list = []
-
-    
     
     def __init__(self, seg_invoice_model_pt=None, cls_angle_model_pt=None, msg=True):
         if seg_invoice_model_pt is None:
@@ -66,7 +64,7 @@ class ImgProcess:
             for j, mask_tansor in enumerate(masks.data):
                 # Get label name               
                 label_name = self.get_seg_model_label_name(seg_model, result, j)
-                self.seg_model_label_name_list.append(label_name)
+                self.__seg_model_label_name_list.append(label_name)
 
                 id = f'result_{i}_{j}'
                 self.__id_list.append(id)
@@ -133,7 +131,7 @@ class ImgProcess:
                     print('----------------------------------------------------------------')
                     print()
 
-        return self.get_final_result(return_id)
+        return self.get_final_result('final', return_id)
 
     
     def merge_mask(self, image, mask):
@@ -199,7 +197,7 @@ class ImgProcess:
         label_index = result.boxes.cls.cpu().numpy().astype(np.uint8)[index].item()
         return seg_model.names[label_index]
 
-    def get_max_contour_info(self, mask, msg=False, label_name=''):
+    def get_max_contour_info(self, mask, msg=False):
         '''return (x, y), (w, h), angle'''
         contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         if len(contours) == 0:
@@ -222,8 +220,8 @@ class ImgProcess:
 
         return (x, y), (w, h), angle
 
-    def get_final_result(self, return_id=False):
-        result_list = self.__step_result_dict['final']
+    def get_final_result(self, step, return_id=False):
+        result_list = self.__step_result_dict[step]
         id_list = self.__id_list
         len_res = len(result_list)
 
