@@ -24,16 +24,20 @@ class ImgProcess:
     
     def __init__(self, seg_invoice_model_pt=None, cls_angle_model_pt=None, msg=True):
         '''
-        seg_invoice_model: 
-        Specify the path to the YOLO model file that can segment the image.
-        This argument is optional; a dedault value is provided.
+        Args:
+            seg_invoice_model_pt (str | Path): Specify the path to the YOLO model file that can segment the image.
+                This argument is optional; a dedault value is provided.
+            cls_angle_model_pt (str | Path):
+                Specify the path to the YOLO model file used to classify image orientation.
+                This argument is optional; a default path is provided.
+            msg (bool) :
+                Toggle display of informational messages.
 
-        cls_angle_model_pt:
-        Specify the path to the YOLO model file used to classify image orientation.
-        This argument is optional; a default path is provided.
-
-        msg:
-        Toggle display of informational messages.
+        Examples:
+            >>> from src import ImgProcess
+            >>> process = ImgProcess() 
+            >>> process = ImgProcess(seg_invocie_model_pt, cls_angle_model_pt)
+            >>> process = ImgProcess(msg=False)
         '''
         if seg_invoice_model_pt is None:
             seg_invoice_model_pt = self._seg_invoice_model_pt
