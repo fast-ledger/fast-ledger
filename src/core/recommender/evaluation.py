@@ -11,7 +11,7 @@ from sklearn.metrics import accuracy_score, make_scorer, confusion_matrix, Confu
 import warnings
 import embedder
 
-warnings.filterwarnings('ignore') 
+warnings.filterwarnings('ignore')
 
 def predict_journal(model, X, y):
     """
@@ -28,12 +28,73 @@ def predict_journal(model, X, y):
 
         model = clone(model)
         model.fit(X_train, y_train)
-        # y_pred = model.predict(X_test)[0]
-        print(X_test)
-        print(model.predict(X_test))
-        # preds.append(y_pred)
         preds.extend(model.predict(X_test))
     return preds
+
+def plot_results(results):
+    total_correct = 0
+    total_test = 0
+    transformer_count = len(results)
+    journal_count = len(results[0]['journal'])
+
+    matplotlib.rc('font', family='Microsoft JhengHei', size=6)
+    fig, axes = plt.subplots(
+        transformer_count,
+        journal_count,
+        figsize=(7 * transformer_count, 7 * journal_count))
+
+    if (hasattr(axes, 'flatten')):
+        axes = axes.flatten()
+        plot_id = 0
+    else:
+        ax = axes
+
+    for transformer in results:
+        for journal in transformer['journal']:
+            correct = sum([a == b for a, b in zip(journal['true'], journal['pred'])])
+            total_correct += correct
+            total_test += len(journal['true'])
+
+            try:
+                ax = axes[plot_id]
+                plot_id += 1
+            except NameError:
+                pass
+
+            labels = sorted(journal['true'].unique())
+            disp = ConfusionMatrixDisplay(
+                confusion_matrix=confusion_matrix(journal['true'], journal['pred']),
+                display_labels=labels
+            )
+            disp.plot(
+                # cmap=plt.cm.Blues,
+                ax=ax)
+            ax.set_title(
+                """encoder: {}
+                {}
+                journal: {}, {}/{} ({:.2f})""".format(
+                    transformer['name'],
+                    transformer['desc'],
+                    journal['name'],
+                    correct,
+                    len(journal['true']),
+                    correct/len(journal['true'])
+                ),
+                fontsize=10)
+            ax.set_xticklabels(labels, rotation=-45, ha='left')
+            ax.tick_params('x', labelsize=6)
+            ax.tick_params('y', labelsize=6)
+
+    fig.suptitle(
+        # """langauge model: {}
+        """overall accuracy: {}/{} ({:.2f})""".format(
+        #     language_model,
+            total_correct,
+            total_test,
+            total_correct / total_test
+        ))
+    plt.tight_layout()
+    plt.show()
 
 embed_strategies = [
     # embedder.item,
@@ -56,7 +117,7 @@ transformers = [
 
 journals = [
     'ljavuras',
-    # 'nelly',
+    'nelly',
     # 'hsuan',
 ]
 
@@ -76,7 +137,6 @@ for i, transformer in enumerate(transformers):
     }
 
     # Evaluation
-    # scores = cross_val_score(pipe, X, y, cv=LeaveOneOut(), scoring=make_scorer(accuracy_score))
     for j, journal in enumerate(journals):
         y = postings[journal]
         results[i]['journal'][j] = {
@@ -85,66 +145,4 @@ for i, transformer in enumerate(transformers):
             'pred': predict_journal(pipe, X, y),
         }
 
-total_correct = 0
-total_test = 0
-transformer_count = len(results)
-journal_count = len(results[0]['journal'])
-
-matplotlib.rc('font', family='Microsoft JhengHei', size=6)
-fig, axes = plt.subplots(
-    transformer_count,
-    journal_count,
-    figsize=(7 * transformer_count, 7 * journal_count))
-
-if (hasattr(axes, 'flatten')):
-    axes = axes.flatten()
-    plot_id = 0
-else:
-    ax = axes
-
-for transformer in results:
-    for journal in transformer['journal']:
-        correct = sum([a == b for a, b in zip(journal['true'], journal['pred'])])
-        total_correct += correct
-        total_test += len(journal['true'])
-
-        try:
-            ax = axes[plot_id]
-            plot_id += 1
-        except NameError:
-            pass
-
-        labels = sorted(journal['true'].unique())
-        disp = ConfusionMatrixDisplay(
-            confusion_matrix=confusion_matrix(journal['true'], journal['pred']),
-            display_labels=labels
-        )
-        disp.plot(
-            # cmap=plt.cm.Blues,
-            ax=ax)
-        ax.set_title(
-            """encoder: {}
-            {}
-            journal: {}, {}/{} ({:.2f})""".format(
-                transformer['name'],
-                transformer['desc'],
-                journal['name'],
-                correct,
-                len(journal['true']),
-                correct/len(journal['true'])
-            ),
-            fontsize=10)
-        ax.set_xticklabels(labels, rotation=-45, ha='left')
-        ax.tick_params('x', labelsize=6)
-        ax.tick_params('y', labelsize=6)
-
-fig.suptitle(
-    # """langauge model: {}
-    """overall accuracy: {}/{} ({:.2f})""".format(
-    #     language_model,
-        total_correct,
-        total_test,
-        total_correct / total_test
-    ))
-plt.tight_layout()
-plt.show()
+plot_results(results)
