@@ -38,7 +38,7 @@ class ImgProcess:
         if self._cls_angle_model is None and msg:
             print("Cls_angle_model is None")
 
-    def __call__(self, src, scale_ratio=0.3, contour_info=False, model_info=False, step_info=True):
+    def __call__(self, src, scale_ratio=0.3, save_result=False, step_info=True, contour_info=False, model_info=False):
         if not model_info:
             logging.getLogger("ultralytics").setLevel(logging.CRITICAL)
 
@@ -64,10 +64,10 @@ class ImgProcess:
                 label_name = self.get_seg_model_label_name(seg_model, result, j)
                 self.seg_model_label_name_list.append(label_name)
 
+                id = f'result_{i}_{j}'
                 if self.show_msg or contour_info or model_info or step_info:
                     print()
                     print('----------------------------------------------------------------')
-                    id = f'result_{i}_{j}'
                     print(f"{'picture id:':<13}{id:<13}")
                     print(f"{'label name:':<13}{label_name:<13}\n")
 
@@ -119,7 +119,11 @@ class ImgProcess:
                 if step_info:
                     print('Final step finish')
 
-                cv2.imwrite(f'result/result_{i}_{j}.png', image)
+                if save_result:
+                    folder = Path('result')
+                    folder.mkdir(parents=True, exist_ok=True)
+                    cv2.imwrite(f'result/{id}.png', image)
+
                 if self.show_msg or contour_info or model_info or step_info:
                     print('----------------------------------------------------------------')
                     print()
