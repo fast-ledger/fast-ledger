@@ -24,13 +24,16 @@ class ImgProcess:
     
     def __init__(self, seg_invoice_model_pt=None, cls_angle_model_pt=None, msg=True):
         '''
-        seg_invoice_model: \n
-        Specify the path to the YOLO model file that can segment the image.\n
-        This argument is optional; a dedault value is provided.\n
-        cls_angle_model_pt:\n
-        Specify the path to the YOLO model file used to classify image orientation.\n
-        This argument is optional; a default path is provided.\n
-        msg:\n
+        seg_invoice_model: 
+        Specify the path to the YOLO model file that can segment the image.
+        This argument is optional; a dedault value is provided.
+
+        
+        cls_angle_model_pt:
+        Specify the path to the YOLO model file used to classify image orientation.
+        This argument is optional; a default path is provided.
+
+        msg:
         Toggle display of informational messages.
         '''
         if seg_invoice_model_pt is None:
@@ -53,23 +56,31 @@ class ImgProcess:
 
     def __call__(self, src, scale_ratio=0.3, save_result=False, return_id=True, step_info=True, contour_info=False, model_info=False):
         """
-        If the final result has only one item, return an image. \n
-        If return_id is True, return a tuple (image, ID) instead.\n
-        If the final result has multiple items, return a list.\n
-        If return_id is True, return a list of (image, ID) tuples instead.\n
-        src:\n
-        The source to be processed.\n
-        scale_ratio:\n
-        The scaling ratio applied to the image.\n
-        save_result:\n
-        Toggle saving of the result.\n
-        return_id:\n
-        Toggle whether to return ID.\n
-        step_info:\n
-        Toggle step informational message display.\n
-        contour_info:\n
-        Toggle showing the contour informational messages\n
-        model_info:\n
+        If the final result has only one item, return an image. 
+        If return_id is True, return a tuple (image, ID) instead.
+
+        If the final result has multiple items, return a list.
+        If return_id is True, return a list of (image, ID) tuples instead.
+
+        src:
+        The source to be processed.
+
+        scale_ratio:
+        The scaling ratio applied to the image.
+
+        save_result:
+        Toggle saving of the result.
+
+        return_id:
+        Toggle whether to return ID.
+
+        step_info:
+        Toggle step informational message display.
+
+        contour_info:
+        Toggle showing the contour informational messages
+
+        model_info:
         Toggle whether to display informational messages about the model's prediction.
         """
         if not model_info:
