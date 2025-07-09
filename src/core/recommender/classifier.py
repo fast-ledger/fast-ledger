@@ -41,7 +41,7 @@ embed_strategies = [
     embedder.company_scope_item,
     # embedder.company_n_item,
     # embedder.company_n_scope_n_item,
-    embedder.company_scope_n_item,
+    # embedder.company_scope_n_item,
 ]
 
 transformers = [
@@ -56,7 +56,7 @@ transformers = [
 
 journals = [
     'ljavuras',
-    'nelly',
+    # 'nelly',
     # 'hsuan',
 ]
 
@@ -95,13 +95,25 @@ fig, axes = plt.subplots(
     transformer_count,
     journal_count,
     figsize=(7 * transformer_count, 7 * journal_count))
-for i, transformer in enumerate(results):
-    for j, journal in enumerate(transformer['journal']):
-        correct = sum([i == j for i, j in zip(journal['true'], journal['pred'])])
+
+if (hasattr(axes, 'flatten')):
+    axes = axes.flatten()
+    plot_id = 0
+else:
+    ax = axes
+
+for transformer in results:
+    for journal in transformer['journal']:
+        correct = sum([a == b for a, b in zip(journal['true'], journal['pred'])])
         total_correct += correct
         total_test += len(journal['true'])
 
-        ax = axes[i, j]
+        try:
+            ax = axes[plot_id]
+            plot_id += 1
+        except NameError:
+            pass
+
         labels = sorted(journal['true'].unique())
         disp = ConfusionMatrixDisplay(
             confusion_matrix=confusion_matrix(journal['true'], journal['pred']),
@@ -111,9 +123,9 @@ for i, transformer in enumerate(results):
             # cmap=plt.cm.Blues,
             ax=ax)
         ax.set_title(
-            """encoder: {0}
-            {1}
-            journal: {2}, {3}/{4} ({5:.2f})""".format(
+            """encoder: {}
+            {}
+            journal: {}, {}/{} ({:.2f})""".format(
                 transformer['name'],
                 transformer['desc'],
                 journal['name'],
