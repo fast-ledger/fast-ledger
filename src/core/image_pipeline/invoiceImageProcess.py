@@ -19,6 +19,8 @@ class ImgProcess:
     _seg_invoice_model = YOLO(_seg_invoice_model_pt, 'segment')
     _cls_angle_model = YOLO(_cls_angle_model_pt, 'classify')
 
+    saving_folder = __base_dir/'result'
+
     
     def __init__(self, seg_invoice_model_pt=None, cls_angle_model_pt=None, msg=True):
         if seg_invoice_model_pt is None:
@@ -123,9 +125,9 @@ class ImgProcess:
                     print('Final step finish')
 
                 if save_result:
-                    folder = Path(self.__base_dir/'result')
+                    folder = Path(self.saving_folder)
                     folder.mkdir(parents=True, exist_ok=True)
-                    cv2.imwrite(self.__base_dir/'result'/f'{id}.png', image)
+                    cv2.imwrite(folder/f'{id}.png', image)
 
                 if self.show_msg or contour_info or model_info or step_info:
                     print('----------------------------------------------------------------')
@@ -184,6 +186,9 @@ class ImgProcess:
 
         if show_msg:
             print()
+
+    def set_saving_directory(self, path):
+        self.saving_folder = path
 
 
     def get_src(self):
@@ -273,6 +278,7 @@ if __name__ == "__main__":
     base_dir = Path(__file__).resolve().parent
     path = base_dir / "raw_images" / "*"
     process = ImgProcess()
+    process.set_saving_directory(base_dir / "test_result")
     result_list = process(path.as_posix(), save_result=True, return_id=True)
 
     """all_path = "result/*"
