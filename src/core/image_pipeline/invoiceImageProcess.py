@@ -28,7 +28,6 @@ class ImgProcess:
         Specify the path to the YOLO model file that can segment the image.
         This argument is optional; a dedault value is provided.
 
-        
         cls_angle_model_pt:
         Specify the path to the YOLO model file used to classify image orientation.
         This argument is optional; a default path is provided.
