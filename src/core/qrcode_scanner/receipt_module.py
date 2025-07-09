@@ -15,6 +15,15 @@ import chardet #檢查編碼
 #pip install watchdog
 
 #folder_path = Path("C:/Users/user/AI 2025/qrcode_scanner/Receipt")
+
+# 取得目前腳本的完整路徑
+script_path = os.path.abspath(__file__)
+# 取得腳本所在的目錄
+script_directory = os.path.dirname(script_path)
+# 將目前的工作目錄更改為腳本所在的目錄
+os.chdir(script_directory)
+print(f"工作目錄已更改為：{os.getcwd()}")
+
 relative_path = Path("receipt")
 # 您可以使用這個 Path 物件來進行各種操作，例如：
 print(relative_path.exists())  # 檢查這個相對路徑所指的資料夾是否存在
@@ -41,18 +50,17 @@ def process_new_image(image_path):
         def putText(img,x, y, text, color=(0, 255, 0)):
             #global img_original # 在彩色圖片上繪製文字
             # 使用支持中文的字体
-            #fontpath = r'C:\Users\user\qrcode_scanner\fonts\DejaVuSans-Bold.ttf'  # 默認字體
-            fontpath = r'C:\Users\user\qrcode_scanner\fonts\DejaVuSans-Bold.ttf'  # 默認字體
-            fontpath_relative = Path("src/core/qrcode_scanner/fonts/DejaVuSans-Bold.ttf").resolve()
+            #fontpath = r'C:\Users\user\qrcode_scanner\fonts\DejaVuSans-Bold.ttf'  
+            fontpath_relative = Path("fonts/DejaVuSans-Bold.ttf").resolve() # 默認字體
             try:
-                fontpath = r'C:\Users\user\qrcode_scanner\fonts\NotoSansTC-VariableFont_wght.ttf'  # 如果上傳了中文字體
-                fontpath_relative = Path("src/core/qrcode_scanner/fonts/NotoSansTC-VariableFont_wght.ttf").resolve()
+                #fontpath = r'C:\Users\user\qrcode_scanner\fonts\NotoSansTC-VariableFont_wght.ttf'  
+                fontpath_relative = Path("fonts/NotoSansTC-VariableFont_wght.ttf").resolve() # 如果上傳了中文字體
             except:
                 pass
 
             # 嘗試加載字體並設置大小
             try:
-                font = ImageFont.truetype(fontpath, 20)
+                font = ImageFont.truetype(fontpath_relative, 20)
             except:
                 font = ImageFont.load_default()
 
@@ -457,5 +465,5 @@ def start_watch_folder(relative_path):
 
 if __name__ == "__main__":
     start_watch_folder(relative_path)
-    image_path = "C:\\Users\\user\\qrcode_scanner\\Receipt\\Receipt_2.jpg"
+    image_path = "receipt\\1.jpg" #20250709
     process_new_image(image_path)
