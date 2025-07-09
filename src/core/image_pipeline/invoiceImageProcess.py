@@ -13,17 +13,21 @@ class ImgProcess:
     __seg_model_label_name_list = []
     __base_dir = Path(__file__).resolve().parent
     __step_result_dict = {'first': [], 'second': [], 'third': [], 'fourth': [], 'final': []}
+    __seg_invoice = 'seg_invoice.pt'
+    __cls_angle = 'cls_angle.pt'
 
-    _seg_invoice_model_pt = __base_dir/'model'/'best_seg.pt'
-    _cls_angle_model_pt=__base_dir/'model'/'best_angle_cls.pt'
+    _seg_invoice_model_pt = __base_dir/'model'/__seg_invoice
+    _cls_angle_model_pt=__base_dir/'model'/__cls_angle
     _seg_invoice_model = YOLO(_seg_invoice_model_pt, 'segment')
     _cls_angle_model = YOLO(_cls_angle_model_pt, 'classify')
 
     saving_folder = __base_dir/'result'
 
     
-    def __init__(self, seg_invoice_model_pt=None, cls_angle_model_pt=None, msg=True):
+    def __init__(self, seg_invoice_model_pt='seg_invoice.pt', cls_angle_model_pt='cls_angle.pt', msg=True):
         '''
+        Initialize an ImgProcess object
+
         Args:
             seg_invoice_model_pt (str | Path): Specify the path to the YOLO model file that can segment the image.
                 This argument is optional; a dedault value is provided.
@@ -39,9 +43,9 @@ class ImgProcess:
             >>> process = ImgProcess(seg_invocie_model_pt, cls_angle_model_pt)
             >>> process = ImgProcess(msg=False)
         '''
-        if seg_invoice_model_pt is None:
+        if seg_invoice_model_pt is None or seg_invoice_model_pt == self.__seg_invoice:
             seg_invoice_model_pt = self._seg_invoice_model_pt
-        if cls_angle_model_pt is None:
+        if cls_angle_model_pt is None or cls_angle_model_pt == self.__cls_angle:
             cls_angle_model_pt = self._cls_angle_model_pt
 
         self.show_msg = msg
