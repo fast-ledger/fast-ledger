@@ -9,15 +9,18 @@ import cv2
 
 # fmt: off
 class ImgProcess:
+    __id_list = []
+    __seg_model_label_name_list = []
+    __base_dir = Path(__file__).resolve().parent
+    __step_result_dict = {'first': [], 'second': [], 'third': [], 'fourth': [], 'final': []}
 
-    seg_model_label_name_list = []
-
-    _seg_invoice_model_pt = "model/best_seg.pt"
-    _cls_angle_model_pt="model/best_angle_cls.pt"
+    _seg_invoice_model_pt = __base_dir/'model'/'best_seg.pt'
+    _cls_angle_model_pt=__base_dir/'model'/'best_angle_cls.pt'
     _seg_invoice_model = YOLO(_seg_invoice_model_pt, 'segment')
     _cls_angle_model = YOLO(_cls_angle_model_pt, 'classify')
 
-    __step_result_dict = {'first': [], 'second': [], 'third': [], 'fourth': [], 'final': []}
+    saving_folder = __base_dir/'result'
+
     
     def __init__(self, seg_invoice_model_pt=None, cls_angle_model_pt=None, msg=True):
         if seg_invoice_model_pt is None:
@@ -38,7 +41,7 @@ class ImgProcess:
         if self._cls_angle_model is None and msg:
             print("Cls_angle_model is None")
 
-    def __call__(self, src, scale_ratio=0.3, contour_info=False, model_info=False, step_info=True):
+    def __call__(self, src, scale_ratio=0.3, save_result=False, return_id=True, step_info=True, contour_info=False, model_info=False):
         if not model_info:
             logging.getLogger("ultralytics").setLevel(logging.CRITICAL)
 
@@ -47,6 +50,7 @@ class ImgProcess:
         self.__src = self.__locate_path(src, self.show_msg)
         if self.get_src() is None:
             raise ValueError(f'no {src} found')
+        self.__src = self.__src.as_posix()
         
         image_list = self.get_image_list(scale_ratio)
 
@@ -62,12 +66,13 @@ class ImgProcess:
             for j, mask_tansor in enumerate(masks.data):
                 # Get label name               
                 label_name = self.get_seg_model_label_name(seg_model, result, j)
-                self.seg_model_label_name_list.append(label_name)
+                self.__seg_model_label_name_list.append(label_name)
 
+                id = f'result_{i}_{j}'
+                self.__id_list.append(id)
                 if self.show_msg or contour_info or model_info or step_info:
                     print()
                     print('----------------------------------------------------------------')
-                    id = f'result_{i}_{j}'
                     print(f"{'picture id:':<13}{id:<13}")
                     print(f"{'label name:':<13}{label_name:<13}\n")
 
@@ -119,12 +124,16 @@ class ImgProcess:
                 if step_info:
                     print('Final step finish')
 
-                cv2.imwrite(f'result/result_{i}_{j}.png', image)
+                if save_result:
+                    folder = Path(self.saving_folder)
+                    folder.mkdir(parents=True, exist_ok=True)
+                    cv2.imwrite(folder/f'{id}.png', image)
+
                 if self.show_msg or contour_info or model_info or step_info:
                     print('----------------------------------------------------------------')
                     print()
 
-        return self.get_final_result()
+        return self.get_final_result('final', return_id)
 
     
     def merge_mask(self, image, mask):
@@ -178,6 +187,9 @@ class ImgProcess:
         if show_msg:
             print()
 
+    def set_saving_directory(self, path):
+        self.saving_folder = path
+
 
     def get_src(self):
         return self.__src
@@ -190,7 +202,7 @@ class ImgProcess:
         label_index = result.boxes.cls.cpu().numpy().astype(np.uint8)[index].item()
         return seg_model.names[label_index]
 
-    def get_max_contour_info(self, mask, msg=False, label_name=''):
+    def get_max_contour_info(self, mask, msg=False):
         '''return (x, y), (w, h), angle'''
         contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         if len(contours) == 0:
@@ -213,14 +225,19 @@ class ImgProcess:
 
         return (x, y), (w, h), angle
 
-    def get_final_result(self):
-        result = self.__step_result_dict['final']
-        len_res = len(result)
+    def get_final_result(self, step, return_id=False):
+        result_list = self.__step_result_dict[step]
+        id_list = self.__id_list
+        len_res = len(result_list)
 
         if len_res == 1:
-            return result[0]
+            if return_id:
+                return (result_list[0], id_list[0])
+            return result_list[0]
         if len_res > 1:
-            return result
+            if return_id:
+                return list(zip(result_list, id_list))
+            return result_list
         else:
             return None
 
@@ -234,8 +251,10 @@ class ImgProcess:
                 print('Path is None')
             return None
         
-        if '*' in path[-1]:
-            if Path(path[:-1]).exists():
+        path = Path(path)
+
+        if '*' in path.name:
+            if Path(path.parent).exists():
                 if show_msg:
                     print(f"Path '{path}', is exist")
                 return path
@@ -244,7 +263,7 @@ class ImgProcess:
                     print(f"No '{path}' found")
                 return None
         
-        if Path(path).exists():
+        if path.exists():
             if show_msg:
                 print(f"Path: '{path}', is exist")
             return path
@@ -256,17 +275,27 @@ class ImgProcess:
 
 
 if __name__ == "__main__":
+    base_dir = Path(__file__).resolve().parent
+    path = base_dir / "raw_images" / "*"
     process = ImgProcess()
-    process("raw_images/*")
+    process.set_saving_directory(base_dir / "test_result")
+    result_list = process(path.as_posix(), save_result=True, return_id=True)
 
-    all_path = "result/*"
+    """all_path = "result/*"
     for path in glob.glob(all_path):
         img = cv2.imread(path)
         path = path.split("\\")[-1]
         cv2.imshow(path, img)
         key = cv2.waitKey(1500)
         if key == 27 or key == ord("q"):
+            break"""
+
+    for result, id in result_list:
+        cv2.imshow(id, result)
+        key = cv2.waitKey(1500)
+        if key == 27 or key == ord("q"):
             break
+
     while True:
         if key == 27 or key == ord("q"):
             cv2.destroyAllWindows()
