@@ -37,10 +37,7 @@ def plot_results(results):
 
     transformer_count = len(results)
     journal_count = len(results[0]['journal'])
-    fig, axes = plt.subplots(
-        transformer_count,
-        1,
-        figsize=(7 * transformer_count, 7 * journal_count))
+    fig, axes = plt.subplots(transformer_count, journal_count, figsize=(7 * transformer_count, 7 * journal_count))
 
     if (hasattr(axes, 'flatten')):
         axes = axes.flatten()
@@ -49,44 +46,40 @@ def plot_results(results):
         ax = axes
 
     for transformer in results:
-
         # Process results for each transformer
-        labels, labels_true, labels_pred = [], [], []
+        embedder_correct = 0
         for journal in transformer['journal']:
-            labels.extend(journal['true'].unique())
-            labels_true.extend(journal['true'])
-            labels_pred.extend(journal['pred'])
-        correct = sum([a == b for a, b in zip(labels_true, labels_pred)])
+            labels = journal['true'].unique()
+            journal_correct = sum([a == b for a, b in zip(journal['true'], journal['pred'])])
+            embedder_correct += journal_correct
 
-        # Plot results for each transformer
-        disp = ConfusionMatrixDisplay(
-            confusion_matrix=confusion_matrix(labels_true, labels_pred),
-            display_labels=labels
-        )
+            # Plot results for each transformer
+            disp = ConfusionMatrixDisplay(
+                confusion_matrix=confusion_matrix(journal['true'], journal['pred']),
+                display_labels=labels
+            )
 
-        try:
-            ax = axes[ax_id]
-            ax_id += 1
-        except NameError:
-            pass
+            try:
+                ax = axes[ax_id]
+                ax_id += 1
+            except NameError:
+                pass
 
-        disp.plot(
-            # cmap=plt.cm.Blues,
-            ax=ax)
+            disp.plot(
+                colorbar=False,
+                ax=ax)
+
+            # Confusion matrix title
+            ax.set_title(
+                """journal: {}
+                {}/{} ({:.2f})""".format(
+                    journal['name'], journal_correct, len(journal['true']), journal_correct / len(journal['true'])
+                ),
+                fontsize=10)
         
-        ax.set_title(
-            """encoder: {}
-            {}
-            journal: {}, {}/{} ({:.2f})""".format(
-                transformer['name'],
-                transformer['desc'],
-                journal['name'], correct, len(labels_true), correct / len(labels_true)
-            ),
-            fontsize=10)
-        
-        ax.set_xticklabels(labels, rotation=-45, ha='left')
-        ax.tick_params('x', labelsize=6)
-        ax.tick_params('y', labelsize=6)
+            ax.set_xticklabels(labels, rotation=-45, ha='left')
+            ax.tick_params('x', labelsize=6)
+            ax.tick_params('y', labelsize=6)
 
     # fig.suptitle(
     #     # """langauge model: {}
@@ -126,7 +119,7 @@ transformers: list[Transformer] = [
 journals = [
     'ljavuras',
     'nelly',
-    # 'hsuan',
+    'hsuan',
 ]
 
 postings = testpostings.postings()
