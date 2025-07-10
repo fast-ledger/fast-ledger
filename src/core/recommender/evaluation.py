@@ -6,13 +6,11 @@ from sklearn.base import clone
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import FunctionTransformer
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import LeaveOneOut, cross_val_score, KFold
-from sklearn.metrics import accuracy_score, make_scorer, confusion_matrix, ConfusionMatrixDisplay
+from sklearn.model_selection import LeaveOneOut, KFold
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import warnings
 import embedder
 from typing import TypedDict
-
-warnings.filterwarnings('ignore')
 
 def predict_journal(model, X, y):
     """
@@ -93,58 +91,61 @@ def plot_results(results):
         )
     plt.show()
 
-embed_strategies = [
-    # embedder.item,
-    # embedder.company_item,
-    embedder.company_scope_item,
-    # embedder.company_n_item,
-    # embedder.company_n_scope_n_item,
-    embedder.company_scope_n_item,
-]
+if __name__ == "__main__":
+    warnings.filterwarnings('ignore')
 
-class Transformer(TypedDict):
-    name: str
-    desc: str
-    func: FunctionTransformer
+    embed_strategies = [
+        # embedder.item,
+        # embedder.company_item,
+        embedder.company_scope_item,
+        # embedder.company_n_item,
+        # embedder.company_n_scope_n_item,
+        embedder.company_scope_n_item,
+    ]
 
-transformers: list[Transformer] = [
-    {
-        'name': f.__name__,
-        'desc': f.__doc__,
-        'func': FunctionTransformer(f)
-    }
-    for f in embed_strategies]
+    class Transformer(TypedDict):
+        name: str
+        desc: str
+        func: FunctionTransformer
 
-# Tested journals
-journals = [
-    'ljavuras',
-    'nelly',
-    'hsuan',
-]
+    transformers: list[Transformer] = [
+        {
+            'name': f.__name__,
+            'desc': f.__doc__,
+            'func': FunctionTransformer(f)
+        }
+        for f in embed_strategies]
 
-postings = testpostings.postings()
-results = [None] * len(transformers)
-for i, transformer in enumerate(transformers):
-    X = pd.DataFrame(transformer['func'].fit_transform(postings))
-    pipe = Pipeline([
-        # ('transformer', transformer['func']),
-        ('classifier', KNeighborsClassifier(weights='distance'))
-    ])
-    results[i] = {
-        'name': transformer['name'],
-        'desc': transformer['desc'],
-        'journal': [None] * len(journals)
-    }
+    # Tested journals
+    journals = [
+        'ljavuras',
+        'nelly',
+        'hsuan',
+    ]
 
-    # Evaluation
-    for j, journal in enumerate(journals):
-        print("[Validating] embedder: {},\tjournal: {}".format(transformer['name'], journal))
-        y = postings[journal]
-        results[i]['journal'][j] = {
-            'name': journal,
-            'true': y,
-            'pred': predict_journal(pipe, X, y),
+    postings = testpostings.postings()
+    results = [None] * len(transformers)
+    for i, transformer in enumerate(transformers):
+        X = pd.DataFrame(transformer['func'].fit_transform(postings))
+        pipe = Pipeline([
+            # ('transformer', transformer['func']),
+            ('classifier', KNeighborsClassifier(weights='distance'))
+        ])
+        results[i] = {
+            'name': transformer['name'],
+            'desc': transformer['desc'],
+            'journal': [None] * len(journals)
         }
 
-print("Validation complete")
-plot_results(results)
+        # Evaluation
+        for j, journal in enumerate(journals):
+            print("[Validating] embedder: {},\tjournal: {}".format(transformer['name'], journal))
+            y = postings[journal]
+            results[i]['journal'][j] = {
+                'name': journal,
+                'true': y,
+                'pred': predict_journal(pipe, X, y),
+            }
+
+    print("Validation complete")
+    plot_results(results)
