@@ -1,8 +1,11 @@
 from ultralytics import YOLO
 from pathlib import Path
+from typing import Union
+from PIL import Image
 import numpy as np
 import ultralytics
 import logging
+import torch
 import glob
 import cv2
 
@@ -13,19 +16,39 @@ class ImgProcess:
     __seg_model_label_name_list = []
     __base_dir = Path(__file__).resolve().parent
     __step_result_dict = {'first': [], 'second': [], 'third': [], 'fourth': [], 'final': []}
+    __seg_invoice = 'seg_invoice.pt'
+    __cls_angle = 'cls_angle.pt'
 
-    _seg_invoice_model_pt = __base_dir/'model'/'best_seg.pt'
-    _cls_angle_model_pt=__base_dir/'model'/'best_angle_cls.pt'
+    _seg_invoice_model_pt = __base_dir/'model'/__seg_invoice
+    _cls_angle_model_pt=__base_dir/'model'/__cls_angle
     _seg_invoice_model = YOLO(_seg_invoice_model_pt, 'segment')
     _cls_angle_model = YOLO(_cls_angle_model_pt, 'classify')
 
     saving_folder = __base_dir/'result'
 
     
-    def __init__(self, seg_invoice_model_pt=None, cls_angle_model_pt=None, msg=True):
-        if seg_invoice_model_pt is None:
+    def __init__(self, seg_invoice_model_pt: str | Path='seg_invoice.pt', cls_angle_model_pt: str | Path='cls_angle.pt', msg: bool=True):
+        '''
+        Initialize an ImgProcess object
+
+        Args:
+            seg_invoice_model_pt (str | Path): Specify the path to the YOLO model file that can segment the image.
+                This argument is optional; a dedault value is provided.
+            cls_angle_model_pt (str | Path):
+                Specify the path to the YOLO model file used to classify image orientation.
+                This argument is optional; a default path is provided.
+            msg (bool) :
+                Toggle display of informational messages.
+
+        Examples:
+            >>> from src import ImgProcess
+            >>> process = ImgProcess() 
+            >>> process = ImgProcess(seg_invocie_model_pt, cls_angle_model_pt)
+            >>> process = ImgProcess(msg=False)
+        '''
+        if seg_invoice_model_pt is None or seg_invoice_model_pt == self.__seg_invoice:
             seg_invoice_model_pt = self._seg_invoice_model_pt
-        if cls_angle_model_pt is None:
+        if cls_angle_model_pt is None or cls_angle_model_pt == self.__cls_angle:
             cls_angle_model_pt = self._cls_angle_model_pt
 
         self.show_msg = msg
@@ -41,7 +64,38 @@ class ImgProcess:
         if self._cls_angle_model is None and msg:
             print("Cls_angle_model is None")
 
-    def __call__(self, src, scale_ratio=0.3, save_result=False, return_id=True, step_info=True, contour_info=False, model_info=False):
+    def __call__(
+            self, 
+            src: str | Path | int | Image.Image | list | tuple | np.ndarray | torch.Tensor, 
+            scale_ratio: float | int = 0.3, 
+            save_result: bool = False, 
+            return_id: bool = True, 
+            step_info: bool = True, 
+            contour_info: bool = False, 
+            model_info: bool = False
+        ) -> list:
+        """
+        Args:
+            src (str | Path | int | Image.Image | list | tuple | np.ndarray | torch.Tensor):
+                The source to be processed.
+            scale_ratio (float | int):
+                The scaling ratio applied to the image.
+            save_result (bool):
+                Toggle saving of the result.
+            return_id (bool):
+                Toggle whether to return ID.
+            step_info (bool):
+                Toggle step informational message display.
+            contour_info (bool):
+                Toggle showing the contour informational messages
+            model_info (bool):
+                Toggle whether to display informational messages about the model's prediction.
+
+        Returns:
+            ([numpy.ndarray] or [tuple]):
+                A list of processed results, each encapsulated in a NumPy ndarray.
+                If return_id is True, return a list of (image, ID) tuples instead.
+        """
         if not model_info:
             logging.getLogger("ultralytics").setLevel(logging.CRITICAL)
 
@@ -228,18 +282,10 @@ class ImgProcess:
     def get_final_result(self, step, return_id=False):
         result_list = self.__step_result_dict[step]
         id_list = self.__id_list
-        len_res = len(result_list)
 
-        if len_res == 1:
-            if return_id:
-                return (result_list[0], id_list[0])
-            return result_list[0]
-        if len_res > 1:
-            if return_id:
-                return list(zip(result_list, id_list))
-            return result_list
-        else:
-            return None
+        if return_id:
+            return list(zip(result_list, id_list))
+        return result_list
 
 
     def __setYOLO_model(self, model, path, task=None, verbose=False):
@@ -279,7 +325,11 @@ if __name__ == "__main__":
     path = base_dir / "raw_images" / "*"
     process = ImgProcess()
     process.set_saving_directory(base_dir / "test_result")
-    result_list = process(path.as_posix(), save_result=True, return_id=True)
+    result_list = process(
+        path.as_posix(),
+        save_result=True,
+        return_id=True,
+    )
 
     """all_path = "result/*"
     for path in glob.glob(all_path):
