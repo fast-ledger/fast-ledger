@@ -101,7 +101,8 @@ if __name__ == "__main__":
         # embedder.company_n_item,
         # embedder.company_n_scope_n_item,
         # embedder.company_scope_n_item,
-        embedder.company_scope_item_labeled,
+        # embedder.company_scope_item_labeled,
+        embedder.all_labeled,
     ]
 
     class Transformer(TypedDict):
@@ -130,7 +131,7 @@ if __name__ == "__main__":
         X = pd.DataFrame(transformer['func'].fit_transform(postings))
         pipe = Pipeline([
             # ('transformer', transformer['func']),
-            ('classifier', KNeighborsClassifier(weights='distance'))
+            ('classifier', KNeighborsClassifier(weights='distance', n_neighbors=3))
         ])
         results[i] = {
             'name': transformer['name'],
