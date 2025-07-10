@@ -38,10 +38,9 @@ process = ImgProcess(msg=True)
 Use the `process()` method to perform masking and rotation on the input image.
 
 ```python
-src = \
-"""
-The source of the image(s) to be processed. 
-Accepts various types, including file paths, URLs, PIL images, NumPy arrays, and Torch tensors.
-"""
+# The source of the image(s) to be processed. 
+# Accepts various types, including file paths, URLs, PIL images, NumPy arrays, and Torch tensors.
+src = "(str | Path | int | Image.Image | list | tuple | np.ndarray | torch.Tensor)"
+
 result = process(src)
 ```
