@@ -48,7 +48,7 @@ def plot_results(results):
 
         embedder_correct, embedder_tests = 0, 0
         for journal in transformer['journal']:
-            labels = journal['true'].unique()
+            labels = sorted(journal['true'].unique())
             journal_correct = sum([a == b for a, b in zip(journal['true'], journal['pred'])])
             embedder_correct += journal_correct
             embedder_tests += len(journal['true'])
@@ -100,7 +100,8 @@ if __name__ == "__main__":
         embedder.company_scope_item,
         # embedder.company_n_item,
         # embedder.company_n_scope_n_item,
-        embedder.company_scope_n_item,
+        # embedder.company_scope_n_item,
+        embedder.company_scope_item_labeled,
     ]
 
     class Transformer(TypedDict):
