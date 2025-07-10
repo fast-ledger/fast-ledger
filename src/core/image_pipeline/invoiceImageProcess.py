@@ -92,8 +92,9 @@ class ImgProcess:
                 Toggle whether to display informational messages about the model's prediction.
 
         Returns:
-            ([numpy.ndarray]): A list of processed results, each encapsulated in a NumPy ndarray.
-            ([(numpy.ndarray, str)]): If return_id is True, return a list of (image, ID) tuples instead.
+            return ([numpy.ndarray]):
+                A list of processed results, each encapsulated in a NumPy ndarray.
+                If return_id is True, return a list of (image, ID) tuples instead.
         """
         if not model_info:
             logging.getLogger("ultralytics").setLevel(logging.CRITICAL)
