@@ -37,23 +37,25 @@ def plot_results(results):
 
     transformer_count = len(results)
     journal_count = len(results[0]['journal'])
-    fig, axes = plt.subplots(transformer_count, journal_count, figsize=(7 * transformer_count, 7 * journal_count))
+    fig = plt.figure(layout='constrained', figsize=(15 * transformer_count, 15 * journal_count))
+    subfigs = fig.subfigures(nrows=transformer_count, ncols=1)
 
-    if (hasattr(axes, 'flatten')):
-        axes = axes.flatten()
-        ax_id = 0
-    else:
-        ax = axes
+    for transformer, subfig in zip(results, subfigs):
+        axes = subfig.subplots(nrows=1, ncols=journal_count)
+        if (journal_count > 1):
+            axes = axes.flatten()
+            ax_id = 0
+        else:
+            ax = axes
 
-    for transformer in results:
-        # Process results for each transformer
-        embedder_correct = 0
+        embedder_correct, embedder_tests = 0, 0
         for journal in transformer['journal']:
             labels = journal['true'].unique()
             journal_correct = sum([a == b for a, b in zip(journal['true'], journal['pred'])])
             embedder_correct += journal_correct
+            embedder_tests += len(journal['true'])
 
-            # Plot results for each transformer
+            # Plot results for each embedder journal combination
             disp = ConfusionMatrixDisplay(
                 confusion_matrix=confusion_matrix(journal['true'], journal['pred']),
                 display_labels=labels
@@ -71,7 +73,7 @@ def plot_results(results):
 
             # Confusion matrix title
             ax.set_title(
-                """journal: {}
+                """[journal] {}
                 {}/{} ({:.2f})""".format(
                     journal['name'], journal_correct, len(journal['true']), journal_correct / len(journal['true'])
                 ),
@@ -80,16 +82,15 @@ def plot_results(results):
             ax.set_xticklabels(labels, rotation=-45, ha='left')
             ax.tick_params('x', labelsize=6)
             ax.tick_params('y', labelsize=6)
-
-    # fig.suptitle(
-    #     # """langauge model: {}
-    #     """overall accuracy: {}/{} ({:.2f})""".format(
-    #     #     language_model,
-    #         total_correct,
-    #         total_test,
-    #         total_correct / total_test
-    #     ))
-    plt.tight_layout()
+        
+        subfig.suptitle(
+            """[embedder] {}
+            {}
+            {}/{} ({:.2f})""".format(
+                transformer['name'],\
+                transformer['desc'],
+                embedder_correct, embedder_tests, embedder_correct / embedder_tests)
+        )
     plt.show()
 
 embed_strategies = [
@@ -114,8 +115,7 @@ transformers: list[Transformer] = [
     }
     for f in embed_strategies]
 
-### 測試帳本 ###
-
+# Tested journals
 journals = [
     'ljavuras',
     'nelly',
