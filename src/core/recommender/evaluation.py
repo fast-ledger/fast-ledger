@@ -10,6 +10,7 @@ from sklearn.model_selection import LeaveOneOut, cross_val_score, KFold
 from sklearn.metrics import accuracy_score, make_scorer, confusion_matrix, ConfusionMatrixDisplay
 import warnings
 import embedder
+from typing import TypedDict
 
 warnings.filterwarnings('ignore')
 
@@ -18,8 +19,8 @@ def predict_journal(model, X, y):
     Run prediction on every entry, each prediction excludes tested entry in training set
     """
     # Cross validation method
-    # cv = LeaveOneOut()
-    cv = KFold(len(y) // 10)
+    cv = LeaveOneOut()
+    # cv = KFold(len(y) // 10)
 
     preds = []
     for _, (train_idx, test_idx) in enumerate(cv.split(X)):
@@ -107,7 +108,12 @@ embed_strategies = [
     embedder.company_scope_n_item,
 ]
 
-transformers = [
+class Transformer(TypedDict):
+    name: str
+    desc: str
+    func: FunctionTransformer
+
+transformers: list[Transformer] = [
     {
         'name': f.__name__,
         'desc': f.__doc__,
@@ -124,12 +130,11 @@ journals = [
 ]
 
 postings = testpostings.postings()
-X = postings
-
 results = [None] * len(transformers)
 for i, transformer in enumerate(transformers):
+    X = pd.DataFrame(transformer['func'].fit_transform(postings))
     pipe = Pipeline([
-        ('transformer', transformer['func']),
+        # ('transformer', transformer['func']),
         ('classifier', KNeighborsClassifier(weights='distance'))
     ])
     results[i] = {
@@ -140,6 +145,7 @@ for i, transformer in enumerate(transformers):
 
     # Evaluation
     for j, journal in enumerate(journals):
+        print("[Validating] embedder: {},\tjournal: {}".format(transformer['name'], journal))
         y = postings[journal]
         results[i]['journal'][j] = {
             'name': journal,
@@ -147,4 +153,5 @@ for i, transformer in enumerate(transformers):
             'pred': predict_journal(pipe, X, y),
         }
 
+print("Validation complete")
 plot_results(results)
