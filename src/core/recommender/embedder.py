@@ -12,6 +12,16 @@ language_models = [
 language_model = language_models[1]
 encoder = SentenceTransformer(language_model)
 
+def row_preprocess(row):
+    item = {
+        'business_name': row['公司名稱'],
+        'business_scopes': [ row['行業1'], row['行業2'], row['行業3'], row['行業4'] ],
+        'datetime': row['時間'].replace('\xa0', ' '),
+        'item': row['商品品項'],
+        'amount': row['金額'],
+    }
+    return item
+
 def item(postings):
     """embed(商品品項)"""
     return encoder.encode(postings['商品品項'].to_list())
@@ -33,22 +43,18 @@ def company_scope_item_labeled(postings):
     """embed(company: 公司名稱
     business scope: 行業1, 行業2, 行業3, 行業4
     item: 商品品項)"""
-    def build_string(row):
-        item_info = {
-            'business_name': row['公司名稱'],
-            'business_scopes': [ row['行業1'], row['行業2'], row['行業3'], row['行業4'] ],
-            'item': row['商品品項']
-        }
+    def item_repr_str(row):
+        item_info = row_preprocess(row)
         return textwrap.dedent("""\
-            company: {}
-            business scope: {}
-            item: {}""".format(
-                item_info['business_name'],
-                ", ".join([s for s in item_info['business_scopes'] if not pd.isnull(s)]),
-                item_info['item']
+                               company: {}
+                               business scope: {}
+                               item: {}""".format(
+            item_info['business_name'],
+            ", ".join([s for s in item_info['business_scopes'] if not pd.isnull(s)]),
+            item_info['item']
         ))
     return encoder.encode(
-        postings.apply(build_string, axis=1).to_list()
+        postings.apply(item_repr_str, axis=1).to_list()
     )
 
 def all_labeled(postings):
@@ -57,28 +63,22 @@ def all_labeled(postings):
     datetime: 時間
     item: 商品品項
     amount: 金額)"""
-    def build_string(row):
-        item_info = {
-            'business_name': row['公司名稱'],
-            'business_scopes': [ row['行業1'], row['行業2'], row['行業3'], row['行業4'] ],
-            'datetime': row['時間'],
-            'item': row['商品品項'],
-            'amount': row['金額'],
-        }
+    def item_repr_str(row):
+        item_info = row_preprocess(row)
         return textwrap.dedent("""\
                                company: {}
                                business scope: {}
                                datetime: {}
                                item: {}
                                amount: {}""".format(
-                item_info['business_name'],
-                ", ".join([s for s in item_info['business_scopes'] if not pd.isnull(s)]),
-                item_info['datetime'],
-                item_info['item'],
-                item_info['amount'],
+            item_info['business_name'],
+            ", ".join([s for s in item_info['business_scopes'] if not pd.isnull(s)]),
+            item_info['datetime'],
+            item_info['item'],
+            item_info['amount'],
         ))
     return encoder.encode(
-        postings.apply(build_string, axis=1).to_list()
+        postings.apply(item_repr_str, axis=1).to_list()
     )
 
 def company_n_item(postings):

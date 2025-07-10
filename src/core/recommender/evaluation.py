@@ -93,6 +93,7 @@ def plot_results(results):
 
 if __name__ == "__main__":
     warnings.filterwarnings('ignore')
+    postings = testpostings.postings()
 
     embed_strategies = [
         # embedder.item,
@@ -125,7 +126,6 @@ if __name__ == "__main__":
         'hsuan',
     ]
 
-    postings = testpostings.postings()
     results = [None] * len(transformers)
     for i, transformer in enumerate(transformers):
         X = pd.DataFrame(transformer['func'].fit_transform(postings))
