@@ -77,7 +77,8 @@ class ImgProcess:
         """
         Args:
             src (str | Path | int | Image.Image | list | tuple | np.ndarray | torch.Tensor):
-                The source to be processed.
+                The source of the image(s) to be processed.
+                Accepts various types, including file paths, URLs, PIL images, NumPy arrays, and Torch tensors.
             scale_ratio (float | int):
                 The scaling ratio applied to the image.
             save_result (bool):
