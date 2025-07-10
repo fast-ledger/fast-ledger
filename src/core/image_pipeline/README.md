@@ -7,7 +7,7 @@
 ### 1. Import the script and Instantiate the 'ImgProcess' class
 
 ```python
-from src import ImgProcess
+from core.image_pipeline import ImgProcess
 
 process = ImgProcess()
 ```
@@ -15,7 +15,7 @@ process = ImgProcess()
 You can provide your own YOLO model file by passing it as an argument to the script.
 
 ```python
-from src import ImgProcess
+from core.image_pipeline import ImgProcess
 
 seg_invoice_model_pt= "your own YOLO model file path"
 cls_angle_model_pt= "your own YOLO model file path"
@@ -28,7 +28,7 @@ process = ImgProcess(
 To enable information output, set the `msg` parameter to `True`.
 
 ```python
-from src import ImgProcess
+from core.image_pipeline import ImgProcess
 
 process = ImgProcess(msg=True)
 ``` 

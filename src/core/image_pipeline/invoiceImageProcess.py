@@ -92,7 +92,7 @@ class ImgProcess:
                 Toggle whether to display informational messages about the model's prediction.
 
         Returns:
-            return ([numpy.ndarray]):
+            ([numpy.ndarray] or [tuple]):
                 A list of processed results, each encapsulated in a NumPy ndarray.
                 If return_id is True, return a list of (image, ID) tuples instead.
         """

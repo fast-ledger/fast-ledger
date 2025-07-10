@@ -1,1 +1,1 @@
-from .invoiceImageProcess import ImgProcess
+from invoiceImageProcess import ImgProcess
