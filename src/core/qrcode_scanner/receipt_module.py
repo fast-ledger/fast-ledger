@@ -8,23 +8,28 @@ import cv2
 import numpy as np
 from PIL import Image, ImageFont, ImageDraw
 from pyzbar.pyzbar import decode
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 import csv
-import matplotlib.pyplot as plt
-from matplotlib import font_manager as fm
 import matplotlib
 import chardet #檢查編碼
 #pip install playsound
 #pip install watchdog
 
 #folder_path = Path("C:/Users/user/AI 2025/qrcode_scanner/Receipt")
-relative_path = Path("src/core/qrcode_scanner/Receipt")
+
+# 取得目前腳本的完整路徑
+script_path = os.path.abspath(__file__)
+# 取得腳本所在的目錄
+script_directory = os.path.dirname(script_path)
+# 將目前的工作目錄更改為腳本所在的目錄
+os.chdir(script_directory)
+print(f"工作目錄已更改為：{os.getcwd()}")
+
+relative_path = Path("receipt")
 # 您可以使用這個 Path 物件來進行各種操作，例如：
 print(relative_path.exists())  # 檢查這個相對路徑所指的資料夾是否存在
 print(relative_path.is_dir())  # 檢查這個相對路徑是否指向一個資料夾
 print(relative_path.resolve()) # 取得這個相對路徑的絕對路徑 (會根據您目前的工作目錄而定)
-relative_path = Path("src/core/qrcode_scanner/Receipt").resolve()
+relative_path = Path("receipt").resolve()
 
 # 🔽 載入原 receipt 處理邏輯
 def process_new_image(image_path):
@@ -45,18 +50,17 @@ def process_new_image(image_path):
         def putText(img,x, y, text, color=(0, 255, 0)):
             #global img_original # 在彩色圖片上繪製文字
             # 使用支持中文的字体
-            #fontpath = r'C:\Users\user\qrcode_scanner\fonts\DejaVuSans-Bold.ttf'  # 默認字體
-            fontpath = r'C:\Users\user\qrcode_scanner\fonts\DejaVuSans-Bold.ttf'  # 默認字體
-            fontpath_relative = Path("src/core/qrcode_scanner/fonts/DejaVuSans-Bold.ttf").resolve()
+            #fontpath = r'C:\Users\user\qrcode_scanner\fonts\DejaVuSans-Bold.ttf'  
+            fontpath_relative = Path("fonts/DejaVuSans-Bold.ttf").resolve() # 默認字體
             try:
-                fontpath = r'C:\Users\user\qrcode_scanner\fonts\NotoSansTC-VariableFont_wght.ttf'  # 如果上傳了中文字體
-                fontpath_relative = Path("src/core/qrcode_scanner/fonts/NotoSansTC-VariableFont_wght.ttf").resolve()
+                #fontpath = r'C:\Users\user\qrcode_scanner\fonts\NotoSansTC-VariableFont_wght.ttf'  
+                fontpath_relative = Path("fonts/NotoSansTC-VariableFont_wght.ttf").resolve() # 如果上傳了中文字體
             except:
                 pass
 
             # 嘗試加載字體並設置大小
             try:
-                font = ImageFont.truetype(fontpath, 20)
+                font = ImageFont.truetype(fontpath_relative, 20)
             except:
                 font = ImageFont.load_default()
 
@@ -210,13 +214,6 @@ def process_new_image(image_path):
         if decoded_objects:
             total_product_amount = 0
             product_list = [] # 確保 product_list 在這裡被初始化
-
-        # 使用 matplotlib 顯示結果
-        # 顯示修改後的原始彩色圖片
-            #matplotlib.use('Agg')
-            #plt.imshow(cv2.cvtColor(img_original, cv2.COLOR_BGR2RGB))
-            #plt.axis('off')  # 關閉座標軸
-            #plt.savefig(f"output_image_{i+1}.png") #("output_image" + str(i+1) + ".png")
 
             qrcode_data_1 = None
             qrcode_data_2 = None
@@ -397,27 +394,7 @@ def process_new_image(image_path):
             for p in product_list:
                 writer.writerow([invoice_number, g_date_str, seller_id, p['商品品項'], p['數量'], p['單價'], p['小計'], total_product_amount])
 
-        scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-        creds = ServiceAccountCredentials.from_json_keyfile_name("python-gogglesheet-97f9ad6db89e.json", scope)
-        client = gspread.authorize(creds)
-        sheet = client.open("測試帳本-API").sheet1
-
-        def find_next_empty_row(col_index):
-            return len(sheet.col_values(col_index)) + 1
-
-        row_f = find_next_empty_row(6)
-        for i, p in enumerate(product_list):
-            sheet.update(values=[[seller_id, g_date_str]], range_name=f"F{row_f+i}:G{row_f+i}")
-            #sheet.update(range_name=f"F{row_f+i}:G{row_f+i}", values=[[seller_id, g_date_str]])
-
-        row_h = find_next_empty_row(8)
-        for i, p in enumerate(product_list):
-            h_val = f"{p['商品品項']} x{p['數量']}"
-            i_val = p['數量']
-            j_val = p['小計']
-            sheet.update(range_name=f"H{row_h+i}:J{row_h+i}",values=[[h_val, i_val, j_val]])
-
-        print("✅ 已寫入 Google Sheet 和 CSV / TXT")
+        print("✅ 已寫入 CSV / TXT")
 
     except Exception as e:
         print(f"❌ 發生錯誤：{e}")
@@ -488,5 +465,5 @@ def start_watch_folder(relative_path):
 
 if __name__ == "__main__":
     start_watch_folder(relative_path)
-    image_path = "C:\\Users\\user\\qrcode_scanner\\Receipt\\Receipt_2.jpg"
+    image_path = "receipt\\1.jpg" #20250709
     process_new_image(image_path)
