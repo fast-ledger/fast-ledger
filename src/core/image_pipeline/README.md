@@ -41,6 +41,5 @@ Use the `process()` method to perform masking and rotation on the input image.
 # The source of the image(s) to be processed. 
 # Accepts various types, including file paths, URLs, PIL images, NumPy arrays, and Torch tensors.
 src = "(str | Path | int | Image.Image | list | tuple | np.ndarray | torch.Tensor)"
-
 result = process(src)
 ```
