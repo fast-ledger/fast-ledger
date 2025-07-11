@@ -85,7 +85,7 @@ def plot_results(results):
             """[embedder] {}
             {}
             {}/{} ({:.2f})""".format(
-                transformer['name'],\
+                transformer['name'],
                 transformer['desc'],
                 embedder_correct, embedder_tests, embedder_correct / embedder_tests)
         )
