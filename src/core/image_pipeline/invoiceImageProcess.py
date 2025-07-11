@@ -1,6 +1,6 @@
+from p_result import P_Result
 from ultralytics import YOLO
 from pathlib import Path
-from typing import Union
 from PIL import Image
 import numpy as np
 import ultralytics
@@ -27,7 +27,12 @@ class ImgProcess:
     saving_folder = __base_dir/'result'
 
     
-    def __init__(self, seg_invoice_model_pt: str | Path='seg_invoice.pt', cls_angle_model_pt: str | Path='cls_angle.pt', msg: bool=True):
+    def __init__(
+        self, 
+        seg_invoice_model_pt: str | Path = 'seg_invoice.pt',
+        cls_angle_model_pt: str | Path = 'cls_angle.pt',
+        msg: bool = True
+    ):
         '''
         Initialize an ImgProcess object
 
@@ -66,24 +71,25 @@ class ImgProcess:
 
     def __call__(
             self, 
-            src: str | Path | int | Image.Image | list | tuple | np.ndarray | torch.Tensor, 
+            src: str | Path | int | Image.Image | list | tuple | np.ndarray | torch.Tensor,
+            size: tuple = (0, 0),
             scale_ratio: float | int = 0.3, 
             save_result: bool = False, 
-            return_id: bool = True, 
             step_info: bool = True, 
             contour_info: bool = False, 
             model_info: bool = False
-        ) -> list:
+        ) -> list[P_Result]:
         """
         Args:
             src (str | Path | int | Image.Image | list | tuple | np.ndarray | torch.Tensor):
-                The source to be processed.
+                The source of the image(s) to be processed.
+                Accepts various types, including file paths, URLs, PIL images, NumPy arrays, and Torch tensors.
+            size (tuple):
+                The size applied to the image.
             scale_ratio (float | int):
                 The scaling ratio applied to the image.
             save_result (bool):
                 Toggle saving of the result.
-            return_id (bool):
-                Toggle whether to return ID.
             step_info (bool):
                 Toggle step informational message display.
             contour_info (bool):
@@ -92,9 +98,10 @@ class ImgProcess:
                 Toggle whether to display informational messages about the model's prediction.
 
         Returns:
-            ([numpy.ndarray] or [tuple]):
-                A list of processed results, each encapsulated in a NumPy ndarray.
-                If return_id is True, return a list of (image, ID) tuples instead.
+            ([P_Result]):
+                A list of processed results, each encapsulated in a P_Result object.
+                Use P_Result.image, P_Result.id, and P_Result.label_name to access
+                the image (as a numpy.ndarray), the ID (as a str), and the label_name (as a str)
         """
         if not model_info:
             logging.getLogger("ultralytics").setLevel(logging.CRITICAL)
@@ -106,7 +113,7 @@ class ImgProcess:
             raise ValueError(f'no {src} found')
         self.__src = self.__src.as_posix()
         
-        image_list = self.get_image_list(scale_ratio)
+        image_list = self.get_image_list(size, scale_ratio)
 
         result_list = seg_model(self.__src, imgsz=1024)
 
@@ -187,7 +194,7 @@ class ImgProcess:
                     print('----------------------------------------------------------------')
                     print()
 
-        return self.get_final_result('final', return_id)
+        return self.get_step_result('final')
 
     
     def merge_mask(self, image, mask):
@@ -248,12 +255,12 @@ class ImgProcess:
     def get_src(self):
         return self.__src
     
-    def get_image_list(self, sr=0.3):
+    def get_image_list(self, size: tuple = (0,0), sr: float | int = 0.3):
         image_path_list = sorted(glob.glob(self.__src))
-        return [cv2.resize(cv2.imread(path), (0, 0), fx=sr, fy=sr) for path in image_path_list]
+        return [cv2.resize(cv2.imread(path), size, fx=sr, fy=sr) for path in image_path_list]
     
-    def get_seg_model_label_name(self, seg_model, result, index=0):
-        label_index = result.boxes.cls.cpu().numpy().astype(np.uint8)[index].item()
+    def get_seg_model_label_name(self, seg_model, YOLO_result, index=0):
+        label_index = YOLO_result.boxes.cls.cpu().numpy().astype(np.uint8)[index].item()
         return seg_model.names[label_index]
 
     def get_max_contour_info(self, mask, msg=False):
@@ -279,13 +286,14 @@ class ImgProcess:
 
         return (x, y), (w, h), angle
 
-    def get_final_result(self, step, return_id=False):
-        result_list = self.__step_result_dict[step]
+    def get_step_result(self, step):
+        label_name_list = self.__seg_model_label_name_list
+        image_list = self.__step_result_dict[step]
         id_list = self.__id_list
 
-        if return_id:
-            return list(zip(result_list, id_list))
-        return result_list
+        result_list = P_Result()
+
+        return result_list(image_list, id_list, label_name_list)
 
 
     def __setYOLO_model(self, model, path, task=None, verbose=False):
@@ -325,30 +333,14 @@ if __name__ == "__main__":
     path = base_dir / "raw_images" / "*"
     process = ImgProcess()
     process.set_saving_directory(base_dir / "test_result")
-    result_list = process(
-        path.as_posix(),
-        save_result=True,
-        return_id=True,
-    )
+    result_list = process(path.as_posix())
 
-    """all_path = "result/*"
-    for path in glob.glob(all_path):
-        img = cv2.imread(path)
-        path = path.split("\\")[-1]
-        cv2.imshow(path, img)
-        key = cv2.waitKey(1500)
-        if key == 27 or key == ord("q"):
-            break"""
-
-    for result, id in result_list:
-        cv2.imshow(id, result)
+    for p_result in result_list:
+        cv2.imshow(p_result.id, p_result.image)
         key = cv2.waitKey(1500)
         if key == 27 or key == ord("q"):
             break
 
-    while True:
-        if key == 27 or key == ord("q"):
-            cv2.destroyAllWindows()
-            break
-        else:
-            key = cv2.waitKey(0)
+    while not (key == 27 or key == ord("q")):
+        key = cv2.waitKey(0)
+    cv2.destroyAllWindows()
