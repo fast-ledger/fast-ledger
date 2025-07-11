@@ -1,0 +1,36 @@
+[project]
+name = "catcountants"
+version = "0.1.0"
+description = "nothing"
+authors = [
+    {name = "Your Name",email = "you@example.com"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+
+[tool.poetry]
+packages = [
+    {include = "image_pipeline", from = "src/core"},
+    {include = "core", from = "src"},
+]
+
+[tool.poetry.dependencies]
+ultralytics = "^8.3.163"
+numpy = "^2.2.6"
+opencv-python = "^4.12.0.88"
+pillow = "^11.3.0"
+torch = "^2.7.1"
+watchdog = "^6.0.0"
+pyzbar = "^0.1.9"
+matplotlib = "^3.10.3"
+chardet = "^5.2.0"
+pandas = "^2.3.1"
+sentence-transformers = "^5.0.0"
+scikit-learn = "^1.7.0"
+requests = "^2.32.4"
+pytesseract = "^0.3.13"
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
