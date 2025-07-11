@@ -71,7 +71,8 @@ class ImgProcess:
 
     def __call__(
             self, 
-            src: str | Path | int | Image.Image | list | tuple | np.ndarray | torch.Tensor, 
+            src: str | Path | int | Image.Image | list | tuple | np.ndarray | torch.Tensor,
+            size: tuple = (0, 0),
             scale_ratio: float | int = 0.3, 
             save_result: bool = False, 
             step_info: bool = True, 
@@ -83,6 +84,8 @@ class ImgProcess:
             src (str | Path | int | Image.Image | list | tuple | np.ndarray | torch.Tensor):
                 The source of the image(s) to be processed.
                 Accepts various types, including file paths, URLs, PIL images, NumPy arrays, and Torch tensors.
+            size (tuple):
+                The size applied to the image.
             scale_ratio (float | int):
                 The scaling ratio applied to the image.
             save_result (bool):
@@ -110,7 +113,7 @@ class ImgProcess:
             raise ValueError(f'no {src} found')
         self.__src = self.__src.as_posix()
         
-        image_list = self.get_image_list(scale_ratio)
+        image_list = self.get_image_list(size, scale_ratio)
 
         result_list = seg_model(self.__src, imgsz=1024)
 
@@ -252,9 +255,9 @@ class ImgProcess:
     def get_src(self):
         return self.__src
     
-    def get_image_list(self, sr=0.3):
+    def get_image_list(self, size: tuple = (0,0), sr: float | int = 0.3):
         image_path_list = sorted(glob.glob(self.__src))
-        return [cv2.resize(cv2.imread(path), (0, 0), fx=sr, fy=sr) for path in image_path_list]
+        return [cv2.resize(cv2.imread(path), size, fx=sr, fy=sr) for path in image_path_list]
     
     def get_seg_model_label_name(self, seg_model, YOLO_result, index=0):
         label_index = YOLO_result.boxes.cls.cpu().numpy().astype(np.uint8)[index].item()

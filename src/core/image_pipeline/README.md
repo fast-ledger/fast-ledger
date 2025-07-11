@@ -46,15 +46,17 @@ results = process(src)
 
 You can also pass additional arguments such as:
 
-- **`scale_ratio`** *(`float` | `int`)*:
+- **`size`** *(`tuple`):*
+The size applied to the image.
+- **`scale_ratio`** *(`float` | `int`):*
 The scaling ratio applied to the image.
-- **`save_result`** *(`bool`)*:
+- **`save_result`** *(`bool`):*
 Toggle saving of the result.
-- **`step_info`** *(`bool`)*:
+- **`step_info`** *(`bool`):*
 Toggle step informational message display.
-- **`contour_info`** *(`bool`)*:
+- **`contour_info`** *(`bool`):*
 Toggle showing the contour informational messages
-- **`model_info`** *(`bool`)*:
+- **`model_info`** *(`bool`):*
 Toggle whether to display informational messages about the model's prediction.
 
 ```python
