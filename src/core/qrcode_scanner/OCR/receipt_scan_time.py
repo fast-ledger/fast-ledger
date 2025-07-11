@@ -17,27 +17,36 @@ Requirements:
     - Python packages: pillow, pytesseract
         Install via: pip install pillow pytesseract
 """
+
 import sys
 import re
 from PIL import Image
 import pytesseract
 
 # 🔧 手動指定 tesseract.exe 路徑（請確認這個路徑正確）
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+try:
+    # fmt: off
+    pytesseract.pytesseract.tesseract_cmd =  r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+    # fmt: on
+except Exception as e:  # 上面這東西可能會出問題我柳個註解在這
+    print(e)
+    FileExistsError("可能需要把 'tesseract.exe' 放進這裡的資料夾 然後改路徑")
+
 
 def extract_time_from_image(img_path):
     # Open image
     image = Image.open(img_path)
     # Run OCR (Traditional Chinese + English)
-    text = pytesseract.image_to_string(image, lang='chi_tra+eng')
+    text = pytesseract.image_to_string(image, lang="chi_tra+eng")
     # Normalize fullwidth colon to ASCII
-    text = text.replace('：', ':')
+    text = text.replace("：", ":")
     # Regex for HH:MM:SS or H:MM:SS
     pattern = re.compile(r"(\d{1,2}:\d{2}:\d{2})")
     matches = pattern.findall(text)
     return matches[0] if matches else None
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     if len(sys.argv) != 2:
         print(f"用法: {sys.argv[0]} <image_path>")
         sys.exit(1)
