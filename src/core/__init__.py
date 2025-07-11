@@ -1,1 +1,1 @@
-from image_pipeline.invoiceImageProcess import ImgProcess
+from .image_pipeline.invoiceImageProcess import ImgProcess
