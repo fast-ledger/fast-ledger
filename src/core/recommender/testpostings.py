@@ -27,3 +27,6 @@ def postings(path=TESTPOSTINGS_PATH, force=False):
         fetchGoogleSheet()
 
     return pd.read_csv(path)
+
+if __name__ == "__main__":
+    postings(force=True)
