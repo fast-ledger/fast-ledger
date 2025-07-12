@@ -10,7 +10,6 @@ from sklearn.model_selection import LeaveOneOut, KFold
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import warnings
 import embedder
-from typing import TypedDict
 
 def predict_journal(model, X, y):
     """
@@ -106,18 +105,13 @@ if __name__ == "__main__":
         embedder.all_labeled,
     ]
 
-    class Transformer(TypedDict):
-        name: str
-        desc: str
-        func: FunctionTransformer
+    class Transformer(FunctionTransformer):
+        def __init__(self, func = None, inverse_func = None, *, validate = False, accept_sparse = False, check_inverse = True, feature_names_out = None, kw_args = None, inv_kw_args = None):
+            super().__init__(func, inverse_func, validate=validate, accept_sparse=accept_sparse, check_inverse=check_inverse, feature_names_out=feature_names_out, kw_args=kw_args, inv_kw_args=inv_kw_args)
+            self.name: str = func.__name__
+            self.desc: str = func.__doc__
 
-    transformers: list[Transformer] = [
-        {
-            'name': f.__name__,
-            'desc': f.__doc__,
-            'func': FunctionTransformer(f)
-        }
-        for f in embed_strategies]
+    transformers: list[Transformer] = [Transformer(f) for f in embed_strategies]
 
     # Tested journals
     journals = [
@@ -128,20 +122,20 @@ if __name__ == "__main__":
 
     results = [None] * len(transformers)
     for i, transformer in enumerate(transformers):
-        X = pd.DataFrame(transformer['func'].fit_transform(postings))
+        X = pd.DataFrame(transformer.fit_transform(postings))
         pipe = Pipeline([
-            # ('transformer', transformer['func']),
+            # ('transformer', transformer.func),
             ('classifier', KNeighborsClassifier(weights='distance', n_neighbors=3))
         ])
         results[i] = {
-            'name': transformer['name'],
-            'desc': transformer['desc'],
+            'name': transformer.name,
+            'desc': transformer.desc,
             'journal': [None] * len(journals)
         }
 
         # Evaluation
         for j, journal in enumerate(journals):
-            print("[Validating] embedder: {},\tjournal: {}".format(transformer['name'], journal))
+            print("[Validating] embedder: {},\tjournal: {}".format(transformer.name, journal))
             y = postings[journal]
             results[i]['journal'][j] = {
                 'name': journal,
