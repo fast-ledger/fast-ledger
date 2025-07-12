@@ -13,9 +13,10 @@ language_model = language_models[1]
 encoder = SentenceTransformer(language_model)
 
 def row_preprocess(row):
+    scopes = [ row['行業1'], row['行業2'], row['行業3'], row['行業4'] ]
     item = {
         'business_name': row['公司名稱'],
-        'business_scopes': [ row['行業1'], row['行業2'], row['行業3'], row['行業4'] ],
+        'business_scopes': [s for s in scopes if not pd.isnull(s)],
         'datetime': row['時間'].replace('\xa0', ' '),
         'item': row['商品品項'],
         'amount': row['金額'],
@@ -50,7 +51,7 @@ def company_scope_item_labeled(postings):
                                business scope: {}
                                item: {}""".format(
             item_info['business_name'],
-            ", ".join([s for s in item_info['business_scopes'] if not pd.isnull(s)]),
+            ", ".join(item_info['business_scopes']),
             item_info['item']
         ))
     return encoder.encode(
