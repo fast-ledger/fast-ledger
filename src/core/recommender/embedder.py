@@ -3,6 +3,7 @@
 import numpy as np
 import pandas as pd
 import textwrap
+from datetime import datetime
 from sentence_transformers import SentenceTransformer
 
 language_models = [
@@ -17,7 +18,7 @@ def row_preprocess(row):
     item = {
         'business_name': row['公司名稱'],
         'business_scopes': [s for s in scopes if not pd.isnull(s)],
-        'datetime': row['時間'].replace('\xa0', ' '),
+        'datetime': datetime.strptime(row['時間'], "%Y/%m/%d\xa0%H:%M"),
         'item': row['商品品項'],
         'amount': row['金額'],
     }
@@ -74,7 +75,7 @@ def all_labeled(postings):
                                amount: {}""".format(
             item_info['business_name'],
             ", ".join([s for s in item_info['business_scopes'] if not pd.isnull(s)]),
-            item_info['datetime'],
+            item_info['datetime'].strftime("%Y/%m/%d %H:%M"),
             item_info['item'],
             item_info['amount'],
         ))
