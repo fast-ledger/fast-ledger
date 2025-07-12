@@ -379,14 +379,14 @@ tests = ["pytest"]
 
 [[package]]
 name = "huggingface-hub"
-version = "0.33.2"
+version = "0.33.4"
 description = "Client library to download and publish models, datasets and other repos on the huggingface.co hub"
 optional = false
 python-versions = ">=3.8.0"
 groups = ["main"]
 files = [
-    {file = "huggingface_hub-0.33.2-py3-none-any.whl", hash = "sha256:3749498bfa91e8cde2ddc2c1db92c79981f40e66434c20133b39e5928ac9bcc5"},
-    {file = "huggingface_hub-0.33.2.tar.gz", hash = "sha256:84221defaec8fa09c090390cd68c78b88e3c4c2b7befba68d3dc5aacbc3c2c5f"},
+    {file = "huggingface_hub-0.33.4-py3-none-any.whl", hash = "sha256:09f9f4e7ca62547c70f8b82767eefadd2667f4e116acba2e3e62a5a81815a7bb"},
+    {file = "huggingface_hub-0.33.4.tar.gz", hash = "sha256:6af13478deae120e765bfd92adad0ae1aec1ad8c439b46f23058ad5956cbca0a"},
 ]
 
 [package.dependencies]
@@ -2035,14 +2035,14 @@ telegram = ["requests"]
 
 [[package]]
 name = "transformers"
-version = "4.53.1"
+version = "4.53.2"
 description = "State-of-the-art Machine Learning for JAX, PyTorch and TensorFlow"
 optional = false
 python-versions = ">=3.9.0"
 groups = ["main"]
 files = [
-    {file = "transformers-4.53.1-py3-none-any.whl", hash = "sha256:c84f3c3e41c71fdf2c60c8a893e1cd31191b0cb463385f4c276302d2052d837b"},
-    {file = "transformers-4.53.1.tar.gz", hash = "sha256:da5a9f66ad480bc2a7f75bc32eaf735fd20ac56af4325ca4ce994021ceb37710"},
+    {file = "transformers-4.53.2-py3-none-any.whl", hash = "sha256:db8f4819bb34f000029c73c3c557e7d06fc1b8e612ec142eecdae3947a9c78bf"},
+    {file = "transformers-4.53.2.tar.gz", hash = "sha256:6c3ed95edfb1cba71c4245758f1b4878c93bf8cde77d076307dacb2cbbd72be2"},
 ]
 
 [package.dependencies]
@@ -2157,14 +2157,14 @@ files = [
 
 [[package]]
 name = "ultralytics"
-version = "8.3.163"
+version = "8.3.165"
 description = "Ultralytics YOLO 🚀 for SOTA object detection, multi-object tracking, instance segmentation, pose estimation and image classification."
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "ultralytics-8.3.163-py3-none-any.whl", hash = "sha256:f4c4f1fbf418fabbcd0d51c87702c7d20c3ebb32523a15c6ee8a95bcaa653f61"},
-    {file = "ultralytics-8.3.163.tar.gz", hash = "sha256:08a986d8ced83e480bb050bb56500bf4d82849036a074508c33a718e675dfe90"},
+    {file = "ultralytics-8.3.165-py3-none-any.whl", hash = "sha256:767dc98156556fb887229f6fde504094359a8e9b91f358d60d102fa6bb25a1a8"},
+    {file = "ultralytics-8.3.165.tar.gz", hash = "sha256:7e1e72e85e32358e88406a6e546f0fd78ed178a541574b43f7449c8d1e3f05e5"},
 ]
 
 [package.dependencies]
