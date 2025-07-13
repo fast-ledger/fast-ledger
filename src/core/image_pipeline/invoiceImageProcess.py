@@ -1,4 +1,4 @@
-from p_result import P_Result
+from image_pipeline import P_Result
 from ultralytics import YOLO
 from pathlib import Path
 from PIL import Image
