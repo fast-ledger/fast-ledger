@@ -252,10 +252,10 @@ class ImgProcess:
         if show_msg:
             print()
 
-        path = self.__locate_path(seg_invoice_model_pt, show_msg)
+        path = self.locate_path(seg_invoice_model_pt, show_msg)
         self._seg_invoice_model = self.__setYOLO_model(self._seg_invoice_model, path, 'segment')
 
-        path = self.__locate_path(cls_angle_model_pt, show_msg)
+        path = self.locate_path(cls_angle_model_pt, show_msg)
         self._cls_angle_model = self.__setYOLO_model(self._cls_angle_model, path, 'classify')
 
         if show_msg:
@@ -267,7 +267,7 @@ class ImgProcess:
 
     def get_src(self, src):
         if isinstance(src, (Path, str)):
-            result = self.__locate_path(src, self.show_msg)
+            result = self.locate_path(src, self.show_msg)
             if result is None:
                 raise ValueError(f'no {src} found')
             result = result.as_posix()
@@ -329,17 +329,18 @@ class ImgProcess:
     def get_step_result(self, step):
         label_name_list = self.__seg_model_label_name_list
         image_list = self.__step_result_dict[step]
+        src_list = self.__src_list
         id_list = self.__id_list
 
         result_list = P_Result()
 
-        return result_list(image_list, id_list, label_name_list)
+        return result_list(image_list, id_list, label_name_list, src_list)
 
 
     def __setYOLO_model(self, model, path, task=None, verbose=False):
         return YOLO(path, task, verbose) if path is not None else model
 
-    def __locate_path(self, path, show_msg=False):
+    def locate_path(self, path, show_msg=False):
         if path is None:
             if show_msg:
                 print('Path is None')
