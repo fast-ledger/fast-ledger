@@ -1,0 +1,113 @@
+# kv/camera_screen.kv
+# Kivy Language (.kv) 檔案，用於定義 CameraScreen 的 UI 佈局和外觀
+
+#:import dp kivy.metrics.dp
+#:import Camera kivy.uix.camera.Camera
+
+<CameraScreen>:
+    name: 'camera_screen' # 定義頁面名稱，用於 ScreenManager 切換
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        # 設置背景顏色，圖片中主體是淺灰色
+        md_bg_color: 0.93, 0.93, 0.93, 1 # 淺灰色背景
+
+        # 頂部應用程式欄 (App Bar) - 只保留返回按鈕
+        MDTopAppBar:
+            # 刪除了 title
+            pos_hint: {'top': 1} # 放在頂部
+            elevation: 0 # 移除陰影效果，使其更平坦
+            md_bg_color: app.theme_cls.bg_normal # 使用應用程式的主題背景色
+            
+            # 刪除了 right_action_items
+            radius: [0, 0, 0, 0] # 沒有圓角
+
+            # 返回上一頁的按鈕 (左上角箭頭圖標) - 重新加回
+            left_action_items: [["arrow-left", lambda x: root.go_back()]]
+
+
+        # "對準發票" 和 "自動掃描" 切換區
+        MDBoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: dp(56) # 設定高度
+            padding: dp(16), 0 # 左右內邊距
+            spacing: dp(16) # 按鈕間距
+            md_bg_color: 0.93, 0.93, 0.93, 1 # 與整體背景色一致
+
+            # "對準發票" 按鈕
+            MDTextButton: # MDTextButton 提供可點擊的文本
+                text: "對準發票"
+                font_size: "16sp"
+                color: app.theme_cls.primary_color # 假設選中時是主題主色（例如藍色）
+                halign: 'center'
+                valign: 'center'
+                bold: True # 粗體顯示
+                on_release: print("對準發票模式") # 添加點擊邏輯
+
+            # "自動掃描" 按鈕
+            MDTextButton:
+                text: "自動掃描"
+                font_size: "16sp"
+                color: 0.5, 0.5, 0.5, 1 # 未選中時的灰色
+                halign: 'center'
+                valign: 'center'
+                on_release: print("自動掃描模式") # 添加點擊邏輯
+
+
+        # 相機預覽/掃描區域
+        MDRelativeLayout: # 使用 RelativeLayout 以便自由定位內部元素
+            size_hint_y: 1 # 佔據剩餘所有垂直空間
+            md_bg_color: 0.8, 0.8, 0.8, 1 # 圖片中相機區域的背景色，比外層深一點
+
+            # Camera 元件
+            Camera:
+                id: camera_preview # 給 Camera 元件一個 ID
+                resolution: (640, 480) # 設置相機分辨率，請根據需要調整
+                play: False # 初始不播放，由 Python 端控制 (由 start_camera 啟用)
+                # 如果要顯示預覽，但桌面不成功，可以試試 keep_ratio: False 讓它填充空間
+                # keep_ratio: True
+                # allow_stretch: True
+
+            # 四個角落的掃描框線 (懸浮在 Camera 之上)
+            # 左上角
+            MDIcon:
+                icon: "crop-top-left"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1 # 白色框線
+                font_size: "60sp" # 圖標大小
+                pos_hint: {'x': 0.1, 'top': 0.85} # 調整位置，使其位於相對角落
+
+            # 右上角
+            MDIcon:
+                icon: "crop-top-right"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                font_size: "60sp"
+                pos_hint: {'right': 0.9, 'top': 0.85} # 調整位置
+
+            # 左下角
+            MDIcon:
+                icon: "crop-bottom-left"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                font_size: "60sp"
+                pos_hint: {'x': 0.1, 'y': 0.15} # 調整位置
+
+            # 右下角
+            MDIcon:
+                icon: "crop-bottom-right"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                font_size: "60sp"
+                pos_hint: {'right': 0.9, 'y': 0.15} # 調整位置
+
+    # 浮動動作按鈕 (FAB) - 底部中央的鉛筆圖標
+    MDFloatingActionButton:
+        icon: "pencil" # 鉛筆圖標
+        md_bg_color: 0, 0, 0, 1 # 黑色背景
+        pos_hint: {'center_x': 0.5, 'center_y': 0.1} # 調整位置，使其位於底部中央
+        size_hint: None, None
+        size: dp(56), dp(56) # 標準 FAB 大小
+        elevation: 6 # 陰影效果，使其看起來像浮在上面
+        on_release: root.capture_photo() # 綁定到 Python 方法

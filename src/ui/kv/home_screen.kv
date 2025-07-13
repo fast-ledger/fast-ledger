@@ -1,0 +1,236 @@
+# kv/home_screen.kv
+# Kivy Language (.kv) 檔案，用於定義 HomeScreen 的 UI 佈局和外觀
+
+# 導入必要的 KivyMD 組件
+#:import MDBottomNavigation kivymd.uix.bottomnavigation.MDBottomNavigation
+#:import MDBottomNavigationItem kivymd.uix.bottomnavigation.MDBottomNavigationItem
+#:import MDTopAppBar kivymd.uix.toolbar.MDTopAppBar
+#:import MDBoxLayout kivymd.uix.boxlayout.MDBoxLayout
+#:import MDCard kivymd.uix.card.MDCard
+#:import MDLabel kivymd.uix.label.MDLabel
+#:import MDFloatingActionButton kivymd.uix.button.MDFloatingActionButton
+#:import MDIconButton kivymd.uix.button.MDIconButton
+#:import ScrollView kivy.uix.scrollview.ScrollView
+#:import dp kivy.metrics.dp
+
+<HomeScreen>:
+    name: 'home'  # 賦予此畫面一個名稱，用於 ScreenManager 進行切換
+
+    MDBoxLayout:
+        orientation: 'vertical' # 垂直方向佈局
+        md_bg_color: app.theme_cls.bg_normal # 設置背景顏色為應用程式主題的標準背景色
+
+        # 頂部應用程式欄 (App Bar)
+        MDTopAppBar:
+            title: "首頁" # 標題文字
+            pos_hint: {'top': 1} # 放在頂部
+            elevation: 2 # 陰影效果
+            right_action_items: [["cog", lambda x: root.settings_button_pressed()]] # 右側動作按鈕 (齒輪圖標)
+            radius: [0, 0, 0, 0] # 沒有圓角
+
+        # 內容滾動視圖 (Scrollable Content Area)
+        ScrollView:
+            MDBoxLayout:
+                orientation: 'vertical'
+                spacing: "15dp" # 垂直方向元素間距
+                padding: "15dp" # 內部邊距
+                adaptive_height: True # 高度自動適應內容 (配合 ScrollView)
+                size_hint_y: None # 必須設置為 None 才能讓 adaptive_height 工作
+                height: self.minimum_height # 必須設置為 minimum_height 才能讓 adaptive_height 工作
+
+                # 餘額卡片 (Balance Card)
+                MDCard:
+                    orientation: 'vertical'
+                    padding: "15dp"
+                    spacing: "10dp"
+                    size_hint_y: None
+                    height: "150dp" # 固定高度
+                    md_bg_color: 0, 0, 0, 1 # 黑色背景 (RGBA)
+                    radius: [18, 18, 18, 18] # 四個角的圓角
+
+                    MDLabel:
+                        text: "Balance"
+                        font_size: "18sp"
+                        halign: 'left' # 水平左對齊
+                        valign: 'top' # 垂直頂部對齊
+                        color: 1, 1, 1, 1 # 白色文字
+                        size_hint_y: None
+                        height: self.texture_size[1] # 高度適應文字內容
+                        bold: True # 粗體
+
+                    MDLabel:
+                        text: "assets:current"
+                        font_size: "14sp"
+                        halign: 'right'
+                        valign: 'top'
+                        color: 0.7, 0.7, 0.7, 1 # 淺灰色文字
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        markup: True # 允許解析 Kivy 標記 (如 [color=...])
+
+                    MDLabel:
+                        text: root.balance_text # 綁定到 Python 類別 (HomeScreen) 中的 balance_text 屬性
+                        font_size: "36sp"
+                        halign: 'center'
+                        valign: 'center'
+                        color: 1, 1, 1, 1
+                        bold: True
+
+                # 費用條形圖卡片 (Expenses Bar Chart Card) - 佔位符
+                MDCard:
+                    orientation: 'vertical'
+                    padding: "15dp"
+                    spacing: "10dp"
+                    size_hint_y: None
+                    height: "220dp"
+                    md_bg_color: 1, 1, 1, 1 # 白色背景
+                    radius: [18, 18, 18, 18]
+                    elevation: 1
+
+                    MDBoxLayout:
+                        orientation: 'horizontal'
+                        size_hint_y: None
+                        height: "30dp"
+                        MDLabel:
+                            text: "Expenses"
+                            font_size: "16sp"
+                            halign: 'left'
+                            valign: 'center'
+                            bold: True
+                        MDLabel:
+                            text: "Past 14 days [icon: chevron-down]" # 使用 Material Design 圖標
+                            font_size: "14sp"
+                            halign: 'center'
+                            valign: 'center'
+                            markup: True
+                        MDLabel:
+                            text: "expenses"
+                            font_size: "14sp"
+                            halign: 'right'
+                            valign: 'center'
+                            color: 0.5, 0.5, 0.5, 1
+
+                    MDBoxLayout:
+                        size_hint_y: 1
+                        md_bg_color: 0.95, 0.95, 0.95, 1 # 淺灰色背景，表示圖表區域
+                        MDLabel:
+                            text: "Bar Chart Placeholder"
+                            halign: 'center'
+                            valign: 'center'
+                            color: 0.5, 0.5, 0.5, 1
+
+                # 費用圓餅圖卡片 (Expenses Donut Chart Card) - 佔位符
+                MDCard:
+                    orientation: 'vertical'
+                    padding: "15dp"
+                    spacing: "10dp"
+                    size_hint_y: None
+                    height: "220dp"
+                    md_bg_color: 1, 1, 1, 1
+                    radius: [18, 18, 18, 18]
+                    elevation: 1
+
+                    MDBoxLayout:
+                        orientation: 'horizontal'
+                        size_hint_y: None
+                        height: "30dp"
+                        MDLabel:
+                            text: "Expenses"
+                            font_size: "16sp"
+                            halign: 'left'
+                            valign: 'center'
+                            bold: True
+                        MDLabel:
+                            text: "Past 14 days [icon: chevron-down]"
+                            font_size: "14sp"
+                            halign: 'center'
+                            valign: 'center'
+                            markup: True
+                        MDLabel:
+                            text: "expenses"
+                            font_size: "14sp"
+                            halign: 'right'
+                            valign: 'center'
+                            color: 0.5, 0.5, 0.5, 1
+
+                    MDBoxLayout:
+                        size_hint_y: 1
+                        md_bg_color: 0.95, 0.95, 0.95, 1
+                        MDLabel:
+                            text: "Total\\n" + root.total_expenses_text # 使用 \n 進行換行
+                            font_size: "24sp"
+                            halign: 'center'
+                            valign: 'center'
+                            bold: True
+                            color: 0, 0, 0, 1
+                            markup: True
+
+                # 新增的卡片，用於容納加號元件
+                MDCard:
+                    orientation: 'vertical'
+                    padding: "0dp" # 內部填充為0，讓MDIconButton幾乎佔滿
+                    spacing: "0dp"
+                    size_hint_y: None
+                    height: "80dp" # 根據圖片調整卡片高度
+                    md_bg_color: 1, 1, 1, 1 # 白色背景
+                    radius: [18, 18, 18, 18]
+                    elevation: 1
+                    on_release: root.add_button_pressed() # 點擊卡片觸發新功能
+
+                    # 將 MDIconButton 放置在卡片中央
+                    MDBoxLayout:
+                        padding: "10dp" # 增加一些內部填充
+                        MDIconButton:
+                            icon: "plus" # 加號圖標
+                            user_font_size: "48sp" # 圖標大小
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1 # 黑色圖標
+                            halign: 'center'
+                            valign: 'center'
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+                # 底部填充空間，防止內容與底部導航欄重疊
+                # 調整此高度以容納美元符號 FAB，讓其懸浮在底部導航之上
+                MDBoxLayout:
+                    size_hint_y: None
+                    height: "80dp" # 底部導航欄的高度 + 美元符號FAB的垂直偏移量
+
+        # 底部導航欄 (MDBottomNavigation 會自動將項目均勻分佈)
+        MDBottomNavigation:
+            id: bottom_nav_bar # 添加 ID，以便在 Python 中引用
+            panel_color: app.theme_cls.bg_normal # 設置底部導航欄的面板顏色
+
+            # 導航項目：Home
+            MDBottomNavigationItem:
+                name: 'home_nav' # 唯一的名稱
+                text: 'Home'
+                icon: 'home'
+
+            # 導航項目：Journal
+            MDBottomNavigationItem:
+                name: 'journal_nav'
+                text: 'Journal'
+                icon: 'book-open-variant'
+
+            # 導航項目：Report
+            MDBottomNavigationItem:
+                name: 'report_nav'
+                text: 'Report'
+                icon: 'chart-bar'
+
+            # 導航項目：Settings
+            MDBottomNavigationItem:
+                name: 'settings_nav'
+                text: 'Settings'
+                icon: 'cog'
+
+    # 懸浮動作按鈕 (Floating Action Button - FAB) - 相機圖標
+    # 保持其位置不變，它仍然是一個獨立於內容的懸浮按鈕
+    MDFloatingActionButton:
+        icon: "camera" # ***這裡從 "currency-usd" 改為 "camera"***
+        md_bg_color: 0, 0, 0, 1 # 黑色背景
+        pos_hint: {'center_x': 0.5, 'center_y': 0.1} # 根據圖片微調 y 值
+        size_hint: None, None
+        size: "48dp", "48dp" # 較小的尺寸
+        elevation: 6
+        on_release: root.transaction_button_pressed() # 點擊時觸發的方法

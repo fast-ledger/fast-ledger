@@ -1,0 +1,76 @@
+# kv/journal_screen.kv
+# 導入所有在 .kv 檔案中直接使用的 Kivy 和 KivyMD 元件
+#:import MDToolbar kivymd.uix.toolbar
+#:import MDBoxLayout kivymd.uix.boxlayout
+#:import ScrollView kivy.uix.scrollview.ScrollView
+#:import MDList kivymd.uix.list
+#:import OneLineAvatarIconListItem kivymd.uix.list
+#:import IconRightWidget kivymd.uix.list
+#:import MDBottomNavigation kivymd.uix.bottomnavigation
+#:import MDBottomNavigationItem kivymd.uix.bottomnavigation
+#:import MDFloatingActionButton kivymd.uix.button
+
+
+<JournalScreen>:
+    name: 'journal_screen' # 確保畫面名稱與 main.py 中 ScreenManager 的名稱一致
+
+    # 主佈局容器：垂直方向
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        # 頂部 App Bar
+        MDToolbar:
+            id: toolbar
+            title: "帳本" # 標題文字
+            # 右側動作按鈕：放大鏡 (搜尋) 和齒輪 (設定)
+            right_action_items: [["magnify", lambda x: app.root.get_screen('journal_screen').search_button_pressed()], ["cog-outline", lambda x: app.root.get_screen('journal_screen').journal_settings_button_pressed()]]
+            elevation: 10 # 陰影效果，使 Toolbar 顯得突出
+            specific_text_color: app.theme_cls.text_color # 確保文字顏色與主題協調
+
+        # 內容區域 - 使用 ScrollView 包裹 MDList 以實現滾動功能
+        ScrollView:
+            MDList:
+                id: transaction_list # 提供 ID 以便在 Python 中動態添加和操作列表項
+                # 這裡的列表項將由 Python 程式碼 (journal_screen.py) 動態生成和添加
+                # 以模擬交易列表的顯示
+
+        # 底部導航欄 - 保持與 Home Screen 相同的佈局和功能
+        MDBottomNavigation:
+            id: bottom_nav_bar # 提供 ID 以便在 Python 中引用和綁定事件
+            panel_color: app.theme_cls.primary_color # 設定導航欄面板的背景顏色為應用程式主色
+
+            # 首頁導航項
+            MDBottomNavigationItem:
+                name: 'home_nav' # 導航項的唯一名稱
+                text: 'Home' # 顯示文字
+                icon: 'home' # 圖標
+                on_tab_press: app.root.current = 'home_screen' # 當點擊時，直接切換到 'home_screen'
+
+            # 帳本導航項
+            MDBottomNavigationItem:
+                name: 'journal_nav'
+                text: 'Journal'
+                icon: 'book'
+                # 當前已在 Journal 頁面，通常無需在此再次設置 on_tab_press 切換，
+                # 但 Python 代碼中的 on_bottom_nav_tab_switched 會處理此邏輯。
+
+            # 報表導航項 (假設未來會實作 'report_screen')
+            MDBottomNavigationItem:
+                name: 'report_nav'
+                text: 'Report'
+                icon: 'chart-bar'
+                on_tab_press: app.root.current = 'report_screen' # 當點擊時，切換到 'report_screen'
+
+            # 設定導航項 (假設未來會實作 'settings_screen')
+            MDBottomNavigationItem:
+                name: 'settings_nav'
+                text: 'Settings'
+                icon: 'cog'
+                on_tab_press: app.root.current = 'settings_screen' # 當點擊時，切換到 'settings_screen'
+
+    # 浮動動作按鈕 (FAB) - 位於底部中間，用於新增交易
+    MDFloatingActionButton:
+        icon: 'cash' # 圖標
+        md_bg_color: app.theme_cls.primary_color # 背景色為應用程式主色
+        pos_hint: {'center_x': .5, 'center_y': .11} # 定位提示：水平居中，垂直在底部導航欄之上
+        on_release: root.add_transaction_fab_pressed() # 綁定到 JournalScreen 中新增交易的方法
