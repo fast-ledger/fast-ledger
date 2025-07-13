@@ -132,7 +132,7 @@ if __name__ == "__main__":
 
     results = [None] * len(transformers)
     for i, transformer in enumerate(transformers):
-        X = pd.DataFrame(transformer.fit_transform(postings))
+        X = transformer.fit_transform(postings)
         pipe = Pipeline([
             # ('transformer', transformer.func),
             ('classifier', KNeighborsClassifier(weights='distance', n_neighbors=3))
