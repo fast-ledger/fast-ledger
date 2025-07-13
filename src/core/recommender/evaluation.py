@@ -119,7 +119,7 @@ if __name__ == "__main__":
     item_embed_strategies = [
         # transformer.company_scope_item,
         transformer.company_scope_item_labeled,
-        transformer.all_labeled,
+        # transformer.all_labeled,
     ]
 
     # Tested journals
@@ -160,7 +160,7 @@ if __name__ == "__main__":
                 "name": journal,
                 "true": y,
                 "pred": predict_journal(
-                    KNeighborsClassifier(weights='distance', n_neighbors=3), 
+                    KNeighborsClassifier(weights='distance', n_neighbors=3, metric_params={'w': [1] * 768 + [200, 200]}), 
                     X, 
                     y),
             }
