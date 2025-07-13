@@ -105,12 +105,7 @@ if __name__ == "__main__":
     postings = testpostings.postings()
 
     embed_strategies = [
-        # embedder.item,
-        # embedder.company_item,
         embedder.company_scope_item,
-        # embedder.company_n_item,
-        # embedder.company_n_scope_n_item,
-        # embedder.company_scope_n_item,
         # embedder.company_scope_item_labeled,
         embedder.all_labeled,
     ]
