@@ -1,4 +1,4 @@
-from image_pipeline import P_Result
+from image_pipeline import P_Result, locate_path as lctp
 from ultralytics import YOLO
 from pathlib import Path
 from PIL import Image
@@ -120,9 +120,9 @@ class ImgProcess:
         self.__src = []
         if isinstance(src, (list, tuple)):
             for _src in src:
-                self.__src.append(self.get_src(_src))
+                self.__src.append(self.get_src(_src, self.show_msg))
         else:
-            self.__src.append(self.get_src(src))
+            self.__src.append(self.get_src(src, self.show_msg))
         
         image_list = self.get_image_list(size, scale_ratio)
 
@@ -252,10 +252,10 @@ class ImgProcess:
         if show_msg:
             print()
 
-        path = self.locate_path(seg_invoice_model_pt, show_msg)
+        path = lctp.locate_path(seg_invoice_model_pt, show_msg)
         self._seg_invoice_model = self.__setYOLO_model(self._seg_invoice_model, path, 'segment')
 
-        path = self.locate_path(cls_angle_model_pt, show_msg)
+        path = lctp.locate_path(cls_angle_model_pt, show_msg)
         self._cls_angle_model = self.__setYOLO_model(self._cls_angle_model, path, 'classify')
 
         if show_msg:
@@ -265,9 +265,9 @@ class ImgProcess:
         self.saving_folder = path
 
 
-    def get_src(self, src):
+    def get_src(self, src, show_msg=False):
         if isinstance(src, (Path, str)):
-            result = self.locate_path(src, self.show_msg)
+            result = lctp.locate_path(src, show_msg)
             if result is None:
                 raise ValueError(f'no {src} found')
             result = result.as_posix()
@@ -340,32 +340,32 @@ class ImgProcess:
     def __setYOLO_model(self, model, path, task=None, verbose=False):
         return YOLO(path, task, verbose) if path is not None else model
 
-    def locate_path(self, path, show_msg=False):
-        if path is None:
-            if show_msg:
-                print('Path is None')
-            return None
+    # def locate_path(self, path, show_msg=False):
+    #     if path is None:
+    #         if show_msg:
+    #             print('Path is None')
+    #         return None
         
-        path = Path(path)
+    #     path = Path(path)
 
-        if '*' in path.name:
-            if Path(path.parent).exists():
-                if show_msg:
-                    print(f"Path '{path}', is exist")
-                return path
-            else:
-                if show_msg:
-                    print(f"No '{path}' found")
-                return None
+    #     if '*' in path.name:
+    #         if Path(path.parent).exists():
+    #             if show_msg:
+    #                 print(f"Path '{path}', is exist")
+    #             return path
+    #         else:
+    #             if show_msg:
+    #                 print(f"No '{path}' found")
+    #             return None
         
-        if path.exists():
-            if show_msg:
-                print(f"Path: '{path}', is exist")
-            return path
-        else:
-            if show_msg:
-                print(f"No '{path}' found")
-            return None
+    #     if path.exists():
+    #         if show_msg:
+    #             print(f"Path: '{path}', is exist")
+    #         return path
+    #     else:
+    #         if show_msg:
+    #             print(f"No '{path}' found")
+    #         return None
 # fmt: on
 
 
