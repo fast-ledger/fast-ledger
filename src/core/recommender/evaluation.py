@@ -39,6 +39,7 @@ def plot_results(results):
         layout="constrained", figsize=(15 * transformer_count, 15 * journal_count)
     )
     subfigs = fig.subfigures(nrows=transformer_count, ncols=1)
+    if (transformer_count < 2): subfigs = [subfigs]
 
     for transformer, subfig in zip(results, subfigs):
         axes = subfig.subplots(nrows=1, ncols=journal_count)
