@@ -13,6 +13,7 @@ import cv2
 # fmt: off
 class ImgProcess:
     __id_list = []
+    __src_list = []
     __seg_model_label_name_list = []
     __step_result_dict = {'first': [], 'second': [], 'third': [], 'fourth': [], 'final': []}
 
@@ -74,7 +75,7 @@ class ImgProcess:
 
     def __call__(
             self, 
-            src: str | Path | int | Image.Image | list | tuple | np.ndarray | torch.Tensor,
+            src: str | Path | Image.Image | list | tuple | np.ndarray | torch.Tensor,
             size: tuple = (0, 0),
             scale_ratio: float | int = 0.3, 
             save_result: bool = False, 
@@ -84,7 +85,7 @@ class ImgProcess:
         ) -> list[P_Result]:
         """
         Args:
-            src (str | Path | int | Image.Image | list | tuple | np.ndarray | torch.Tensor):
+            src (str | Path | Image.Image | list | tuple | np.ndarray | torch.Tensor):
                 The source of the image(s) to be processed.
                 Accepts various types, including file paths, URLs, PIL images, NumPy arrays, and Torch tensors.
             size (tuple):
@@ -116,14 +117,17 @@ class ImgProcess:
 
         seg_model = self._seg_invoice_model
 
-        self.__src = self.__locate_path(src, self.show_msg)
-        if self.get_src() is None:
-            raise ValueError(f'no {src} found')
-        self.__src = self.__src.as_posix()
+        self.__src = []
+        if isinstance(src, (list, tuple)):
+            for _src in src:
+                self.__src.append(self.get_src(_src))
+        else:
+            self.__src.append(self.get_src(src))
         
         image_list = self.get_image_list(size, scale_ratio)
 
-        result_list = seg_model(self.__src, imgsz=1024)
+        for _src in self.__src:
+            result_list = seg_model(_src, imgsz=1024)
 
         for index, result in enumerate(result_list):
             i = f"{index:03d}"
@@ -135,6 +139,7 @@ class ImgProcess:
             for j, mask_tansor in enumerate(masks.data):
                 # Get label name               
                 label_name = self.get_seg_model_label_name(seg_model, result, j)
+                self.__src_list.append(result.path)
                 self.__seg_model_label_name_list.append(label_name)
 
                 id = f'result_{i}_{j}'
@@ -260,12 +265,39 @@ class ImgProcess:
         self.saving_folder = path
 
 
-    def get_src(self):
-        return self.__src
+    def get_src(self, src):
+        if isinstance(src, (Path, str)):
+            result = self.__locate_path(src, self.show_msg)
+            if result is None:
+                raise ValueError(f'no {src} found')
+            result = result.as_posix()
+        elif isinstance(src, (np.ndarray, torch.Tensor, Image.Image)):
+            result = src
+        else:
+            raise ValueError('Wrong type')
+        
+        return result
     
     def get_image_list(self, size: tuple = (0,0), sr: float | int = 0.3):
-        image_path_list = sorted(glob.glob(self.__src))
-        return [cv2.resize(cv2.imread(path), size, fx=sr, fy=sr) for path in image_path_list]
+        img_list = []
+
+        for src in self.__src:
+            if isinstance(src, (Path, str)):
+                image_path_list = sorted(glob.glob(src))
+                for path in image_path_list:
+                    img_list.append(cv2.resize(cv2.imread(path), size, fx=sr, fy=sr))
+            elif isinstance(src, np.ndarray):
+                img_list.append(src)
+            elif isinstance(src, torch.Tensor):
+                img_list.append(src.cpu().numpy())
+            elif isinstance(src, Image.Image):
+                img_list.append(np.array(src))
+            else:
+                raise ValueError('Wrong type')
+            
+        return img_list
+                
+            
     
     def get_seg_model_label_name(self, seg_model, YOLO_result, index=0):
         label_index = YOLO_result.boxes.cls.cpu().numpy().astype(np.uint8)[index].item()
