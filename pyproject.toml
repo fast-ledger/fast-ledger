@@ -1,6 +1,9 @@
 [project]
 authors = [
-  {name = "Your Name", email = "you@example.com"},
+  {name = "Ljavuras", email = "ljavuras.py@gmail.com"},
+  {name = "NicEzWs", email = "herobrine2983@gmail.com"},
+  {name = "qoqstor", email = "qoqstore@gmail.com"},
+  {name = "elva-xiao1996", email = "a0970379277@gmail.com"},
 ]
 description = "hello world"
 name = "catcountants"
