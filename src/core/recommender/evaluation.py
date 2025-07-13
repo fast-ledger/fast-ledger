@@ -1,9 +1,11 @@
 import pandas as pd
+import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 from sklearn.base import clone
 from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.preprocessing import FunctionTransformer
+from sklearn.compose import ColumnTransformer
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import LeaveOneOut, KFold
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
@@ -112,8 +114,8 @@ if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     
     postings = fetch_dataset()
-    # postings = postings.frame
-    postings = postings.subset('lunch-dinner')  # lunch/dinner dataset
+    postings = postings.frame
+    # postings = postings.subset('lunch-dinner')  # lunch/dinner dataset
 
     language_models = [
         'sentence-transformers/multi-qa-MiniLM-L6-cos-v1',
@@ -131,8 +133,8 @@ if __name__ == "__main__":
     # Tested journals
     journals = [
         "ljavuras",
-        "nelly",
-        # "hsuan",
+        # "nelly",
+        "hsuan",
     ]
 
     results = [None] * len(item_embed_strategies)
@@ -148,8 +150,24 @@ if __name__ == "__main__":
             (
                 "time_embedding",
                 transformer.time_cyclic_transformer
+            ),
+            (
+                "amount_embedding",
+                ColumnTransformer([
+                    (
+                        "amount_sigmoid",
+                        FunctionTransformer(lambda z: 1 / (1 + np.exp(-1 * z.astype(int)))),
+                        ['金額']
+                    )
+                ])
             )
         ])
+        weight_time = 15
+        weight_amount = 100
+        KNN_weights = ([1] * 768
+                       + [weight_time, weight_time]
+                       + [weight_amount]
+                       )
         X = embedder.fit_transform(postings)
 
         results[i] = {
@@ -169,7 +187,7 @@ if __name__ == "__main__":
                     KNeighborsClassifier(
                         weights='distance',
                         n_neighbors=3,
-                        metric_params={'w': [1] * 768 + [200, 200]}),
+                        metric_params={'w': KNN_weights}),
                     X,
                     y),
             }
