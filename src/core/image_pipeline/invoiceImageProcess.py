@@ -285,7 +285,8 @@ class ImgProcess:
             if isinstance(src, (Path, str)):
                 image_path_list = sorted(glob.glob(src))
                 for path in image_path_list:
-                    img_list.append(cv2.resize(cv2.imread(path), size, fx=sr, fy=sr))
+                    if not Path(path).is_dir():
+                        img_list.append(cv2.resize(cv2.imread(path), size, fx=sr, fy=sr))
             elif isinstance(src, np.ndarray):
                 img_list.append(src)
             elif isinstance(src, torch.Tensor):
@@ -339,33 +340,6 @@ class ImgProcess:
 
     def __setYOLO_model(self, model, path, task=None, verbose=False):
         return YOLO(path, task, verbose) if path is not None else model
-
-    # def locate_path(self, path, show_msg=False):
-    #     if path is None:
-    #         if show_msg:
-    #             print('Path is None')
-    #         return None
-        
-    #     path = Path(path)
-
-    #     if '*' in path.name:
-    #         if Path(path.parent).exists():
-    #             if show_msg:
-    #                 print(f"Path '{path}', is exist")
-    #             return path
-    #         else:
-    #             if show_msg:
-    #                 print(f"No '{path}' found")
-    #             return None
-        
-    #     if path.exists():
-    #         if show_msg:
-    #             print(f"Path: '{path}', is exist")
-    #         return path
-    #     else:
-    #         if show_msg:
-    #             print(f"No '{path}' found")
-    #         return None
 # fmt: on
 
 
