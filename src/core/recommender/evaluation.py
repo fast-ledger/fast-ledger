@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
 from sklearn.base import clone
-from sklearn.pipeline import Pipeline
+from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.preprocessing import FunctionTransformer
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import LeaveOneOut, KFold
@@ -112,9 +112,9 @@ if __name__ == "__main__":
     language_model = language_models[1]
     encoder = SentenceTransformer(language_model)
 
-    embed_strategies = [
-        transformer.company_scope_item,
-        # transformer.company_scope_item_labeled,
+    item_embed_strategies = [
+        # transformer.company_scope_item,
+        transformer.company_scope_item_labeled,
         transformer.all_labeled,
     ]
 
@@ -125,11 +125,20 @@ if __name__ == "__main__":
         "hsuan",
     ]
 
-    results = [None] * len(embed_strategies)
-    for i, item_embedder in enumerate(embed_strategies):
-        embedder = Pipeline([
-            ('transformer', FunctionTransformer(item_embedder)),
-            ('encoder', FunctionTransformer(lambda p: encoder.encode(p))),
+    results = [None] * len(item_embed_strategies)
+    for i, item_embedder in enumerate(item_embed_strategies):
+        embedder = FeatureUnion([
+            (
+                "item_embedding",
+                Pipeline([
+                    ('transformer', FunctionTransformer(item_embedder)),
+                    ('encoder', FunctionTransformer(lambda p: encoder.encode(p))),
+                ])
+            ),
+            (
+                "time_embedding",
+                transformer.time_cyclic_transformer
+            )
         ])
         X = embedder.fit_transform(postings)
 
