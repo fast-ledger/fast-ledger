@@ -105,6 +105,9 @@ if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     postings = testpostings.postings()
 
+    # dinner/lunch dataset
+    postings = postings[postings['ljavuras'].str.contains("expenses:food:dining:")].reset_index()
+
     language_models = [
         'sentence-transformers/multi-qa-MiniLM-L6-cos-v1',
         'shibing624/text2vec-base-chinese'
@@ -122,7 +125,7 @@ if __name__ == "__main__":
     journals = [
         "ljavuras",
         "nelly",
-        "hsuan",
+        # "hsuan",
     ]
 
     results = [None] * len(item_embed_strategies)
