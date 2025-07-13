@@ -5,7 +5,7 @@ import pandas as pd
 GOOGLESHEET_ID = "1dHxFMzxJzud7SlQeZYBuFMXsYjz1RBmiX-rZc4SubQ4"
 TESTPOSTINGS_PATH = "data/test-postings.csv"
 
-def fetchGoogleSheet(id=GOOGLESHEET_ID, path=TESTPOSTINGS_PATH):
+def fetch_google_sheet(id=GOOGLESHEET_ID, path=TESTPOSTINGS_PATH):
     """
     抓取 Google Drive 上的測試帳本至本地
     """
@@ -20,13 +20,24 @@ def fetchGoogleSheet(id=GOOGLESHEET_ID, path=TESTPOSTINGS_PATH):
                 response.content[response.content.find(b'\n') + 1:]  # Remove first row
             )
 
-def postings(path=TESTPOSTINGS_PATH, force=False):
-    file = Path(path)
+class Dataset:
+    def __init__(self, path=TESTPOSTINGS_PATH, force=False):
+        file = Path(path)
 
-    if force or not file.exists():
-        fetchGoogleSheet()
+        if force or not file.exists():
+            fetch_google_sheet()
 
-    return pd.read_csv(path)
+        self.frame = pd.read_csv(path)
+    
+    def subset(self, subset_name):
+        match subset_name:
+            case "lunch-dinner":
+                return self.frame[
+                    self.frame['ljavuras'].str.contains("expenses:food:dining:")
+                ].reset_index()
+
+def fetch_dataset(path=TESTPOSTINGS_PATH, force=False):
+    return Dataset(path=path, force=force)
 
 if __name__ == "__main__":
-    postings(force=True)
+    fetch_google_sheet()

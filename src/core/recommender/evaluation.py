@@ -8,7 +8,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import LeaveOneOut, KFold
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sentence_transformers import SentenceTransformer
-from recommender import testpostings, transformer
+from recommender import transformer
+from datasets import fetch_dataset
 import warnings
 
 def predict_journal(model, X, y):
@@ -104,10 +105,10 @@ def plot_results(results):
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
-    postings = testpostings.postings()
-
-    # dinner/lunch dataset
-    postings = postings[postings['ljavuras'].str.contains("expenses:food:dining:")].reset_index()
+    
+    postings = fetch_dataset()
+    # postings = postings.frame
+    postings = postings.subset('lunch-dinner')  # lunch/dinner dataset
 
     language_models = [
         'sentence-transformers/multi-qa-MiniLM-L6-cos-v1',
