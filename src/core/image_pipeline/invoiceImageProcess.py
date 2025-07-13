@@ -14,8 +14,9 @@ import cv2
 class ImgProcess:
     __id_list = []
     __seg_model_label_name_list = []
-    __base_dir = Path(__file__).resolve().parent
     __step_result_dict = {'first': [], 'second': [], 'third': [], 'fourth': [], 'final': []}
+
+    __base_dir = Path(__file__).resolve().parent
     __seg_invoice = 'seg_invoice.pt'
     __cls_angle = 'cls_angle.pt'
 
@@ -51,6 +52,8 @@ class ImgProcess:
             >>> process = ImgProcess(seg_invocie_model_pt, cls_angle_model_pt)
             >>> process = ImgProcess(msg=False)
         '''
+
+        
         if seg_invoice_model_pt is None or seg_invoice_model_pt == self.__seg_invoice:
             seg_invoice_model_pt = self._seg_invoice_model_pt
         if cls_angle_model_pt is None or cls_angle_model_pt == self.__cls_angle:
@@ -103,6 +106,11 @@ class ImgProcess:
                 Use P_Result.image, P_Result.id, and P_Result.label_name to access
                 the image (as a numpy.ndarray), the ID (as a str), and the label_name (as a str)
         """
+        self.__seg_model_label_name_list.clear()
+        self.__id_list.clear()
+        for lst in self.__step_result_dict.values():
+            lst.clear()
+
         if not model_info:
             logging.getLogger("ultralytics").setLevel(logging.CRITICAL)
 
