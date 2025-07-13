@@ -30,6 +30,33 @@ def predict_journal(model, X, y):
         preds.extend(model.predict(X_test))
     return preds
 
+def plot_confusion_matrix(ax, journal):
+    journal_correct = sum(
+        [a == b for a, b in zip(journal["true"], journal["pred"])]
+    )
+    labels = sorted(journal["true"].unique())
+
+    disp = ConfusionMatrixDisplay(
+        confusion_matrix=confusion_matrix(journal["true"], journal["pred"]),
+        display_labels=labels,
+    )
+    disp.plot(colorbar=False, ax=ax)
+
+    # Confusion matrix title
+    ax.set_title(
+        """[journal] {}
+        {}/{} ({:.2f})""".format(
+            journal["name"],
+            journal_correct,
+            len(journal["true"]),
+            journal_correct / len(journal["true"]),
+        ),
+        fontsize=10,
+    )
+
+    ax.set_xticklabels(labels, rotation=-45, ha="left")
+    ax.tick_params("x", labelsize=6)
+    ax.tick_params("y", labelsize=6)
 
 def plot_results(results):
     matplotlib.rc("font", family="Microsoft JhengHei", size=6)
@@ -52,18 +79,11 @@ def plot_results(results):
 
         embedder_correct, embedder_tests = 0, 0
         for journal in transformer["journal"]:
-            labels = sorted(journal["true"].unique())
             journal_correct = sum(
                 [a == b for a, b in zip(journal["true"], journal["pred"])]
             )
             embedder_correct += journal_correct
             embedder_tests += len(journal["true"])
-
-            # Plot results for each embedder journal combination
-            disp = ConfusionMatrixDisplay(
-                confusion_matrix=confusion_matrix(journal["true"], journal["pred"]),
-                display_labels=labels,
-            )
 
             try:
                 ax = axes[ax_id]
@@ -71,23 +91,8 @@ def plot_results(results):
             except NameError:
                 pass
 
-            disp.plot(colorbar=False, ax=ax)
-
-            # Confusion matrix title
-            ax.set_title(
-                """[journal] {}
-                {}/{} ({:.2f})""".format(
-                    journal["name"],
-                    journal_correct,
-                    len(journal["true"]),
-                    journal_correct / len(journal["true"]),
-                ),
-                fontsize=10,
-            )
-
-            ax.set_xticklabels(labels, rotation=-45, ha="left")
-            ax.tick_params("x", labelsize=6)
-            ax.tick_params("y", labelsize=6)
+            # Plot results for each embedder journal combination
+            plot_confusion_matrix(ax, journal)
 
         subfig.suptitle(
             """[embedder] {}
@@ -161,8 +166,11 @@ if __name__ == "__main__":
                 "name": journal,
                 "true": y,
                 "pred": predict_journal(
-                    KNeighborsClassifier(weights='distance', n_neighbors=3, metric_params={'w': [1] * 768 + [200, 200]}), 
-                    X, 
+                    KNeighborsClassifier(
+                        weights='distance',
+                        n_neighbors=3,
+                        metric_params={'w': [1] * 768 + [200, 200]}),
+                    X,
                     y),
             }
 
