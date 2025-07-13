@@ -33,6 +33,7 @@ sentence-transformers = "^5.0.0"
 torch = "^2.7.1"
 ultralytics = "^8.3.163"
 watchdog = "^6.0.0"
+zxing-cpp = "^2.3.0"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
