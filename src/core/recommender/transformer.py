@@ -4,14 +4,6 @@ import numpy as np
 import pandas as pd
 import textwrap
 from datetime import datetime
-from sentence_transformers import SentenceTransformer
-
-language_models = [
-    'sentence-transformers/multi-qa-MiniLM-L6-cos-v1',
-    'shibing624/text2vec-base-chinese'
-]
-language_model = language_models[1]
-encoder = SentenceTransformer(language_model)
 
 def row_preprocess(row):
     scopes = [ row['行業1'], row['行業2'], row['行業3'], row['行業4'] ]
@@ -26,12 +18,10 @@ def row_preprocess(row):
 
 def company_scope_item(postings):
     """embed(公司名稱行業1行業2行業3行業4商品品項)"""
-    return pd.DataFrame(encoder.encode(
+    return (
         postings[['公司名稱', '行業1', '行業2', '行業3', '行業4', '商品品項']]
         .fillna('')
-        .apply(lambda x: ''.join(x), axis=1)
-        .to_list()
-    ))
+        .apply(lambda x: ''.join(x), axis=1))
 
 def company_scope_item_labeled(postings):
     """embed(company: 公司名稱
@@ -47,9 +37,7 @@ def company_scope_item_labeled(postings):
             ", ".join(item_info['business_scopes']),
             item_info['item']
         ))
-    return pd.DataFrame(encoder.encode(
-        postings.apply(item_repr_str, axis=1).to_list()
-    ))
+    return postings.apply(item_repr_str, axis=1)
 
 def all_labeled(postings):
     """embed(company: 公司名稱
@@ -71,6 +59,4 @@ def all_labeled(postings):
             item_info['item'],
             item_info['amount'],
         ))
-    return pd.DataFrame(encoder.encode(
-        postings.apply(item_repr_str, axis=1).to_list()
-    ))
+    return postings.apply(item_repr_str, axis=1)

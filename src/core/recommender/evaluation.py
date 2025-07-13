@@ -7,7 +7,8 @@ from sklearn.preprocessing import FunctionTransformer
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import LeaveOneOut, KFold
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-from recommender import embedder, testpostings
+from sentence_transformers import SentenceTransformer
+from recommender import testpostings, transformer
 import warnings
 
 def predict_journal(model, X, y):
@@ -20,8 +21,8 @@ def predict_journal(model, X, y):
 
     preds = []
     for _, (train_idx, test_idx) in enumerate(cv.split(X)):
-        X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
-        y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
+        X_train, X_test = X[train_idx], X[test_idx]
+        y_train, y_test = y[train_idx], y[test_idx]
 
         model = clone(model)
         model.fit(X_train, y_train)
@@ -104,19 +105,18 @@ if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     postings = testpostings.postings()
 
-    embed_strategies = [
-        embedder.company_scope_item,
-        # embedder.company_scope_item_labeled,
-        embedder.all_labeled,
+    language_models = [
+        'sentence-transformers/multi-qa-MiniLM-L6-cos-v1',
+        'shibing624/text2vec-base-chinese'
     ]
+    language_model = language_models[1]
+    encoder = SentenceTransformer(language_model)
 
-    class Transformer(FunctionTransformer):
-        def __init__(self, func = None, inverse_func = None, *, validate = False, accept_sparse = False, check_inverse = True, feature_names_out = None, kw_args = None, inv_kw_args = None):
-            super().__init__(func, inverse_func, validate=validate, accept_sparse=accept_sparse, check_inverse=check_inverse, feature_names_out=feature_names_out, kw_args=kw_args, inv_kw_args=inv_kw_args)
-            self.name: str = func.__name__
-            self.desc: str = func.__doc__
-
-    transformers: list[Transformer] = [Transformer(f) for f in embed_strategies]
+    embed_strategies = [
+        transformer.company_scope_item,
+        # transformer.company_scope_item_labeled,
+        transformer.all_labeled,
+    ]
 
     # Tested journals
     journals = [
@@ -125,27 +125,31 @@ if __name__ == "__main__":
         "hsuan",
     ]
 
-    results = [None] * len(transformers)
-    for i, transformer in enumerate(transformers):
-        X = transformer.fit_transform(postings)
-        pipe = Pipeline([
-            # ('transformer', transformer.func),
-            ('classifier', KNeighborsClassifier(weights='distance', n_neighbors=3))
+    results = [None] * len(embed_strategies)
+    for i, item_embedder in enumerate(embed_strategies):
+        embedder = Pipeline([
+            ('transformer', FunctionTransformer(item_embedder)),
+            ('encoder', FunctionTransformer(lambda p: encoder.encode(p))),
         ])
+        X = embedder.fit_transform(postings)
+
         results[i] = {
-            'name': transformer.name,
-            'desc': transformer.desc,
+            'name': item_embedder.__name__,
+            'desc': item_embedder.__doc__,
             'journal': [None] * len(journals)
         }
 
         # Evaluation
         for j, journal in enumerate(journals):
-            print("[Validating] embedder: {},\tjournal: {}".format(transformer.name, journal))
+            print("[Validating] embedder: {},\tjournal: {}".format(item_embedder.__name__, journal))
             y = postings[journal]
             results[i]["journal"][j] = {
                 "name": journal,
                 "true": y,
-                "pred": predict_journal(pipe, X, y),
+                "pred": predict_journal(
+                    KNeighborsClassifier(weights='distance', n_neighbors=3), 
+                    X, 
+                    y),
             }
 
     print("Validation complete")
