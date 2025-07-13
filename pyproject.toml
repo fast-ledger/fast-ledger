@@ -1,0 +1,39 @@
+[project]
+authors = [
+  {name = "Ljavuras", email = "ljavuras.py@gmail.com"},
+  {name = "NicEzWs", email = "herobrine2983@gmail.com"},
+  {name = "qoqstor", email = "qoqstore@gmail.com"},
+  {name = "elva-xiao1996", email = "a0970379277@gmail.com"},
+]
+description = "hello world"
+name = "catcountants"
+readme = "README.md"
+requires-python = ">=3.10"
+version = "0.1.0"
+
+[tool.poetry]
+packages = [
+  {include = "image_pipeline", from = "src/core"},
+  {include = "recommender", from = "src/core"},
+  {include = "qrcode_scanner", from = "src/core"},
+]
+
+[tool.poetry.dependencies]
+chardet = "^5.2.0"
+matplotlib = "^3.10.3"
+numpy = "^2.2.6"
+opencv-python = "^4.12.0.88"
+pandas = "^2.3.1"
+pillow = "^11.3.0"
+pytesseract = "^0.3.13"
+pyzbar = "^0.1.9"
+requests = "^2.32.4"
+scikit-learn = "^1.7.0"
+sentence-transformers = "^5.0.0"
+torch = "^2.7.1"
+ultralytics = "^8.3.163"
+watchdog = "^6.0.0"
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=2.0.0,<3.0.0"]

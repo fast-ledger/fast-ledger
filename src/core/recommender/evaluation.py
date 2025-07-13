@@ -1,4 +1,3 @@
-import testpostings
 import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
@@ -8,8 +7,8 @@ from sklearn.preprocessing import FunctionTransformer
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import LeaveOneOut, KFold
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from recommender import embedder, testpostings
 import warnings
-import embedder
 
 def predict_journal(model, X, y):
     """
@@ -29,33 +28,38 @@ def predict_journal(model, X, y):
         preds.extend(model.predict(X_test))
     return preds
 
+
 def plot_results(results):
-    matplotlib.rc('font', family='Microsoft JhengHei', size=6)
+    matplotlib.rc("font", family="Microsoft JhengHei", size=6)
 
     transformer_count = len(results)
-    journal_count = len(results[0]['journal'])
-    fig = plt.figure(layout='constrained', figsize=(15 * transformer_count, 15 * journal_count))
+    journal_count = len(results[0]["journal"])
+    fig = plt.figure(
+        layout="constrained", figsize=(15 * transformer_count, 15 * journal_count)
+    )
     subfigs = fig.subfigures(nrows=transformer_count, ncols=1)
 
     for transformer, subfig in zip(results, subfigs):
         axes = subfig.subplots(nrows=1, ncols=journal_count)
-        if (journal_count > 1):
+        if journal_count > 1:
             axes = axes.flatten()
             ax_id = 0
         else:
             ax = axes
 
         embedder_correct, embedder_tests = 0, 0
-        for journal in transformer['journal']:
-            labels = sorted(journal['true'].unique())
-            journal_correct = sum([a == b for a, b in zip(journal['true'], journal['pred'])])
+        for journal in transformer["journal"]:
+            labels = sorted(journal["true"].unique())
+            journal_correct = sum(
+                [a == b for a, b in zip(journal["true"], journal["pred"])]
+            )
             embedder_correct += journal_correct
-            embedder_tests += len(journal['true'])
+            embedder_tests += len(journal["true"])
 
             # Plot results for each embedder journal combination
             disp = ConfusionMatrixDisplay(
-                confusion_matrix=confusion_matrix(journal['true'], journal['pred']),
-                display_labels=labels
+                confusion_matrix=confusion_matrix(journal["true"], journal["pred"]),
+                display_labels=labels,
             )
 
             try:
@@ -64,34 +68,40 @@ def plot_results(results):
             except NameError:
                 pass
 
-            disp.plot(
-                colorbar=False,
-                ax=ax)
+            disp.plot(colorbar=False, ax=ax)
 
             # Confusion matrix title
             ax.set_title(
                 """[journal] {}
                 {}/{} ({:.2f})""".format(
-                    journal['name'], journal_correct, len(journal['true']), journal_correct / len(journal['true'])
+                    journal["name"],
+                    journal_correct,
+                    len(journal["true"]),
+                    journal_correct / len(journal["true"]),
                 ),
-                fontsize=10)
-        
-            ax.set_xticklabels(labels, rotation=-45, ha='left')
-            ax.tick_params('x', labelsize=6)
-            ax.tick_params('y', labelsize=6)
-        
+                fontsize=10,
+            )
+
+            ax.set_xticklabels(labels, rotation=-45, ha="left")
+            ax.tick_params("x", labelsize=6)
+            ax.tick_params("y", labelsize=6)
+
         subfig.suptitle(
             """[embedder] {}
             {}
             {}/{} ({:.2f})""".format(
-                transformer['name'],
-                transformer['desc'],
-                embedder_correct, embedder_tests, embedder_correct / embedder_tests)
+                transformer["name"],
+                transformer["desc"],
+                embedder_correct,
+                embedder_tests,
+                embedder_correct / embedder_tests,
+            )
         )
     plt.show()
 
+
 if __name__ == "__main__":
-    warnings.filterwarnings('ignore')
+    warnings.filterwarnings("ignore")
     postings = testpostings.postings()
 
     embed_strategies = [
@@ -115,9 +125,9 @@ if __name__ == "__main__":
 
     # Tested journals
     journals = [
-        'ljavuras',
-        'nelly',
-        'hsuan',
+        "ljavuras",
+        "nelly",
+        "hsuan",
     ]
 
     results = [None] * len(transformers)
@@ -137,10 +147,10 @@ if __name__ == "__main__":
         for j, journal in enumerate(journals):
             print("[Validating] embedder: {},\tjournal: {}".format(transformer.name, journal))
             y = postings[journal]
-            results[i]['journal'][j] = {
-                'name': journal,
-                'true': y,
-                'pred': predict_journal(pipe, X, y),
+            results[i]["journal"][j] = {
+                "name": journal,
+                "true": y,
+                "pred": predict_journal(pipe, X, y),
             }
 
     print("Validation complete")
