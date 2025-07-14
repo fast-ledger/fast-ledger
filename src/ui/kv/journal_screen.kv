@@ -19,8 +19,8 @@
         orientation: 'vertical'
 
         # 頂部 App Bar
-        MDToolbar:
-            id: toolbar
+        MDTopAppBar:
+            id: MDTopAppBar
             title: "帳本" # 標題文字
             # 右側動作按鈕：放大鏡 (搜尋) 和齒輪 (設定)
             right_action_items: [["magnify", lambda x: app.root.get_screen('journal_screen').search_button_pressed()], ["cog-outline", lambda x: app.root.get_screen('journal_screen').journal_settings_button_pressed()]]
