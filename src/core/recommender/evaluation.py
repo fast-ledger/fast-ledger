@@ -1,16 +1,18 @@
 import pandas as pd
+import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 from sklearn.base import clone
-from sklearn.pipeline import Pipeline
+from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.preprocessing import FunctionTransformer
+from sklearn.compose import ColumnTransformer
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import LeaveOneOut, KFold
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-from recommender import embedder, testpostings
+from sentence_transformers import SentenceTransformer
+from recommender import transformer
+from datasets import fetch_dataset
 import warnings
-from typing import TypedDict
-
 
 def predict_journal(model, X, y):
     """
@@ -22,14 +24,41 @@ def predict_journal(model, X, y):
 
     preds = []
     for _, (train_idx, test_idx) in enumerate(cv.split(X)):
-        X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
-        y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
+        X_train, X_test = X[train_idx], X[test_idx]
+        y_train, y_test = y[train_idx], y[test_idx]
 
         model = clone(model)
         model.fit(X_train, y_train)
         preds.extend(model.predict(X_test))
     return preds
 
+def plot_confusion_matrix(ax, journal):
+    journal_correct = sum(
+        [a == b for a, b in zip(journal["true"], journal["pred"])]
+    )
+    labels = sorted(journal["true"].unique())
+
+    disp = ConfusionMatrixDisplay(
+        confusion_matrix=confusion_matrix(journal["true"], journal["pred"]),
+        display_labels=labels,
+    )
+    disp.plot(colorbar=False, ax=ax)
+
+    # Confusion matrix title
+    ax.set_title(
+        """[journal] {}
+        {}/{} ({:.2f})""".format(
+            journal["name"],
+            journal_correct,
+            len(journal["true"]),
+            journal_correct / len(journal["true"]),
+        ),
+        fontsize=10,
+    )
+
+    ax.set_xticklabels(labels, rotation=-45, ha="left")
+    ax.tick_params("x", labelsize=6)
+    ax.tick_params("y", labelsize=6)
 
 def plot_results(results):
     matplotlib.rc("font", family="Microsoft JhengHei", size=6)
@@ -40,6 +69,7 @@ def plot_results(results):
         layout="constrained", figsize=(15 * transformer_count, 15 * journal_count)
     )
     subfigs = fig.subfigures(nrows=transformer_count, ncols=1)
+    if (transformer_count < 2): subfigs = [subfigs]
 
     for transformer, subfig in zip(results, subfigs):
         axes = subfig.subplots(nrows=1, ncols=journal_count)
@@ -51,18 +81,11 @@ def plot_results(results):
 
         embedder_correct, embedder_tests = 0, 0
         for journal in transformer["journal"]:
-            labels = sorted(journal["true"].unique())
             journal_correct = sum(
                 [a == b for a, b in zip(journal["true"], journal["pred"])]
             )
             embedder_correct += journal_correct
             embedder_tests += len(journal["true"])
-
-            # Plot results for each embedder journal combination
-            disp = ConfusionMatrixDisplay(
-                confusion_matrix=confusion_matrix(journal["true"], journal["pred"]),
-                display_labels=labels,
-            )
 
             try:
                 ax = axes[ax_id]
@@ -70,23 +93,8 @@ def plot_results(results):
             except NameError:
                 pass
 
-            disp.plot(colorbar=False, ax=ax)
-
-            # Confusion matrix title
-            ax.set_title(
-                """[journal] {}
-                {}/{} ({:.2f})""".format(
-                    journal["name"],
-                    journal_correct,
-                    len(journal["true"]),
-                    journal_correct / len(journal["true"]),
-                ),
-                fontsize=10,
-            )
-
-            ax.set_xticklabels(labels, rotation=-45, ha="left")
-            ax.tick_params("x", labelsize=6)
-            ax.tick_params("y", labelsize=6)
+            # Plot results for each embedder journal combination
+            plot_confusion_matrix(ax, journal)
 
         subfig.suptitle(
             """[embedder] {}
@@ -104,63 +112,84 @@ def plot_results(results):
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
-    postings = testpostings.postings()
+    
+    postings = fetch_dataset()
+    postings = postings.frame
+    # postings = postings.subset('lunch-dinner')  # lunch/dinner dataset
 
-    embed_strategies = [
-        # embedder.item,
-        # embedder.company_item,
-        embedder.company_scope_item,
-        # embedder.company_n_item,
-        # embedder.company_n_scope_n_item,
-        # embedder.company_scope_n_item,
-        # embedder.company_scope_item_labeled,
-        embedder.all_labeled,
+    language_models = [
+        'sentence-transformers/multi-qa-MiniLM-L6-cos-v1',
+        'shibing624/text2vec-base-chinese'
     ]
+    language_model = language_models[1]
+    encoder = SentenceTransformer(language_model)
 
-    class Transformer(TypedDict):
-        name: str
-        desc: str
-        func: FunctionTransformer
-
-    transformers: list[Transformer] = [
-        {"name": f.__name__, "desc": f.__doc__, "func": FunctionTransformer(f)}
-        for f in embed_strategies
+    item_embed_strategies = [
+        # transformer.company_scope_item,
+        transformer.company_scope_item_labeled,
+        # transformer.all_labeled,
     ]
 
     # Tested journals
     journals = [
         "ljavuras",
-        "nelly",
+        # "nelly",
         "hsuan",
     ]
 
-    results = [None] * len(transformers)
-    for i, transformer in enumerate(transformers):
-        X = pd.DataFrame(transformer["func"].fit_transform(postings))
-        pipe = Pipeline(
-            [
-                # ('transformer', transformer['func']),
-                ("classifier", KNeighborsClassifier(weights="distance", n_neighbors=3))
-            ]
-        )
+    results = [None] * len(item_embed_strategies)
+    for i, item_embedder in enumerate(item_embed_strategies):
+        embedder = FeatureUnion([
+            (
+                "item_embedding",
+                Pipeline([
+                    ('transformer', FunctionTransformer(item_embedder)),
+                    ('encoder', FunctionTransformer(lambda p: encoder.encode(p))),
+                ])
+            ),
+            (
+                "time_embedding",
+                transformer.time_cyclic_transformer
+            ),
+            (
+                "amount_embedding",
+                ColumnTransformer([
+                    (
+                        "amount_sigmoid",
+                        FunctionTransformer(lambda z: 1 / (1 + np.exp(-1 * z.astype(int)))),
+                        ['金額']
+                    )
+                ])
+            )
+        ])
+        weight_time = 15
+        weight_amount = 100
+        KNN_weights = ([1] * 768
+                       + [weight_time, weight_time]
+                       + [weight_amount]
+                       )
+        X = embedder.fit_transform(postings)
+
         results[i] = {
-            "name": transformer["name"],
-            "desc": transformer["desc"],
-            "journal": [None] * len(journals),
+            'name': item_embedder.__name__,
+            'desc': item_embedder.__doc__,
+            'journal': [None] * len(journals)
         }
 
         # Evaluation
         for j, journal in enumerate(journals):
-            print(
-                "[Validating] embedder: {},\tjournal: {}".format(
-                    transformer["name"], journal
-                )
-            )
+            print("[Validating] embedder: {},\tjournal: {}".format(item_embedder.__name__, journal))
             y = postings[journal]
             results[i]["journal"][j] = {
                 "name": journal,
                 "true": y,
-                "pred": predict_journal(pipe, X, y),
+                "pred": predict_journal(
+                    KNeighborsClassifier(
+                        weights='distance',
+                        n_neighbors=3,
+                        metric_params={'w': KNN_weights}),
+                    X,
+                    y),
             }
 
     print("Validation complete")
