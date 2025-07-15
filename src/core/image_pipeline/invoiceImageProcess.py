@@ -134,6 +134,7 @@ class ImgProcess:
             
             masks = result.masks
             if masks is None:
+                print('No item')
                 continue
 
             for j, mask_tansor in enumerate(masks.data):
