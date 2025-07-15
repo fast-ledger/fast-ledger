@@ -1,0 +1,476 @@
+# ui.kv
+#:kivy 2.1.0
+#:import MDRectangleFlatButton kivymd.uix.button.MDRectangleFlatButton
+#:import MDLabel kivymd.uix.label.MDLabel
+#:import MDBoxLayout kivymd.uix.boxlayout.MDBoxLayout
+#:import MDScrollView kivymd.uix.scrollview.MDScrollView
+#:import MDCard kivymd.uix.card.MDCard
+#:import MDRaisedButton kivymd.uix.button.MDRaisedButton
+#:import MDScreen kivymd.uix.screen.MDScreen
+#:import Camera kivy.uix.camera.Camera
+#:import Image kivy.uix.image.Image
+
+<MainScreen>:
+    name: "main_screen"
+
+    MDBoxLayout:
+        id: main_screen_layout
+        orientation: 'vertical'
+        md_bg_color: 0.95, 0.95, 0.95, 1
+
+        # 上方區域 (相機輸入與處理後的影像)
+        MDBoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.45
+            padding: dp(10)
+            spacing: dp(10)
+
+            MDCard:
+                size_hint_x: 0.5
+                orientation: 'vertical'
+                padding: dp(10)
+                spacing: dp(5)
+                radius: dp(12)
+                elevation: 6
+                md_bg_color: 0.9, 0.9, 0.9, 1
+                MDLabel:
+                    text: "相機輸入"
+                    font_name: "fonts/NotoSansCJK-Regular.ttf"
+                    halign: 'center'
+                    valign: 'center'
+                    bold: True
+                    font_size: '18sp'
+                    size_hint_y: None
+                    height: self.texture_size[1] + dp(10)
+                Camera:
+                    id: camera_input
+                    play: True
+                    resolution: (640, 480)
+                    size_hint: 1, 1
+                    allow_stretch: True
+                    keep_ratio: True
+
+            MDCard:
+                size_hint_x: 0.5
+                orientation: 'vertical'
+                padding: dp(10)
+                spacing: dp(5)
+                radius: dp(12)
+                elevation: 6
+                md_bg_color: 0.9, 0.9, 0.9, 1
+                MDLabel:
+                    text: "處理後的影像"
+                    font_name: "fonts/NotoSansCJK-Regular.ttf"
+                    halign: 'center'
+                    valign: 'center'
+                    bold: True
+                    font_size: '18sp'
+                    size_hint_y: None
+                    height: self.texture_size[1] + dp(10)
+                Image:
+                    id: processed_image
+                    source: "src/core/qrcode_scanner/receipt/Receipt_2.jpg"
+                    size_hint: 1, 1
+                    allow_stretch: True
+                    keep_ratio: True
+
+
+        # 中間內容區域 (左右兩側的資訊顯示)
+        MDBoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.55
+            padding: dp(10)
+            spacing: dp(10)
+
+            # 左側垂直佈局，包含營業人名稱、行業、發票資訊
+            MDBoxLayout:
+                orientation: 'vertical'
+                size_hint_x: 0.5
+                padding: dp(10)
+                spacing: dp(10)
+
+                # 營業人名稱 區塊 (標題 + 內容)
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: business_name_title_box.height + business_name_content_box.height + dp(10)
+
+                    MDBoxLayout: # 營業人名稱 標題
+                        id: business_name_title_box
+                        orientation: 'vertical'
+                        size_hint_y: None
+                        height: dp(50)
+                        md_bg_color: 0.2, 0.6, 0.8, 1
+                        padding: dp(10)
+                        radius: dp(8)
+                        elevation: 4
+                        MDLabel:
+                            text: "營業人名稱"
+                            font_name: "fonts/NotoSansCJK-Regular.ttf"
+                            color: 1, 1, 1, 1
+                            halign: 'center'
+                            valign: 'center'
+                            bold: True
+                            font_size: '18sp'
+
+                    MDBoxLayout: # 營業人名稱 內容框
+                        id: business_name_content_box
+                        orientation: 'vertical'
+                        size_hint_y: None
+                        height: business_name_label.texture_size[1] + dp(20)
+                        padding: dp(10)
+                        spacing: dp(5)
+                        radius: dp(8)
+                        md_bg_color: 0.9, 0.9, 0.9, 1
+                        MDLabel:
+                            id: business_name_label
+                            text: "" # 初始為空
+                            font_name: "fonts/NotoSansCJK-Regular.ttf"
+                            color: 0.3, 0.3, 0.3, 1
+                            font_size: '15sp'
+                            halign: 'left'
+                            valign: 'top'
+                            text_size: self.width, None
+                            size_hint_y: None
+                            height: self.texture_size[1]
+
+                # 行業 區塊 (標題 + 內容)
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: industry_title_box.height + industry_content_box.height + dp(10)
+                    MDBoxLayout: # 行業 標題
+                        id: industry_title_box
+                        orientation: 'vertical'
+                        size_hint_y: None
+                        height: dp(50)
+                        md_bg_color: 0.2, 0.6, 0.8, 1
+                        padding: dp(10)
+                        radius: dp(8)
+                        elevation: 4
+                        MDLabel:
+                            text: "行業"
+                            font_name: "fonts/NotoSansCJK-Regular.ttf"
+                            color: 1, 1, 1, 1
+                            halign: 'center'
+                            valign: 'center'
+                            bold: True
+                            font_size: '18sp'
+                    MDBoxLayout: # 行業 內容框
+                        id: industry_content_box
+                        orientation: 'vertical'
+                        size_hint_y: None
+                        height: industry_label.texture_size[1] + dp(20)
+                        padding: dp(10)
+                        spacing: dp(5)
+                        radius: dp(8)
+                        md_bg_color: 0.9, 0.9, 0.9, 1
+                        MDLabel:
+                            id: industry_label
+                            text: "" # 初始為空
+                            font_name: "fonts/NotoSansCJK-Regular.ttf"
+                            color: 0.3, 0.3, 0.3, 1
+                            font_size: '15sp'
+                            halign: 'left'
+                            valign: 'top'
+                            text_size: self.width, None
+                            size_hint_y: None
+                            height: self.texture_size[1]
+
+                # 發票資訊 區塊 (標題 + 滾動內容)
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: 1
+                    MDBoxLayout: # 發票資訊 標題
+                        orientation: 'vertical'
+                        size_hint_y: None
+                        height: dp(50)
+                        md_bg_color: 0.2, 0.6, 0.8, 1
+                        padding: dp(10)
+                        radius: dp(8)
+                        elevation: 4
+                        MDLabel:
+                            text: "發票資訊"
+                            font_name: "fonts/NotoSansCJK-Regular.ttf"
+                            color: 1, 1, 1, 1
+                            halign: 'center'
+                            valign: 'center'
+                            bold: True
+                            font_size: '18sp'
+
+                    MDScrollView: # 發票資訊 內容框（滾動區域）
+                        size_hint_y: 1
+                        bar_width: dp(8)
+                        effect_cls: "ScrollEffect"
+
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            size_hint_y: None
+                            height: self.minimum_height
+                            padding: dp(10)
+                            spacing: dp(5)
+                            radius: dp(8)
+                            md_bg_color: 0.9, 0.9, 0.9, 1
+                            MDLabel:
+                                id: invoice_number_label
+                                text: "統一編號: " # 初始文本
+                                font_name: "fonts/NotoSansCJK-Regular.ttf"
+                                color: 0.3, 0.3, 0.3, 1
+                                font_size: '15sp'
+                                halign: 'left'
+                                valign: 'top'
+                                text_size: self.width, None
+                                size_hint_y: None
+                                height: self.texture_size[1]
+                            MDLabel:
+                                id: time_label
+                                text: "時間: " # 初始文本
+                                font_name: "fonts/NotoSansCJK-Regular.ttf"
+                                color: 0.3, 0.3, 0.3, 1
+                                font_size: '15sp'
+                                halign: 'left'
+                                valign: 'top'
+                                text_size: self.width, None
+                                size_hint_y: None
+                                height: self.texture_size[1]
+
+
+            # 右側垂直佈局，包含品項與預測分類
+            MDBoxLayout:
+                orientation: 'vertical'
+                size_hint_x: 0.5
+                padding: dp(10)
+                spacing: dp(10)
+
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: dp(50)
+                    md_bg_color: 0.2, 0.6, 0.8, 1
+                    padding: dp(10)
+                    radius: dp(8)
+                    elevation: 4
+                    MDLabel:
+                        text: "品項與預測分類"
+                        font_name: "fonts/NotoSansCJK-Regular.ttf"
+                        color: 1, 1, 1, 1
+                        halign: 'center'
+                        valign: 'center'
+                        bold: True
+                        font_size: '18sp'
+
+                MDScrollView:
+                    size_hint_y: 1
+                    bar_width: dp(8)
+                    effect_cls: "ScrollEffect"
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        size_hint_y: None
+                        height: self.minimum_height
+                        padding: dp(10)
+                        spacing: dp(5) # 增加每個品項區塊之間的間距
+
+                        # 每個品項及其分類的容器，背景色讓其像獨立的區塊
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            size_hint_y: None
+                            height: self.minimum_height
+                            padding: dp(10)
+                            spacing: dp(5)
+                            radius: dp(8)
+                            md_bg_color: 0.9, 0.9, 0.9, 1 # 與發票資訊內容框相同背景色
+                            MDLabel:
+                                id: item1_name_label
+                                text: "" # 初始由 Python 代碼設置
+                                font_name: "fonts/NotoSansCJK-Regular.ttf"
+                                color: 0.3, 0.3, 0.3, 1
+                                font_size: '15sp'
+                                halign: 'left'
+                                valign: 'top'
+                                text_size: self.width, None
+                                size_hint_y: None
+                                height: self.texture_size[1]
+                            MDLabel:
+                                id: item1_category_label
+                                text: "" # 初始由 Python 代碼設置
+                                font_name: "fonts/NotoSansCJK-Regular.ttf"
+                                color: 0.2, 0.2, 0.2, 1
+                                font_size: '15sp' # 保持一致的字體大小
+                                halign: 'left' # 左對齊
+                                valign: 'top'
+                                text_size: self.width, None
+                                size_hint_y: None
+                                height: self.texture_size[1]
+
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            size_hint_y: None
+                            height: self.minimum_height
+                            padding: dp(10)
+                            spacing: dp(5)
+                            radius: dp(8)
+                            md_bg_color: 0.9, 0.9, 0.9, 1
+                            MDLabel:
+                                id: item2_name_label
+                                text: ""
+                                font_name: "fonts/NotoSansCJK-Regular.ttf"
+                                color: 0.3, 0.3, 0.3, 1
+                                font_size: '15sp'
+                                halign: 'left'
+                                valign: 'top'
+                                text_size: self.width, None
+                                size_hint_y: None
+                                height: self.texture_size[1]
+                            MDLabel:
+                                id: item2_category_label
+                                text: ""
+                                font_name: "fonts/NotoSansCJK-Regular.ttf"
+                                color: 0.2, 0.2, 0.2, 1
+                                font_size: '15sp'
+                                halign: 'left'
+                                valign: 'top'
+                                text_size: self.width, None
+                                size_hint_y: None
+                                height: self.texture_size[1]
+
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            size_hint_y: None
+                            height: self.minimum_height
+                            padding: dp(10)
+                            spacing: dp(5)
+                            radius: dp(8)
+                            md_bg_color: 0.9, 0.9, 0.9, 1
+                            MDLabel:
+                                id: item3_name_label
+                                text: ""
+                                font_name: "fonts/NotoSansCJK-Regular.ttf"
+                                color: 0.3, 0.3, 0.3, 1
+                                font_size: '15sp'
+                                halign: 'left'
+                                valign: 'top'
+                                text_size: self.width, None
+                                size_hint_y: None
+                                height: self.texture_size[1]
+                            MDLabel:
+                                id: item3_category_label
+                                text: ""
+                                font_name: "fonts/NotoSansCJK-Regular.ttf"
+                                color: 0.2, 0.2, 0.2, 1
+                                font_size: '15sp'
+                                halign: 'left'
+                                valign: 'top'
+                                text_size: self.width, None
+                                size_hint_y: None
+                                height: self.texture_size[1]
+
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            size_hint_y: None
+                            height: self.minimum_height
+                            padding: dp(10)
+                            spacing: dp(5)
+                            radius: dp(8)
+                            md_bg_color: 0.9, 0.9, 0.9, 1
+                            MDLabel:
+                                id: item4_name_label
+                                text: ""
+                                font_name: "fonts/NotoSansCJK-Regular.ttf"
+                                color: 0.3, 0.3, 0.3, 1
+                                font_size: '15sp'
+                                halign: 'left'
+                                valign: 'top'
+                                text_size: self.width, None
+                                size_hint_y: None
+                                height: self.texture_size[1]
+                            MDLabel:
+                                id: item4_category_label
+                                text: ""
+                                font_name: "fonts/NotoSansCJK-Regular.ttf"
+                                color: 0.2, 0.2, 0.2, 1
+                                font_size: '15sp'
+                                halign: 'left'
+                                valign: 'top'
+                                text_size: self.width, None
+                                size_hint_y: None
+                                height: self.texture_size[1]
+
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            size_hint_y: None
+                            height: self.minimum_height
+                            padding: dp(10)
+                            spacing: dp(5)
+                            radius: dp(8)
+                            md_bg_color: 0.9, 0.9, 0.9, 1
+                            MDLabel:
+                                id: item5_name_label
+                                text: ""
+                                font_name: "fonts/NotoSansCJK-Regular.ttf"
+                                color: 0.3, 0.3, 0.3, 1
+                                font_size: '15sp'
+                                halign: 'left'
+                                valign: 'top'
+                                text_size: self.width, None
+                                size_hint_y: None
+                                height: self.texture_size[1]
+                            MDLabel:
+                                id: item5_category_label
+                                text: ""
+                                font_name: "fonts/NotoSansCJK-Regular.ttf"
+                                color: 0.2, 0.2, 0.2, 1
+                                font_size: '15sp'
+                                halign: 'left'
+                                valign: 'top'
+                                text_size: self.width, None
+                                size_hint_y: None
+                                height: self.texture_size[1]
+
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            size_hint_y: None
+                            height: self.minimum_height
+                            padding: dp(10)
+                            spacing: dp(5)
+                            radius: dp(8)
+                            md_bg_color: 0.9, 0.9, 0.9, 1
+                            MDLabel:
+                                id: item6_name_label
+                                text: ""
+                                font_name: "fonts/NotoSansCJK-Regular.ttf"
+                                color: 0.3, 0.3, 0.3, 1
+                                font_size: '15sp'
+                                halign: 'left'
+                                valign: 'top'
+                                text_size: self.width, None
+                                size_hint_y: None
+                                height: self.texture_size[1]
+                            MDLabel:
+                                id: item6_category_label
+                                text: ""
+                                font_name: "fonts/NotoSansCJK-Regular.ttf"
+                                color: 0.2, 0.2, 0.2, 1
+                                font_size: '15sp'
+                                halign: 'left'
+                                valign: 'top'
+                                text_size: self.width, None
+                                size_hint_y: None
+                                height: self.texture_size[1]
+
+        # 底部按鈕區域 (掃描發票按鈕)
+        MDBoxLayout:
+            size_hint_y: None
+            height: dp(70)
+            padding: dp(10)
+            md_bg_color: 0.1, 0.1, 0.1, 1
+
+            MDRaisedButton:
+                text: "掃描發票"
+                font_name: "fonts/NotoSansCJK-Regular.ttf"
+                font_size: '20sp'
+                size_hint: 0.8, 1
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                md_bg_color: 0.2, 0.6, 0.8, 1
+                color: 1, 1, 1, 1
+                on_release: app.process_image_and_data()
