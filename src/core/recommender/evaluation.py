@@ -109,7 +109,6 @@ def plot_results(results):
         )
     plt.show()
 
-
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     
@@ -157,7 +156,7 @@ if __name__ == "__main__":
                     (
                         "amount_sigmoid",
                         FunctionTransformer(lambda z: 1 / (1 + np.exp(-1 * z.astype(int)))),
-                        ['金額']
+                        ['amount']
                     )
                 ])
             )
