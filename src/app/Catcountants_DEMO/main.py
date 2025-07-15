@@ -27,6 +27,8 @@ class ReceiptScannerApp(MDApp):
 
     # OCR 內容的標籤，用來動態更新文本
     invoice_number_label = ObjectProperty(None)
+    buyer_identifier = ObjectProperty(None)
+    seller_identifier = ObjectProperty(None)
     time_label = ObjectProperty(None)
     business_name_label = ObjectProperty(None)
     industry_label = ObjectProperty(None)
@@ -59,6 +61,8 @@ class ReceiptScannerApp(MDApp):
             self.processed_image_widget = self.root.ids.processed_image
 
             self.invoice_number_label = self.root.ids.invoice_number_label
+            self.buyer_identifier = self.root.ids.buyer_identifier
+            self.seller_identifier = self.root.ids.seller_identifier
             self.time_label = self.root.ids.time_label
             self.business_name_label = self.root.ids.business_name_label
             self.industry_label = self.root.ids.industry_label
@@ -89,7 +93,9 @@ class ReceiptScannerApp(MDApp):
         清除所有顯示的文字內容，實現初始化效果。
         """
         print("--- 呼叫 clear_display: 正在清除所有顯示內容 ---")
-        self.invoice_number_label.text = "統一編號: "
+        self.invoice_number_label.text = "發票號碼: "
+        self.buyer_identifier.text = "買方統編: "
+        self.seller_identifier.text = "賣方統編: "
         self.time_label.text = "時間: "
         self.business_name_label.text = "營業人名稱: "
         self.industry_label.text = "行業: "
@@ -121,7 +127,9 @@ class ReceiptScannerApp(MDApp):
 
         # 模擬一些 OCR 數據用於發票資訊、品項和分類
         sample_ocr_data = {
-            "invoice_number": "91601740",
+            "invoice_number": "FM12345678",
+            "buyer_identifier": "00000000",
+            "seller_identifier": "91601740",
             "time": "2025/01/07 15:18",
             "business_name": "歐立食品股份有限公司南勢角門市部",
             "industry": "未分類其他食品、飲料及菸草製品零售\n咖啡館",
@@ -153,7 +161,11 @@ class ReceiptScannerApp(MDApp):
 
         # 更新發票資訊標籤
         self.invoice_number_label.text = (
-            f"統一編號: {ocr_data.get('invoice_number', '')}"
+            f"發票號碼: {ocr_data.get('invoice_number', '')}"
+        )
+        self.buyer_identifier.text = f"買方統編: {ocr_data.get('buyer_identifier', '')}"
+        self.seller_identifier.text = (
+            f"賣方統編: {ocr_data.get('seller_identifier', '')}"
         )
         self.time_label.text = f"時間: {ocr_data.get('time', '')}"
         self.business_name_label.text = f"{ocr_data.get('business_name', '')}"
