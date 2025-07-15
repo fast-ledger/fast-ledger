@@ -108,7 +108,7 @@ class ReceiptScannerApp(MDApp):
         self.item6_name_label.text = ""
         self.item6_category_label.text = ""
 
-        self.processed_image_widget.source = "data/images/placeholder.png"  # "src/core/qrcode_scanner/receipt/Receipt_2.jpg"    # 確保顯示佔位圖
+        self.processed_image_widget.source = "assets/images/placeholder.png"  # "src/core/qrcode_scanner/receipt/Receipt_2.jpg"    # 確保顯示佔位圖
         print("--- 介面已重置為空白狀態 ---")
 
     def process_image_and_data(self):
