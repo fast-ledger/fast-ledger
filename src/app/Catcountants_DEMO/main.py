@@ -48,7 +48,7 @@ class ReceiptScannerApp(MDApp):
 
     def build(self):
         # 載入 KV 檔案，它會定義 MainScreen 的結構
-        Builder.load_file("src/test/Catcountants_DEMO/ui.kv")
+        Builder.load_file("ui.kv")
         # 直接返回 MainScreen 的實例作為應用程式的根
         return MainScreen()
 
