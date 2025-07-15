@@ -10,20 +10,20 @@ from sklearn.preprocessing import FunctionTransformer
 from sklearn.compose import ColumnTransformer
 
 def row_preprocess(row):
-    scopes = [ row['行業1'], row['行業2'], row['行業3'], row['行業4'] ]
+    scopes = [ row['scope_1'], row['scope_2'], row['scope_3'], row['scope_4'] ]
     item = {
-        'business_name': row['公司名稱'],
+        'business_name': row['business_name'],
         'business_scopes': [s for s in scopes if not pd.isnull(s)],
-        'datetime': datetime.strptime(row['時間'], "%Y/%m/%d\xa0%H:%M"),
-        'item': row['商品品項'],
-        'amount': row['金額'],
+        'datetime': datetime.strptime(row['datetime'], "%Y/%m/%d\xa0%H:%M"),
+        'item': row['item'],
+        'amount': row['amount'],
     }
     return item
 
 def company_scope_item(postings):
     """embed(公司名稱行業1行業2行業3行業4商品品項)"""
     return (
-        postings[['公司名稱', '行業1', '行業2', '行業3', '行業4', '商品品項']]
+        postings[['business_name', 'scope_1', 'scope_2', 'scope_3', 'scope_4', 'item']]
         .fillna('')
         .apply(lambda x: ''.join(x), axis=1))
 
@@ -69,7 +69,7 @@ def time_extractor(postings):
     def time_extract(row):
         time = re.search(
             r'(\d{4})/(\d{2})/(\d{2})\s(\d{2}):(\d{2})',
-            row['時間'])
+            row['datetime'])
         return pd.Series(
             [
                 int(time.group(1)),
