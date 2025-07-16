@@ -61,15 +61,16 @@ if __name__ == "__main__":
     time_train_start = time.time()
     predictor.fit(X_train, y_train)  # Train predictor
     time_train_end = time.time()
-    possibilities = predictor.predict_proba(X_test)[0]  # Predict result
+    prediction = predictor.predict_proba(X_test)[0]  # Predict result
     time_pred_end = time.time()
 
-    print(pd.DataFrame({
+    score = pd.DataFrame({
         'accounts': sorted(y_train.unique()),
-        'score': possibilities
-    }).sort_values(by=['score'], ascending=False))
+        'score': prediction
+    })
+    print(score[score['score'] > 0].sort_values(by=['score'], ascending=False).to_string(index=False))
     print("Prediction:", predictor.predict(X_test)[0])
-    
+
     print("========== Time Evaluation ==========")
     print("Load predictor: {:.2f}s".format(time_train_start - time_load_predictor))
     print("Training: {:.2f}s\tPredict: {:.2f}s".format(
