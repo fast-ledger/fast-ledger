@@ -12,7 +12,7 @@ class Predictor:
         encoder = SentenceTransformer('sentence-transformers/multi-qa-MiniLM-L6-cos-v1')
 
         weight_time = 15
-        weight_amount = 100
+        weight_subtotal = 100
         KNN_weights = [1] * 384
 
         features = [(
@@ -27,15 +27,15 @@ class Predictor:
             KNN_weights += [weight_time, weight_time]
             features += [("time_embedding", time_cyclic_transformer)]
 
-        if (weight_amount > 0):
-            KNN_weights += [weight_amount]
+        if (weight_subtotal > 0):
+            KNN_weights += [weight_subtotal]
             features += [(
-                "amount_embedding",
+                "subtotal_embedding",
                 ColumnTransformer([
                     (
-                        "amount_sigmoid",
+                        "subtotal_sigmoid",
                         FunctionTransformer(lambda z: 1 / (1 + np.exp(-1 * z.astype(int)))),
-                        ['amount']
+                        ['subtotal']
                     )
                 ])
             )]
@@ -63,3 +63,4 @@ if __name__ == "__main__":
         'accounts': sorted(y_train.unique()),
         'possibility': possibilities
     }).sort_values(by=['possibility'], ascending=False))
+    print("Prediction:", predictor.predict(X_test)[0])
