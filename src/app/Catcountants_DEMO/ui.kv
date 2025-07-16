@@ -213,7 +213,29 @@
                             md_bg_color: 0.9, 0.9, 0.9, 1
                             MDLabel:
                                 id: invoice_number_label
-                                text: "統一編號: " # 初始文本
+                                text: "發票號碼: " # 初始文本
+                                font_name: "fonts/NotoSansCJK-Regular.ttf"
+                                color: 0.3, 0.3, 0.3, 1
+                                font_size: '15sp'
+                                halign: 'left'
+                                valign: 'top'
+                                text_size: self.width, None
+                                size_hint_y: None
+                                height: self.texture_size[1]
+                            MDLabel:
+                                id: buyer_identifier
+                                text: "買方統編: " # 初始文本
+                                font_name: "fonts/NotoSansCJK-Regular.ttf"
+                                color: 0.3, 0.3, 0.3, 1
+                                font_size: '15sp'
+                                halign: 'left'
+                                valign: 'top'
+                                text_size: self.width, None
+                                size_hint_y: None
+                                height: self.texture_size[1]
+                            MDLabel:
+                                id: seller_identifier
+                                text: "賣方統編: " # 初始文本
                                 font_name: "fonts/NotoSansCJK-Regular.ttf"
                                 color: 0.3, 0.3, 0.3, 1
                                 font_size: '15sp'
