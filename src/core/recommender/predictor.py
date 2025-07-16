@@ -63,3 +63,4 @@ if __name__ == "__main__":
         'accounts': sorted(y_train.unique()),
         'possibility': possibilities
     }).sort_values(by=['possibility'], ascending=False))
+    print("Prediction:", predictor.predict(X_test)[0])
