@@ -61,6 +61,6 @@ if __name__ == "__main__":
 
     print(pd.DataFrame({
         'accounts': sorted(y_train.unique()),
-        'possibility': possibilities
-    }).sort_values(by=['possibility'], ascending=False))
+        'score': possibilities
+    }).sort_values(by=['score'], ascending=False))
     print("Prediction:", predictor.predict(X_test)[0])
