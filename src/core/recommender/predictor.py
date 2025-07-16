@@ -6,6 +6,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.neighbors import KNeighborsClassifier
 from sentence_transformers import SentenceTransformer
 from transformer import company_scope_item_labeled, time_cyclic_transformer
+import time
 
 class Predictor:
     def __new__(cls):
@@ -55,12 +56,23 @@ if __name__ == "__main__":
     y_train = X_train['ljavuras']
 
     # Example usage
-    predictor = Predictor()
-    predictor.fit(X_train, y_train)
-    possibilities = predictor.predict_proba(X_test)[0]
+    time_load_predictor = time.time()
+    predictor = Predictor()  # Create predictor
+    time_train_start = time.time()
+    predictor.fit(X_train, y_train)  # Train predictor
+    time_train_end = time.time()
+    possibilities = predictor.predict_proba(X_test)[0]  # Predict result
+    time_pred_end = time.time()
 
     print(pd.DataFrame({
         'accounts': sorted(y_train.unique()),
         'score': possibilities
     }).sort_values(by=['score'], ascending=False))
     print("Prediction:", predictor.predict(X_test)[0])
+    
+    print("========== Time Evaluation ==========")
+    print("Load predictor: {:.2f}s".format(time_train_start - time_load_predictor))
+    print("Training: {:.2f}s\tPredict: {:.2f}s".format(
+        time_train_end - time_train_start,
+        time_pred_end - time_train_end
+    ))
