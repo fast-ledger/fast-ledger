@@ -16,7 +16,7 @@ def row_preprocess(row):
         'business_scopes': [s for s in scopes if not pd.isnull(s)],
         'datetime': datetime.strptime(row['datetime'], "%Y/%m/%d\xa0%H:%M"),
         'item': row['item'],
-        'amount': row['amount'],
+        'subtotal': row['subtotal'],
     }
     return item
 
@@ -48,7 +48,7 @@ def all_labeled(postings):
     business scope: 行業1, 行業2, 行業3, 行業4
     datetime: 時間
     item: 商品品項
-    amount: 金額)"""
+    subtotal: 金額)"""
     def item_repr_str(row):
         item_info = row_preprocess(row)
         return textwrap.dedent("""\
@@ -56,12 +56,12 @@ def all_labeled(postings):
                                business scope: {}
                                datetime: {}
                                item: {}
-                               amount: {}""".format(
+                               subtotal: {}""".format(
             item_info['business_name'],
             ", ".join(item_info['business_scopes']),
             item_info['datetime'].strftime("%Y/%m/%d %H:%M"),
             item_info['item'],
-            item_info['amount'],
+            item_info['subtotal'],
         ))
     return postings.apply(item_repr_str, axis=1)
 

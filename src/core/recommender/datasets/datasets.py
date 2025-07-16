@@ -36,7 +36,7 @@ class Dataset:
             "統一編號": "ban",
             "時間": "datetime",
             "商品品項": "item",
-            "金額": "amount",
+            "金額": "subtotal",
         })
     
     def subset(self, subset_name):
