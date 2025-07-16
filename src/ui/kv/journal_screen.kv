@@ -1,76 +1,102 @@
 # kv/journal_screen.kv
-# 導入所有在 .kv 檔案中直接使用的 Kivy 和 KivyMD 元件
-#:import MDToolbar kivymd.uix.toolbar
-#:import MDBoxLayout kivymd.uix.boxlayout
-#:import ScrollView kivy.uix.scrollview.ScrollView
-#:import MDList kivymd.uix.list
-#:import OneLineAvatarIconListItem kivymd.uix.list
-#:import IconRightWidget kivymd.uix.list
-#:import MDBottomNavigation kivymd.uix.bottomnavigation
-#:import MDBottomNavigationItem kivymd.uix.bottomnavigation
-#:import MDFloatingActionButton kivymd.uix.button
+# Kivy Language (.kv) 檔案，用於定義 JournalScreen 的 UI 佈局和外觀
 
+# 導入必要的 KivyMD 組件
+#:import MDBottomNavigation kivymd.uix.bottomnavigation.MDBottomNavigation
+#:import MDBottomNavigationItem kivymd.uix.bottomnavigation.MDBottomNavigationItem
+#:import MDTopAppBar kivymd.uix.toolbar.MDTopAppBar
+#:import MDBoxLayout kivymd.uix.boxlayout.MDBoxLayout
+#:import MDCard kivymd.uix.card.MDCard
+#:import MDLabel kivymd.uix.label.MDLabel
+#:import MDFloatingActionButton kivymd.uix.button.MDFloatingActionButton
+#:import MDIconButton kivymd.uix.button.MDIconButton
+#:import ScrollView kivy.uix.scrollview.ScrollView
+#:import MDList kivymd.uix.list.MDList 
+#:import IconRightWidget kivymd.uix.list.IconRightWidget 
+#:import dp kivy.metrics.dp
 
 <JournalScreen>:
-    name: 'journal_screen' # 確保畫面名稱與 main.py 中 ScreenManager 的名稱一致
+    name: 'journal_screen'  # 賦予此畫面一個名稱，用於 ScreenManager 進行切換
 
-    # 主佈局容器：垂直方向
     MDBoxLayout:
-        orientation: 'vertical'
+        orientation: 'vertical' # 垂直方向佈局
+        md_bg_color: app.theme_cls.bg_normal # 設置背景顏色為應用程式主題的標準背景色
 
-        # 頂部 App Bar
+        # 頂部應用程式欄 (App Bar) - 與首頁保持一致，但標題為「帳本」
         MDTopAppBar:
-            id: MDTopAppBar
-            title: "帳本" # 標題文字
-            # 右側動作按鈕：放大鏡 (搜尋) 和齒輪 (設定)
-            right_action_items: [["magnify", lambda x: app.root.get_screen('journal_screen').search_button_pressed()], ["cog-outline", lambda x: app.root.get_screen('journal_screen').journal_settings_button_pressed()]]
-            elevation: 10 # 陰影效果，使 Toolbar 顯得突出
-            specific_text_color: app.theme_cls.text_color # 確保文字顏色與主題協調
+            title: "帳本" # <-- 標題文字更改為「帳本」
+            pos_hint: {'top': 1} # 放在頂部
+            elevation: 2 # 陰影效果
+            # 右側動作按鈕 (放大鏡和齒輪圖標)
+            right_action_items: [["magnify", lambda x: root.search_button_pressed()], ["cog", lambda x: root.settings_button_pressed()]]
+            radius: [0, 0, 0, 0] # 沒有圓角
 
-        # 內容區域 - 使用 ScrollView 包裹 MDList 以實現滾動功能
+        # 內容滾動視圖 (Scrollable Content Area) - 包含帳本條目
         ScrollView:
-            MDList:
-                id: transaction_list # 提供 ID 以便在 Python 中動態添加和操作列表項
-                # 這裡的列表項將由 Python 程式碼 (journal_screen.py) 動態生成和添加
-                # 以模擬交易列表的顯示
+            MDBoxLayout:
+                orientation: 'vertical'
+                spacing: "15dp" # 垂直方向元素間距
+                padding: "15dp" # 內部邊距
+                adaptive_height: True # 高度自動適應內容 (配合 ScrollView)
+                size_hint_y: None # 必須設置為 None 才能讓 adaptive_height 工作
+                height: self.minimum_height # 必須設置為 minimum_height 才能讓 adaptive_height 工作
 
-        # 底部導航欄 - 保持與 Home Screen 相同的佈局和功能
+                # MDList 用於顯示 Journal 的動態數據 (每個條目由 Python 創建的 MDCard)
+                MDList:
+                    id: journal_list # <-- JournalScreen.py 會將內容添加到此 ID
+                    padding: 0 # MDList 內部填充為0，讓卡片填滿
+                    spacing: "15dp" # MDList 項目間距，這裡用於卡片間距
+                    adaptive_height: True
+                    size_hint_y: None
+                    height: self.minimum_height
+
+                # 底部填充空間，防止內容與底部導航欄重疊
+                # 這個高度要足夠讓 FAB 和底部導航欄有空間
+                MDBoxLayout:
+                    size_hint_y: None
+                    height: "80dp" # 底部導航欄的高度 + FAB 的垂直偏移量
+
+        # 底部導航欄 (MDBottomNavigation 會自動將項目均勻分佈)
         MDBottomNavigation:
-            id: bottom_nav_bar # 提供 ID 以便在 Python 中引用和綁定事件
-            panel_color: app.theme_cls.primary_color # 設定導航欄面板的背景顏色為應用程式主色
+            panel_color: "#ffffffff"
+            # 移除 id: bottom_nav_bar 和 panel_color: app.theme_cls.bg_normal
+            # 直接在每個 MDBottomNavigationItem 中處理 on_tab_press 事件
+            size_hint:(1,.2)
 
-            # 首頁導航項
+            # 導航項目：Home
             MDBottomNavigationItem:
-                name: 'home_nav' # 導航項的唯一名稱
-                text: 'Home' # 顯示文字
-                icon: 'home' # 圖標
-                on_tab_press: app.root.current = 'home_screen' # 當點擊時，直接切換到 'home_screen'
+                name: 'home_nav' # 唯一的名稱
+                text: 'Home'
+                icon: 'home'
+                on_tab_press: app.root.current = 'home' # <-- 新增這行
 
-            # 帳本導航項
+            # 導航項目：Journal
             MDBottomNavigationItem:
                 name: 'journal_nav'
                 text: 'Journal'
-                icon: 'book'
-                # 當前已在 Journal 頁面，通常無需在此再次設置 on_tab_press 切換，
-                # 但 Python 代碼中的 on_bottom_nav_tab_switched 會處理此邏輯。
+                icon: 'book-open-variant'
+                on_tab_press: app.root.current = 'journal_screen' # <-- 新增這行
 
-            # 報表導航項 (假設未來會實作 'report_screen')
+            # 導航項目：Report
             MDBottomNavigationItem:
                 name: 'report_nav'
                 text: 'Report'
                 icon: 'chart-bar'
-                on_tab_press: app.root.current = 'report_screen' # 當點擊時，切換到 'report_screen'
+                on_tab_press: print("跳轉到 Report 頁面 (未實作)") # <-- 新增這行
 
-            # 設定導航項 (假設未來會實作 'settings_screen')
+            # 導航項目：Settings
             MDBottomNavigationItem:
                 name: 'settings_nav'
                 text: 'Settings'
                 icon: 'cog'
-                on_tab_press: app.root.current = 'settings_screen' # 當點擊時，切換到 'settings_screen'
+                on_tab_press: print("跳轉到 Settings 頁面 (未實作)") # <-- 新增這行
 
-    # 浮動動作按鈕 (FAB) - 位於底部中間，用於新增交易
+    # 懸浮動作按鈕 (Floating Action Button - FAB) - 相機圖標
     MDFloatingActionButton:
-        icon: 'cash' # 圖標
-        md_bg_color: app.theme_cls.primary_color # 背景色為應用程式主色
-        pos_hint: {'center_x': .5, 'center_y': .11} # 定位提示：水平居中，垂直在底部導航欄之上
-        on_release: root.add_transaction_fab_pressed() # 綁定到 JournalScreen 中新增交易的方法
+        icon: "camera"
+        md_bg_color: 0, 0, 0, 1
+        pos_hint: {'center_x': 0.5, 'center_y': 0.1}
+        size_hint: None, None
+        size: "48dp", "48dp"
+        elevation: 6
+        on_release: root.transaction_button_pressed() # 點擊時觸發的方法

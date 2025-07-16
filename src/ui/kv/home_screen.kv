@@ -29,7 +29,7 @@
             radius: [0, 0, 0, 0] # 沒有圓角
 
         # 內容滾動視圖 (Scrollable Content Area)
-        ScrollView:
+        MDScrollView:
             MDBoxLayout:
                 orientation: 'vertical'
                 spacing: "15dp" # 垂直方向元素間距
@@ -110,14 +110,14 @@
                             valign: 'center'
                             color: 0.5, 0.5, 0.5, 1
 
-                    MDBoxLayout:
-                        size_hint_y: 1
-                        md_bg_color: 0.95, 0.95, 0.95, 1 # 淺灰色背景，表示圖表區域
-                        MDLabel:
-                            text: "Bar Chart Placeholder"
-                            halign: 'center'
-                            valign: 'center'
-                            color: 0.5, 0.5, 0.5, 1
+                        MDBoxLayout:
+                            size_hint_y: 1
+                            md_bg_color: 0.95, 0.95, 0.95, 1 # 淺灰色背景，表示圖表區域
+                            MDLabel:
+                                text: "Bar Chart Placeholder"
+                                halign: 'center'
+                                valign: 'center'
+                                color: 0.5, 0.5, 0.5, 1
 
                 # 費用圓餅圖卡片 (Expenses Donut Chart Card) - 佔位符
                 MDCard:
@@ -153,17 +153,17 @@
                             valign: 'center'
                             color: 0.5, 0.5, 0.5, 1
 
-                    MDBoxLayout:
-                        size_hint_y: 1
-                        md_bg_color: 0.95, 0.95, 0.95, 1
-                        MDLabel:
-                            text: "Total\\n" + root.total_expenses_text # 使用 \n 進行換行
-                            font_size: "24sp"
-                            halign: 'center'
-                            valign: 'center'
-                            bold: True
-                            color: 0, 0, 0, 1
-                            markup: True
+                        MDBoxLayout:
+                            size_hint_y: 1
+                            md_bg_color: 0.95, 0.95, 0.95, 1
+                            MDLabel:
+                                text: "Total\\n" + root.total_expenses_text # 使用 \n 進行換行
+                                font_size: "24sp"
+                                halign: 'center'
+                                valign: 'center'
+                                bold: True
+                                color: 0, 0, 0, 1
+                                markup: True
 
                 # 新增的卡片，用於容納加號元件
                 MDCard:
@@ -197,40 +197,45 @@
 
         # 底部導航欄 (MDBottomNavigation 會自動將項目均勻分佈)
         MDBottomNavigation:
-            id: bottom_nav_bar # 添加 ID，以便在 Python 中引用
-            panel_color: app.theme_cls.bg_normal # 設置底部導航欄的面板顏色
+            panel_color: "#ffffffff"
+            # 移除 id: bottom_nav_bar 和 panel_color: app.theme_cls.bg_normal
+            # 直接在每個 MDBottomNavigationItem 中處理 on_tab_press 事件
+            size_hint:(1,.2)
 
             # 導航項目：Home
             MDBottomNavigationItem:
                 name: 'home_nav' # 唯一的名稱
                 text: 'Home'
                 icon: 'home'
+                on_tab_press: app.root.current = 'home' # <-- 新增這行
 
             # 導航項目：Journal
             MDBottomNavigationItem:
                 name: 'journal_nav'
                 text: 'Journal'
                 icon: 'book-open-variant'
+                on_tab_press: app.root.current = 'journal_screen' # <-- 新增這行
 
             # 導航項目：Report
             MDBottomNavigationItem:
                 name: 'report_nav'
                 text: 'Report'
                 icon: 'chart-bar'
+                on_tab_press: print("跳轉到 Report 頁面 (未實作)") # <-- 新增這行
 
             # 導航項目：Settings
             MDBottomNavigationItem:
                 name: 'settings_nav'
                 text: 'Settings'
                 icon: 'cog'
+                on_tab_press: print("跳轉到 Settings 頁面 (未實作)") # <-- 新增這行
 
     # 懸浮動作按鈕 (Floating Action Button - FAB) - 相機圖標
-    # 保持其位置不變，它仍然是一個獨立於內容的懸浮按鈕
     MDFloatingActionButton:
-        icon: "camera" # ***這裡從 "currency-usd" 改為 "camera"***
-        md_bg_color: 0, 0, 0, 1 # 黑色背景
-        pos_hint: {'center_x': 0.5, 'center_y': 0.1} # 根據圖片微調 y 值
+        icon: "camera"
+        md_bg_color: 0, 0, 0, 1
+        pos_hint: {'center_x': 0.5, 'center_y': 0.1}
         size_hint: None, None
-        size: "48dp", "48dp" # 較小的尺寸
+        size: "48dp", "48dp"
         elevation: 6
         on_release: root.transaction_button_pressed() # 點擊時觸發的方法
