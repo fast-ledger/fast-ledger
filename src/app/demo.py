@@ -65,16 +65,6 @@ class CameraApp(MDApp):
         ret, frame = self.capture.read()
         self.input_img = self.test_image
 
-        def shift(self):
-            if cv2.waitKey(1) == ord("q"):
-                if self.input_img == self.test_image:
-                    self.input_img = frame
-                else:
-                    self.input_img = self.test_image
-
-        t = Thread(target=shift)
-        t.start()
-
         if ret:
             frame = cv2.resize(frame, (0, 0), fx=0.8, fy=0.8)
             buf = cv2.flip(frame, -1).tobytes()
@@ -95,7 +85,7 @@ class CameraApp(MDApp):
             if self.p.is_alive():
                 self.__elapsed_time = 1 - dt
             else:
-                self.p = Thread(target=self.invoice_process, args=(self.input_img,))
+                self.p = Thread(target=self.invoice_process, args=(self.test_image,))
                 self.p.start()
 
     def on_stop(self):
