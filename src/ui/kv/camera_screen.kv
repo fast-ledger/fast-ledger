@@ -25,8 +25,7 @@
             radius: [0, 0, 0, 0] # 沒有圓角
 
             # 返回上一頁的按鈕 (左上角箭頭圖標)
-            left_action_items: [["arrow-left", lambda x: app.root.setter('current', 'home')()]]
-
+            left_action_items: [["arrow-left", lambda x: setattr(app.root, 'current', 'home')]] # <--- 請務必確認這裡已修改
 
         # "對準發票" 和 "自動掃描" 切換區
         MDBoxLayout:
@@ -62,7 +61,7 @@
             size_hint_y: 1 # 佔據剩餘所有垂直空間
             md_bg_color: 0.8, 0.8, 0.8, 1 # 圖片中相機區域的背景色，比外層深一點
 
-            # *** 修改這裡：將 Camera 元件放入 ***
+            # Camera 元件
             Camera:
                 id: camera_preview # 給 Camera 元件一個 ID
                 resolution: (640, 480) # 設置相機分辨率，請根據需要調整
@@ -70,7 +69,6 @@
                 # 如果要顯示預覽，但桌面不成功，可以試試 keep_ratio: False 讓它填充空間
                 # keep_ratio: True
                 # allow_stretch: True
-            # *** 修改結束 ***
 
             # 四個角落的掃描框線 (懸浮在 Camera 之上)
             # 左上角
@@ -113,5 +111,4 @@
         size_hint: None, None
         size: dp(56), dp(56) # 標準 FAB 大小
         elevation: 6 # 陰影效果，使其看起來像浮在上面
-        on_release: root.capture_photo() # *** 修改這裡：綁定到 Python 方法 ***
-
+        on_release: root.capture_photo() # 綁定到 CameraScreen 類中的 capture_photo 方法

@@ -11,8 +11,8 @@
 #:import MDFloatingActionButton kivymd.uix.button.MDFloatingActionButton
 #:import MDIconButton kivymd.uix.button.MDIconButton
 #:import ScrollView kivy.uix.scrollview.ScrollView
-#:import MDList kivymd.uix.list.MDList 
-#:import IconRightWidget kivymd.uix.list.IconRightWidget 
+#:import MDList kivymd.uix.list.MDList
+#:import IconRightWidget kivymd.uix.list.IconRightWidget
 #:import dp kivy.metrics.dp
 
 <JournalScreen>:
@@ -27,6 +27,8 @@
             title: "帳本" # <-- 標題文字更改為「帳本」
             pos_hint: {'top': 1} # 放在頂部
             elevation: 2 # 陰影效果
+            # 左側動作按鈕 (返回箭頭)
+            left_action_items: [["arrow-left", lambda x: setattr(app.root, 'current', 'home')]] # <--- 已修改為正確的返回語法
             # 右側動作按鈕 (放大鏡和齒輪圖標)
             right_action_items: [["magnify", lambda x: root.search_button_pressed()], ["cog", lambda x: root.settings_button_pressed()]]
             radius: [0, 0, 0, 0] # 沒有圓角
@@ -68,28 +70,28 @@
                 name: 'home_nav' # 唯一的名稱
                 text: 'Home'
                 icon: 'home'
-                on_tab_press: app.root.current = 'home' # <-- 新增這行
+                on_tab_press: app.root.current = 'home' # <-- 已新增
 
             # 導航項目：Journal
             MDBottomNavigationItem:
                 name: 'journal_nav'
                 text: 'Journal'
                 icon: 'book-open-variant'
-                on_tab_press: app.root.current = 'journal_screen' # <-- 新增這行
+                on_tab_press: app.root.current = 'journal_screen' # <-- 已新增
 
             # 導航項目：Report
             MDBottomNavigationItem:
                 name: 'report_nav'
                 text: 'Report'
                 icon: 'chart-bar'
-                on_tab_press: print("跳轉到 Report 頁面 (未實作)") # <-- 新增這行
+                on_tab_press: print("跳轉到 Report 頁面 (未實作)") # <-- 已新增
 
             # 導航項目：Settings
             MDBottomNavigationItem:
                 name: 'settings_nav'
                 text: 'Settings'
                 icon: 'cog'
-                on_tab_press: print("跳轉到 Settings 頁面 (未實作)") # <-- 新增這行
+                on_tab_press: print("跳轉到 Settings 頁面 (未實作)") # <-- 已新增
 
     # 懸浮動作按鈕 (Floating Action Button - FAB) - 相機圖標
     MDFloatingActionButton:
@@ -99,4 +101,4 @@
         size_hint: None, None
         size: "48dp", "48dp"
         elevation: 6
-        on_release: root.transaction_button_pressed() # 點擊時觸發的方法
+        on_release: root.go_to_camera_screen() # <--- 已修改為呼叫 go_to_camera_screen 方法

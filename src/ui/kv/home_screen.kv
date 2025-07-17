@@ -197,9 +197,8 @@
 
         # 底部導航欄 (MDBottomNavigation 會自動將項目均勻分佈)
         MDBottomNavigation:
+            id: bottom_nav_bar # <--- **修正點 1：新增此 ID**
             panel_color: "#ffffffff"
-            # 移除 id: bottom_nav_bar 和 panel_color: app.theme_cls.bg_normal
-            # 直接在每個 MDBottomNavigationItem 中處理 on_tab_press 事件
             size_hint:(1,.2)
 
             # 導航項目：Home
@@ -207,28 +206,28 @@
                 name: 'home_nav' # 唯一的名稱
                 text: 'Home'
                 icon: 'home'
-                on_tab_press: app.root.current = 'home' # <-- 新增這行
+                on_tab_press: app.root.current = 'home'
 
             # 導航項目：Journal
             MDBottomNavigationItem:
                 name: 'journal_nav'
                 text: 'Journal'
                 icon: 'book-open-variant'
-                on_tab_press: app.root.current = 'journal_screen' # <-- 新增這行
+                on_tab_press: app.root.current = 'journal_screen'
 
             # 導航項目：Report
             MDBottomNavigationItem:
                 name: 'report_nav'
                 text: 'Report'
                 icon: 'chart-bar'
-                on_tab_press: print("跳轉到 Report 頁面 (未實作)") # <-- 新增這行
+                on_tab_press: print("跳轉到 Report 頁面 (未實作)")
 
             # 導航項目：Settings
             MDBottomNavigationItem:
                 name: 'settings_nav'
                 text: 'Settings'
                 icon: 'cog'
-                on_tab_press: print("跳轉到 Settings 頁面 (未實作)") # <-- 新增這行
+                on_tab_press: print("跳轉到 Settings 頁面 (未實作)")
 
     # 懸浮動作按鈕 (Floating Action Button - FAB) - 相機圖標
     MDFloatingActionButton:
@@ -238,4 +237,4 @@
         size_hint: None, None
         size: "48dp", "48dp"
         elevation: 6
-        on_release: root.transaction_button_pressed() # 點擊時觸發的方法
+        on_release: root.transaction_button_pressed() # <--- **此處已修正，呼叫 transaction_button_pressed 方法**
