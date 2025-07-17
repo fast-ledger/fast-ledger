@@ -31,13 +31,26 @@ class CameraApp(MDApp):
     scanner = Qscanner()
     p = Thread()
 
+    process_img = None
+
     __elapsed_time = 0
     q_result = None
     process_times = 0
 
     test_image = cv2.imread("src/core/qrcode_scanner/receipt/Receipt_2.jpg")
 
+    invoice_number = "AA00000000"
+    invoice_date = "0000000"
+    seller_identifier = "00000000"
+    buyer_identifier = "00000000"
+    randan_number = "0000"
+    note = "**********"
+
     item_label_list = []
+    item_name = ""
+    item_amount = ""
+    item_price = ""
+    item_total = ""
 
     def build(self):
         mainLayout = MDGridLayout(cols=2, rows=1)
@@ -58,7 +71,7 @@ class CameraApp(MDApp):
         self.mainLayout = mainLayout
 
         self.capture = cv2.VideoCapture(0)
-        Clock.schedule_interval(self.update, 1.0 / 90.0)
+        Clock.schedule_interval(self.update, 1.0 / 60.0)
         return self.mainLayout
 
     def update(self, dt):
@@ -66,13 +79,7 @@ class CameraApp(MDApp):
         self.input_img = self.test_image
 
         if ret:
-            frame = cv2.resize(frame, (0, 0), fx=0.8, fy=0.8)
-            buf = cv2.flip(frame, -1).tobytes()
-            texture = Texture.create(
-                size=(frame.shape[1], frame.shape[0]), colorfmt="bgr"
-            )
-            texture.blit_buffer(buf, colorfmt="bgr", bufferfmt="ubyte")
-            self.img.texture = texture
+            self.img.texture = self.to_texture(frame, (0, 0), 0.8)
 
         self.setLabel_text()
 
@@ -85,7 +92,7 @@ class CameraApp(MDApp):
             if self.p.is_alive():
                 self.__elapsed_time = 1 - dt
             else:
-                self.p = Thread(target=self.invoice_process, args=(self.test_image,))
+                self.p = Thread(target=self.invoice_process, args=(frame,))
                 self.p.start()
 
     def on_stop(self):
@@ -94,63 +101,69 @@ class CameraApp(MDApp):
     def invoice_process(self, frame):
         self.process_times += 1
 
-        if self.process_times >= 2:
+        if self.process_times >= 100:
             self.process_times = 0
             self.q_result = None
 
-        results = self.process(frame, scale_ratio=1.5)
+        self.process.set_saving_directory("src/app/picture")
+        results = self.process(frame, 2, save_result=False)
         for result in results:
             if result.label_name == "elec":
                 self.process_times = 0
                 self.q_result = self.scanner(result.image)
                 self.q_result.print_invoice_info()
+        # self.q_result = self.scanner(frame)
+        # self.q_result.print_invoice_info()
+
+    def to_texture(self, img, size: tuple = (0, 0), scale_ratio=0.8):
+        img = cv2.resize(img, size, fx=scale_ratio, fy=scale_ratio)
+        buf = cv2.flip(img, -1).tobytes()
+        texture = Texture.create(size=(img.shape[1], img.shape[0]), colorfmt="bgr")
+        texture.blit_buffer(buf, colorfmt="bgr", bufferfmt="ubyte")
+        return texture
 
     def setLabel_text(self):
-        invoice_number = "AA00000000"
-        invoice_date = "0000000"
-        seller_identifier = "00000000"
-        buyer_identifier = "00000000"
-        randan_number = "0000"
-        note = "**********"
-
-        item_name = ""
-        item_amount = ""
-        item_price = ""
-        item_total = ""
-
         for label in self.item_label_list:
             self.s_layout.remove_widget(label)
 
         if self.q_result is not None:
-            invoice_number = self.q_result.invoice_number
-            invoice_date = self.q_result.invoice_date
-            seller_identifier = self.q_result.seller_identifier
-            buyer_identifier = self.q_result.buyer_identifier
-            randan_number = self.q_result.randan_number
-            note = self.q_result.note
+            if self.q_result.invoice_number != "":
+                self.invoice_number = self.q_result.invoice_number
+                self.invoice_date = self.q_result.invoice_date
+                self.seller_identifier = self.q_result.seller_identifier
+                self.buyer_identifier = self.q_result.buyer_identifier
+                self.randan_number = self.q_result.randan_number
+                self.note = self.q_result.note
 
-            for i, item in enumerate(self.q_result.item):
-                item_name = item.get("name")
-                item_amount = item.get("amount")
-                item_price = item.get("price")
-                item_total = item.get("total")
+                for item in self.q_result.item:
+                    if item.get("name") != "":
+                        for label in self.item_label_list:
+                            self.s_layout.remove_widget(label)
+                        break
 
-                item_text = f"""
-{"商品:": <5}{item_name}
-{"數量:": <5}{item_amount: <10}
-{"金額:": <5}{item_price: <10}
-{"總金額:": <5}{item_total: <10}"""
-                label = MyLabel(text=item_text)
-                self.s_layout.add_widget(label)
-                self.item_label_list.append(label)
+                for i, item in enumerate(self.q_result.item):
+                    if item.get("name") != "":
+                        self.item_name = item.get("name")
+                        self.item_amount = item.get("amount")
+                        self.item_price = item.get("price")
+                        self.item_total = item.get("total")
+
+                        item_text = f"""
+{"商品:": <5}{self.item_name}
+{"數量:": <5}{self.item_amount: <10}
+{"金額:": <5}{self.item_price: <10}
+{"總金額:": <5}{self.item_total: <10}"""
+                        label = MyLabel(text=item_text)
+                        self.s_layout.add_widget(label)
+                        self.item_label_list.append(label)
 
         text = f"""
-{"發票號碼:": <6}{invoice_number: <15}
-{"發票日期:": <6}{invoice_date: <15}
-{"賣方統編:": <6}{seller_identifier: <15}
-{"買方統編:": <6}{buyer_identifier: <15}
-{"隨機碼:": <6}{randan_number: <15}
-{"Note:": <6}{note: <15}
+{"發票號碼:": <6}{self.invoice_number: <15}
+{"發票日期:": <6}{self.invoice_date: <15}
+{"賣方統編:": <6}{self.seller_identifier: <15}
+{"買方統編:": <6}{self.buyer_identifier: <15}
+{"隨機碼:": <6}{self.randan_number: <15}
+{"Note:": <6}{self.note: <15}
 """
         self.label.text = text
 
