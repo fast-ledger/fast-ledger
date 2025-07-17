@@ -13,5 +13,4 @@ environ['KIVY_DPI'] = str(dpi * scale)
 from kivy.core.window import Window
 from kivy.metrics import dp
 
-print(dp(width * scale), dp(height * scale))
 Window.size = (dp(width * scale), dp(height * scale))
