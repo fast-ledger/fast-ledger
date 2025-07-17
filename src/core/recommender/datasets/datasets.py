@@ -27,7 +27,17 @@ class Dataset:
         if force or not file.exists():
             fetch_google_sheet()
 
-        self.frame = pd.read_csv(path)
+        self.frame = pd.read_csv(path).rename(columns={
+            "公司名稱": "business_name",
+            "行業1": "scope_1",
+            "行業2": "scope_2",
+            "行業3": "scope_3",
+            "行業4": "scope_4",
+            "統一編號": "ban",
+            "時間": "datetime",
+            "商品品項": "item",
+            "金額": "subtotal",
+        })
     
     def subset(self, subset_name):
         match subset_name:

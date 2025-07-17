@@ -109,7 +109,6 @@ def plot_results(results):
         )
     plt.show()
 
-
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     
@@ -152,21 +151,21 @@ if __name__ == "__main__":
                 transformer.time_cyclic_transformer
             ),
             (
-                "amount_embedding",
+                "subtotal_embedding",
                 ColumnTransformer([
                     (
-                        "amount_sigmoid",
+                        "subtotal_sigmoid",
                         FunctionTransformer(lambda z: 1 / (1 + np.exp(-1 * z.astype(int)))),
-                        ['金額']
+                        ['subtotal']
                     )
                 ])
             )
         ])
         weight_time = 15
-        weight_amount = 100
+        weight_subtotal = 100
         KNN_weights = ([1] * 768
                        + [weight_time, weight_time]
-                       + [weight_amount]
+                       + [weight_subtotal]
                        )
         X = embedder.fit_transform(postings)
 
