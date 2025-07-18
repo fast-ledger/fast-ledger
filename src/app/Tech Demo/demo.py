@@ -24,7 +24,6 @@ class TextLabel(MDLabel):
         self.font_name = "src/ui/fonts/NotoSansCJK-Regular.ttf"
         self.font_size = 20
 
-
 # fmt: off
 class TechDemoRoot(MDGridLayout):
     process = ImgProcess()
@@ -34,7 +33,15 @@ class TechDemoRoot(MDGridLayout):
     __elapsed_time = 0
     __run_times = 0
 
-    item_label_list = []
+    class Item:
+        def __init__(self, item):
+            self.name = item['name']
+            self.quantity = item['amount']
+            self.unit_price = item['price']
+            self.subtotal = item['total']
+
+        def is_valid(self):
+            return not not self.name
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -56,8 +63,6 @@ class TechDemoRoot(MDGridLayout):
         self.reset()
 
     def reset(self, dt=None):
-        for label in self.item_label_list:
-            self.col2_layout.remove_widget(label)
         self.scan_result = None
 
         self.invoice_number = "AA00000000"
@@ -67,12 +72,11 @@ class TechDemoRoot(MDGridLayout):
         self.random_number = "0000"
         self.note = "**********"
 
-        self.item_label_list = []
-
-        self.item_name = set()
-        self.item_amount = set()
-        self.item_price = set()
-        self.item_total = set()
+        self.items = []
+        self.reset_items()
+        
+    def reset_items(self):
+        self.ids.col_right.clear_widgets()
         
     def update(self, dt):
         ret, frame = self.capture.read()
@@ -149,36 +153,22 @@ class TechDemoRoot(MDGridLayout):
         for item in self.scan_result.item:
             name = item.get('name')
             if  name != '' and name is not None:
-                for label in self.item_label_list:
-                    self.ids.col_right.remove_widget(label)
-                print('remove')
-                self.item_label_list.clear()
+                self.reset_items()
                 break
         
-        self.item_name.clear()
-        self.item_amount.clear()
-        self.item_price.clear()
-        self.item_total.clear()
+        self.items.clear()
 
         for item in self.scan_result.item:
-            name = item.get('name')
-            amount = item.get('amount')
-            price = item.get('price')
-            total = item.get('total')
-            if  name != '' and name is not None:
-                self.item_name.add(name)
-                self.item_amount.add(amount)
-                self.item_price.add(price)
-                self.item_total.add(total)
-                text = textwrap.dedent(f"""\
-                    {"商品:": <{text_head_bytes}}{name}
-                    {"數量:": <{text_head_bytes}}{amount: <{text_body_bytes}}
-                    {"金額:": <{text_head_bytes}}{price: <{text_body_bytes}}
-                    {"總金額:": <{text_head_bytes}}{total: <{text_body_bytes}}
-                """)
-                label = TextLabel(text=text)
+            item = self.Item(item)
+            if item.is_valid():
+                self.items.append(item)
+                label = TextLabel(text=textwrap.dedent(f"""\
+                    {"商品:": <{text_head_bytes}}{item.name}
+                    {"數量:": <{text_head_bytes}}{item.quantity: <{text_body_bytes}}
+                    {"金額:": <{text_head_bytes}}{item.unit_price: <{text_body_bytes}}
+                    {"總金額:": <{text_head_bytes}}{item.subtotal: <{text_body_bytes}}
+                """))
                 self.ids.col_right.add_widget(label)
-                self.item_label_list.append(label)
 
     def should_reset(self, space:int):
         if self.__run_times > space:
