@@ -146,6 +146,7 @@ class CameraApp(MDApp):
         for result in result_list:
             if result.label_name != "elec":
                 continue
+            self.__run_times = 0
             scan_result = self.scanner(result.image)
             scan_result.print_invoice_info()
 
@@ -165,7 +166,6 @@ class CameraApp(MDApp):
         for item in self.scan_result.item:
             name = item.get('name')
             if  name != '' and name is not None:
-                self.__run_times = 0
                 for label in self.item_label_list:
                     self.col2_layout.remove_widget(label)
                 print('remove')
