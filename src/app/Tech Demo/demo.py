@@ -19,7 +19,7 @@ Window.size = (1024, 640)
 Window.resizable = False
 
 
-class MyLabel(MDLabel):
+class TextLabel(MDLabel):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.color = (0, 0, 0, 1)
@@ -28,7 +28,7 @@ class MyLabel(MDLabel):
 
 
 # fmt: off
-class CameraApp(MDApp):
+class TechDemoApp(MDApp):
     process = ImgProcess()
     scanner = Qscanner()
     process_thread = Thread()
@@ -67,7 +67,7 @@ class CameraApp(MDApp):
         col2_layout = MDBoxLayout(orientation="vertical")
 
         capture_image = Image(pos=(0, 200))
-        invs_info_label = MyLabel(pos=(20, -200), text="")
+        invs_info_label = TextLabel(pos=(20, -200), text="")
 
         mainLayout.add_widget(col1_layout)
         mainLayout.add_widget(col2_layout)
@@ -192,7 +192,7 @@ class CameraApp(MDApp):
                     {"金額:": <{text_head_bytes}}{price: <{text_body_bytes}}
                     {"總金額:": <{text_head_bytes}}{total: <{text_body_bytes}}
                 """)
-                label = MyLabel(text=text)
+                label = TextLabel(text=text)
                 self.col2_layout.add_widget(label)
                 self.item_label_list.append(label)
 
@@ -208,4 +208,4 @@ class CameraApp(MDApp):
 # fmt: on
 
 
-CameraApp().run()
+TechDemoApp().run()
