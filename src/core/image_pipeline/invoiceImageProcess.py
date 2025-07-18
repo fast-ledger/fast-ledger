@@ -18,8 +18,8 @@ class ImgProcess:
     __step_result_dict = {'first': [], 'second': [], 'third': [], 'fourth': [], 'final': []}
 
     __base_dir = Path(__file__).resolve().parent
-    __seg_invoice = 'seg_invoice.pt'
-    __cls_angle = 'cls_angle.pt'
+    __seg_invoice = 'seg_invoice3.pt'
+    __cls_angle = 'cls_angle2.pt'
 
     _seg_invoice_model_pt = __base_dir/'models'/__seg_invoice
     _cls_angle_model_pt=__base_dir/'models'/__cls_angle
