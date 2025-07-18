@@ -21,8 +21,8 @@ class ImgProcess:
     __seg_invoice = 'seg_invoice.pt'
     __cls_angle = 'cls_angle.pt'
 
-    _seg_invoice_model_pt = __base_dir/'model'/__seg_invoice
-    _cls_angle_model_pt=__base_dir/'model'/__cls_angle
+    _seg_invoice_model_pt = __base_dir/'models'/__seg_invoice
+    _cls_angle_model_pt=__base_dir/'models'/__cls_angle
     _seg_invoice_model = YOLO(_seg_invoice_model_pt, 'segment')
     _cls_angle_model = YOLO(_cls_angle_model_pt, 'classify')
 
