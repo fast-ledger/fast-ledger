@@ -1,8 +1,7 @@
-from qrcode_scanner import Qscanner, Q_result
+from qrcode_scanner import Qscanner
 from image_pipeline import ImgProcess
 from threading import Thread
 import textwrap
-import math
 import cv2
 
 from kivymd.uix.floatlayout import MDFloatLayout
