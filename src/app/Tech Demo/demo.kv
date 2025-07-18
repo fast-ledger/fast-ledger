@@ -1,0 +1,21 @@
+#:kivy 2.3.1
+
+#:import MDGridLayout kivymd.uix.gridlayout
+#:import MDFloatLayout kivymd.uix.floatlayout
+#:import MDBoxLayout kivymd.uix.boxlayout
+#:import Image kivy.uix.image
+
+MDGridLayout:
+    cols: 2
+    rows: 1
+
+    MDFloatLayout:
+        id: col_left
+
+        Image:
+            id: capture_image
+            pos: 0, 200
+
+    MDBoxLayout:
+        id: col_right
+        orientation: 'vertical'

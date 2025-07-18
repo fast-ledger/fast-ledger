@@ -4,14 +4,11 @@ from threading import Thread
 import textwrap
 import cv2
 
-from kivymd.uix.floatlayout import MDFloatLayout
-from kivymd.uix.gridlayout import MDGridLayout
-from kivymd.uix.boxlayout import MDBoxLayout
 from kivy.graphics.texture import Texture
 from kivymd.uix.label import MDLabel
 from kivy.core.window import Window
-from kivy.uix.image import Image
 from kivy.clock import Clock
+from kivy.lang import Builder
 from kivymd.app import MDApp
 
 
@@ -62,18 +59,11 @@ class TechDemoApp(MDApp):
         self.item_total = set()        
 
     def build(self):
-        mainLayout = MDGridLayout(cols=2, rows=1)
-        col1_layout = MDFloatLayout()
-        col2_layout = MDBoxLayout(orientation="vertical")
+        self.root = Builder.load_file("demo.kv")
 
-        capture_image = Image(pos=(0, 200))
         invs_info_label = TextLabel(pos=(20, -200), text="")
 
-        mainLayout.add_widget(col1_layout)
-        mainLayout.add_widget(col2_layout)
-
-        col1_layout.add_widget(capture_image)
-        col1_layout.add_widget(invs_info_label)
+        self.root.ids.col_left.add_widget(invs_info_label)
 
         capture = cv2.VideoCapture(0)
         capture.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
@@ -83,12 +73,9 @@ class TechDemoApp(MDApp):
         Clock.schedule_interval(self.processing, 1.0 / 90.0)
 
         self.capture = capture
-        self.col1_layout = col1_layout
-        self.col2_layout = col2_layout
-        self.capture_image = capture_image
         self.invs_info_label = invs_info_label
 
-        return mainLayout
+        return self.root
 
     def update(self, dt):
         ret, frame = self.capture.read()
@@ -137,7 +124,7 @@ class TechDemoApp(MDApp):
         shape = img.shape
         texture = Texture.create(size=(shape[1], shape[0]), colorfmt="bgr")
         texture.blit_buffer(buf, colorfmt="bgr", bufferfmt="ubyte")
-        self.capture_image.texture = texture
+        self.root.ids.capture_image.texture = texture
         
     def frame_process(self, frame):
         self.should_reset(10)
@@ -166,7 +153,7 @@ class TechDemoApp(MDApp):
             if  name != '' and name is not None:
                 self.__run_times = 0
                 for label in self.item_label_list:
-                    self.col2_layout.remove_widget(label)
+                    self.root.ids.col_right.remove_widget(label)
                 print('remove')
                 self.item_label_list.clear()
                 break
@@ -193,7 +180,7 @@ class TechDemoApp(MDApp):
                     {"總金額:": <{text_head_bytes}}{total: <{text_body_bytes}}
                 """)
                 label = TextLabel(text=text)
-                self.col2_layout.add_widget(label)
+                self.root.ids.col_right.add_widget(label)
                 self.item_label_list.append(label)
 
     def should_reset(self, space:int):
