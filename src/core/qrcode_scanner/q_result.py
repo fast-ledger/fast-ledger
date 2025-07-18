@@ -1,13 +1,13 @@
 class Q_result:
     def __init__(self, **kwds):
-        self.invoice_number = kwds.get("i_number")
-        self.randan_number = kwds.get("r_number")
-        self.seller_identifier = kwds.get("s_id")
-        self.buyer_identifier = kwds.get("b_id")
-        self.invoice_date = kwds.get("date")
-        self.qrcode = kwds.get("qrcode")
-        self.note = kwds.get("note")
-        self.item = kwds.get("item")
+        self.invoice_number: str = kwds.get("i_number")
+        self.random_number: str = kwds.get("r_number")
+        self.seller_identifier: str = kwds.get("s_id")
+        self.buyer_identifier: str = kwds.get("b_id")
+        self.invoice_date: str = kwds.get("date")
+        self.qrcode: list[str] = kwds.get("qrcode")
+        self.note: str = kwds.get("note")
+        self.item: list[dict] = kwds.get("item")
 
     def __call__(
         self,
@@ -39,7 +39,7 @@ class Q_result:
         print("=========================================================")
         print("發票號碼:", self.invoice_number)
         print("發票日期:", self.invoice_date)
-        print("隨機碼:", self.randan_number)
+        print("隨機碼:", self.random_number)
         print("買方統編:", self.buyer_identifier)
         print("賣方統編:", self.seller_identifier)
         print("Note:", self.note)

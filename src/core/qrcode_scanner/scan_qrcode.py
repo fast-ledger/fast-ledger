@@ -16,7 +16,7 @@ class Qscanner:
         self.seller_identifier = ""
         self.buyer_identifier = ""
         self.invoice_number = ""
-        self.randan_number = ""
+        self.random_number = ""
         self.invoice_date = ""
         self.note = ""
 
@@ -44,7 +44,7 @@ class Qscanner:
                     print(text)
                 self.invoice_number = text[:10]
                 self.invoice_date = text[10:17]
-                self.randan_number = text[17:21]
+                self.random_number = text[17:21]
 
                 btext = text[21:]
                 btext = btext.split(":")
@@ -80,7 +80,7 @@ class Qscanner:
             self.seller_identifier,
             self.buyer_identifier,
             self.invoice_number,
-            self.randan_number,
+            self.random_number,
             self.invoice_date,
             self.note,
             self.qrcode,
