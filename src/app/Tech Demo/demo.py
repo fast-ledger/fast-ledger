@@ -10,11 +10,12 @@ from kivy.core.window import Window
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivymd.app import MDApp
-
+from kivymd.uix.gridlayout import MDGridLayout
 
 Window.size = (1024, 640)
 Window.resizable = False
 
+Builder.load_file("demo.kv")
 
 class TextLabel(MDLabel):
     def __init__(self, **kwargs):
@@ -25,7 +26,7 @@ class TextLabel(MDLabel):
 
 
 # fmt: off
-class TechDemoApp(MDApp):
+class TechDemoRoot(MDGridLayout):
     process = ImgProcess()
     scanner = Qscanner()
     process_thread = Thread()
@@ -37,6 +38,21 @@ class TechDemoApp(MDApp):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+        invs_info_label = TextLabel(pos=(20, -200), text="")
+
+        self.ids.col_left.add_widget(invs_info_label)
+
+        capture = cv2.VideoCapture(0)
+        capture.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+        capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+
+        Clock.schedule_interval(self.update, 1.0 / 90.0)
+        Clock.schedule_interval(self.processing, 1.0 / 90.0)
+
+        self.capture = capture
+        self.invs_info_label = invs_info_label
+
         self.reset()
 
     def reset(self, dt=None):
@@ -56,27 +72,8 @@ class TechDemoApp(MDApp):
         self.item_name = set()
         self.item_amount = set()
         self.item_price = set()
-        self.item_total = set()        
-
-    def build(self):
-        self.root = Builder.load_file("demo.kv")
-
-        invs_info_label = TextLabel(pos=(20, -200), text="")
-
-        self.root.ids.col_left.add_widget(invs_info_label)
-
-        capture = cv2.VideoCapture(0)
-        capture.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-        capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
-
-        Clock.schedule_interval(self.update, 1.0 / 90.0)
-        Clock.schedule_interval(self.processing, 1.0 / 90.0)
-
-        self.capture = capture
-        self.invs_info_label = invs_info_label
-
-        return self.root
-
+        self.item_total = set()
+        
     def update(self, dt):
         ret, frame = self.capture.read()
         if ret:
@@ -124,7 +121,7 @@ class TechDemoApp(MDApp):
         shape = img.shape
         texture = Texture.create(size=(shape[1], shape[0]), colorfmt="bgr")
         texture.blit_buffer(buf, colorfmt="bgr", bufferfmt="ubyte")
-        self.root.ids.capture_image.texture = texture
+        self.ids.capture_image.texture = texture
         
     def frame_process(self, frame):
         self.should_reset(10)
@@ -153,7 +150,7 @@ class TechDemoApp(MDApp):
             if  name != '' and name is not None:
                 self.__run_times = 0
                 for label in self.item_label_list:
-                    self.root.ids.col_right.remove_widget(label)
+                    self.ids.col_right.remove_widget(label)
                 print('remove')
                 self.item_label_list.clear()
                 break
@@ -180,7 +177,7 @@ class TechDemoApp(MDApp):
                     {"總金額:": <{text_head_bytes}}{total: <{text_body_bytes}}
                 """)
                 label = TextLabel(text=text)
-                self.root.ids.col_right.add_widget(label)
+                self.ids.col_right.add_widget(label)
                 self.item_label_list.append(label)
 
     def should_reset(self, space:int):
@@ -194,5 +191,9 @@ class TechDemoApp(MDApp):
         self.capture.release()
 # fmt: on
 
+class TechDemoApp(MDApp):
+    def build(self):
+        return TechDemoRoot()
 
-TechDemoApp().run()
+if __name__ == "__main__":
+    TechDemoApp().run()
