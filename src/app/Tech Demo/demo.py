@@ -1,26 +1,23 @@
-from qrcode_scanner import Qscanner, Q_result
+from qrcode_scanner import Qscanner
 from image_pipeline import ImgProcess
 from threading import Thread
 import textwrap
-import math
 import cv2
 
-from kivymd.uix.floatlayout import MDFloatLayout
-from kivymd.uix.gridlayout import MDGridLayout
-from kivymd.uix.boxlayout import MDBoxLayout
 from kivy.graphics.texture import Texture
 from kivymd.uix.label import MDLabel
 from kivy.core.window import Window
-from kivy.uix.image import Image
 from kivy.clock import Clock
+from kivy.lang import Builder
 from kivymd.app import MDApp
-
+from kivymd.uix.gridlayout import MDGridLayout
 
 Window.size = (1024, 640)
 Window.resizable = False
 
+Builder.load_file("demo.kv")
 
-class MyLabel(MDLabel):
+class TextLabel(MDLabel):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.color = (0, 0, 0, 1)
@@ -29,7 +26,7 @@ class MyLabel(MDLabel):
 
 
 # fmt: off
-class CameraApp(MDApp):
+class TechDemoRoot(MDGridLayout):
     process = ImgProcess()
     scanner = Qscanner()
     process_thread = Thread()
@@ -41,6 +38,21 @@ class CameraApp(MDApp):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+        invs_info_label = TextLabel(pos=(20, -200), text="")
+
+        self.ids.col_left.add_widget(invs_info_label)
+
+        capture = cv2.VideoCapture(0)
+        capture.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+        capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+
+        Clock.schedule_interval(self.update, 1.0 / 90.0)
+        Clock.schedule_interval(self.processing, 1.0 / 90.0)
+
+        self.capture = capture
+        self.invs_info_label = invs_info_label
+
         self.reset()
 
     def reset(self, dt=None):
@@ -60,37 +72,8 @@ class CameraApp(MDApp):
         self.item_name = set()
         self.item_amount = set()
         self.item_price = set()
-        self.item_total = set()        
-
-    def build(self):
-        mainLayout = MDGridLayout(cols=2, rows=1)
-        col1_layout = MDFloatLayout()
-        col2_layout = MDBoxLayout(orientation="vertical")
-
-        capture_image = Image(pos=(0, 200))
-        invs_info_label = MyLabel(pos=(20, -200), text="")
-
-        mainLayout.add_widget(col1_layout)
-        mainLayout.add_widget(col2_layout)
-
-        col1_layout.add_widget(capture_image)
-        col1_layout.add_widget(invs_info_label)
-
-        capture = cv2.VideoCapture(0)
-        capture.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-        capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
-
-        Clock.schedule_interval(self.update, 1.0 / 90.0)
-        Clock.schedule_interval(self.processing, 1.0 / 90.0)
-
-        self.capture = capture
-        self.col1_layout = col1_layout
-        self.col2_layout = col2_layout
-        self.capture_image = capture_image
-        self.invs_info_label = invs_info_label
-
-        return mainLayout
-
+        self.item_total = set()
+        
     def update(self, dt):
         ret, frame = self.capture.read()
         if ret:
@@ -138,7 +121,7 @@ class CameraApp(MDApp):
         shape = img.shape
         texture = Texture.create(size=(shape[1], shape[0]), colorfmt="bgr")
         texture.blit_buffer(buf, colorfmt="bgr", bufferfmt="ubyte")
-        self.capture_image.texture = texture
+        self.ids.capture_image.texture = texture
         
     def frame_process(self, frame):
         self.should_reset(10)
@@ -167,7 +150,7 @@ class CameraApp(MDApp):
             name = item.get('name')
             if  name != '' and name is not None:
                 for label in self.item_label_list:
-                    self.col2_layout.remove_widget(label)
+                    self.ids.col_right.remove_widget(label)
                 print('remove')
                 self.item_label_list.clear()
                 break
@@ -193,8 +176,8 @@ class CameraApp(MDApp):
                     {"金額:": <{text_head_bytes}}{price: <{text_body_bytes}}
                     {"總金額:": <{text_head_bytes}}{total: <{text_body_bytes}}
                 """)
-                label = MyLabel(text=text)
-                self.col2_layout.add_widget(label)
+                label = TextLabel(text=text)
+                self.ids.col_right.add_widget(label)
                 self.item_label_list.append(label)
 
     def should_reset(self, space:int):
@@ -208,5 +191,9 @@ class CameraApp(MDApp):
         self.capture.release()
 # fmt: on
 
+class TechDemoApp(MDApp):
+    def build(self):
+        return TechDemoRoot()
 
-CameraApp().run()
+if __name__ == "__main__":
+    TechDemoApp().run()
