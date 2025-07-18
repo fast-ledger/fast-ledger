@@ -31,7 +31,7 @@ class ImgProcess:
     
     def __init__(
         self, 
-        seg_invoice_model_pt: str | Path = 'seg_invoice.pt',
+        seg_invoice_model_pt: str | Path = 'seg_invoice3.pt',
         cls_angle_model_pt: str | Path = 'cls_angle.pt',
         msg: bool = True
     ):
