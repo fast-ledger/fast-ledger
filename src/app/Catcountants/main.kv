@@ -1,6 +1,11 @@
 #:kivy 2.3.1
 
+#:import LucideIcon icon.lucide.lucide
+
 MDScreen:
     MDLabel:
         text: "Hello World"
         halign: "center"
+    LucideIcon:
+        icon: "a-arrow-down"
+        pos_hint: {"center_x": .5, "center_y": .5}

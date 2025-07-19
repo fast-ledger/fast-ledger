@@ -1,0 +1,6 @@
+#:import lucide_icons icon.lucide.icon_definitions.lucide_icons
+
+<LucideIcon>:
+    font_name: "Lucide"
+    -text: u"{}".format(lucide_icons[root.icon]) if root.icon in lucide_icons else " "
+    -source: None if root.icon in lucide_icons else root.icon
