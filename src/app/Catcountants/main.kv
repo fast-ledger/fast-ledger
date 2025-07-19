@@ -1,18 +1,7 @@
 #:kivy 2.3.1
 
-#:import LucideIcon fonts.lucide.lucide
-
-<BaseScreen>:
-    name: "base"
-    canvas.before:
-        Color:
-            rgba: .5, .5, .5, 1
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    LucideIcon:
-        icon: "house"
-        pos_hint: {"center_x": .5, "center_y": .5}
+#:import BaseScreen ui.section.base_screen
 
 <StackScreenManager>:
     BaseScreen:
+        name: "base"

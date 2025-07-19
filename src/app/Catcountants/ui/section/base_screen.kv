@@ -1,0 +1,22 @@
+#:kivy 2.3.1
+
+#:import MDTopAppBar kivymd.uix.appbar.MDTopAppBar
+
+<BaseScreen>:
+    name: "base"
+    md_bg_color: self.theme_cls.secondaryContainerColor
+
+    MDTopAppBar:
+        type: "small"
+        pos_hint: {"top": 1}
+
+        MDTopAppBarLeadingButtonContainer:
+            MDActionTopAppBarButton:
+                icon: "menu"
+
+        MDTopAppBarTitle:
+            text: "首頁"
+
+        MDTopAppBarTrailingButtonContainer:
+            MDActionTopAppBarButton:
+                icon: "dots-vertical"
