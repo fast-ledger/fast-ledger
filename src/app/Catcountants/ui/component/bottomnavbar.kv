@@ -1,0 +1,21 @@
+#:import MDNavigationBar kivymd.uix.navigationbar
+
+<CatNavigationItem>:
+    MDNavigationItemIcon:
+        icon: root.icon
+    MDNavigationItemLabel:
+        text: root.text
+
+<CatBottomNavBar>:
+    CatNavigationItem:
+        icon: "home-variant"
+        text: "Home"
+    CatNavigationItem:
+        icon: "notebook"
+        text: "Journal"
+    CatNavigationItem:
+        icon: "chart-line"
+        text: "Report"
+    CatNavigationItem:
+        icon: "cog"
+        text: "Settings"

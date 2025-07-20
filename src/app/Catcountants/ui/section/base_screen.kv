@@ -2,8 +2,9 @@
 
 #:import MDBoxLayout kivymd.uix.boxlayout
 #:import MDScreen kivymd.uix.screen
-#:import MDTopAppBar kivymd.uix.appbar.MDTopAppBar
-#:import MDNavigationBar kivymd.uix.navigationbar
+#:import CatBottomNavBar ui.component.bottomnavbar
+
+#:include ui/component/topbar.kv
 
 <BaseScreen>:
     name: "base"
@@ -12,41 +13,9 @@
         orientation: "vertical"
         md_bg_color: self.theme_cls.secondaryContainerColor
 
-        MDTopAppBar:
-            type: "small"
-
-            MDTopAppBarLeadingButtonContainer:
-                MDActionTopAppBarButton:
-                    icon: "menu"
-
-            MDTopAppBarTitle:
-                text: "首頁"
-
-            MDTopAppBarTrailingButtonContainer:
-                MDActionTopAppBarButton:
-                    icon: "dots-vertical"
+        CatTopBar:
 
         MDScreen:
             size_hint: 1, 1
         
-        MDNavigationBar:
-            MDNavigationItem:
-                MDNavigationItemIcon:
-                    icon: "home-variant"
-                MDNavigationItemLabel:
-                    text: "Home"
-            MDNavigationItem:
-                MDNavigationItemIcon:
-                    icon: "notebook"
-                MDNavigationItemLabel:
-                    text: "Journal"
-            MDNavigationItem:
-                MDNavigationItemIcon:
-                    icon: "chart-line"
-                MDNavigationItemLabel:
-                    text: "Report"
-            MDNavigationItem:
-                MDNavigationItemIcon:
-                    icon: "cog"
-                MDNavigationItemLabel:
-                    text: "Settings"
+        CatBottomNavBar:
