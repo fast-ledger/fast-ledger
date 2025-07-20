@@ -1,8 +1,7 @@
-from pathlib import Path
-from kivy.lang import Builder
 from kivymd.uix.screen import MDScreen
+from utilities.loadkv import loadkv
 
-Builder.load_file(str(Path(__file__).parent / "base_screen.kv"))
+loadkv(__file__)
 
 class BaseScreen(MDScreen):
     pass

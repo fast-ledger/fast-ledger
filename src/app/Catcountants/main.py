@@ -1,10 +1,10 @@
 from pathlib import Path
-from kivy.lang import Builder
 from kivy.core.text import LabelBase
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
+from utilities.loadkv import loadkv
 
-Builder.load_file("main.kv")
+loadkv(__file__)
 
 class StackScreenManager(MDScreenManager):
     pass
