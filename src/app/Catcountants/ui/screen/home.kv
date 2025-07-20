@@ -1,13 +1,19 @@
 #:kivy 2.3.1
 
+#:import dp kivy.metrics.dp
 #:import MDScreen kivymd.uix.screen
+#:import MDBoxLayout kivymd.uix.boxlayout
 #:import MDLabel kivymd.uix.label
 #:import CatBasePrimaryScreen ui.screen.baseprimary
+#:import BalancePanel ui.component.panel
 
 <HomeScreen@CatBasePrimaryScreen>:
     name: "home"
     title: "首頁"
     
-    MDLabel:
-        text: "Home"
-        halign: "center"
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: dp(20), dp(20), dp(20), dp(28 + 20)
+        size_hint_y: None
+
+    BalancePanel:

@@ -1,0 +1,22 @@
+#:kivy 2.3.1
+
+#:import MDBoxLayout kivymd.uix.boxlayout
+#:import MDLabel kivymd.uix.label
+
+<BalancePanel>:
+    MDBoxLayout:
+        MDLabel:
+            text: "Balance"
+            adaptive_height: True
+        MDLabel:
+            text: "assets:current"
+            adaptive_height: True
+            halign: "right"
+    MDLabel:
+        text: "123,456 NT$"
+        font_style: "Display"
+        role: "small"
+        bold: True
+        adaptive_height: True
+        halign: "right"
+        
