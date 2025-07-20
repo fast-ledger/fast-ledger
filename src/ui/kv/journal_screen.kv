@@ -14,91 +14,214 @@
 #:import MDList kivymd.uix.list.MDList
 #:import IconRightWidget kivymd.uix.list.IconRightWidget
 #:import dp kivy.metrics.dp
+#:import MDTextField kivymd.uix.textfield.MDTextField
+#:import MDChip kivymd.uix.chip.MDChip
+#:import MDGridLayout kivymd.uix.gridlayout.MDGridLayout
 
-<JournalScreen>:
-    name: 'journal_screen'  # 賦予此畫面一個名稱，用於 ScreenManager 進行切換
+
+<SearchTransactionContent>:
+    # 這是搜尋浮動視窗的內容佈局
+    orientation: 'vertical'
+    spacing: "15dp"
+    padding: "10dp"
+    size_hint_y: None
+    height: self.minimum_height # 讓內容高度自適應
+
+    MDLabel:
+        text: "名稱" # 新增：名稱的獨立標籤
+        adaptive_height: True
+        font_name: "NotoSansCJK"
+        font_size: "16sp"
+    MDTextField:
+        id: name_input
+        # hint_text: "請輸入借方名稱" # 移除 hint_text，因為現在有獨立標籤
+        mode: "rectangle"
+        size_hint_y: None
+        height: "48dp"
+        text: root.search_name # 綁定屬性
+        font_name: "NotoSansCJK" 
+        hint_text_font_name: "NotoSansCJK" # 雖然移除了 hint_text，但保留以防萬一
 
     MDBoxLayout:
-        orientation: 'vertical' # 垂直方向佈局
-        md_bg_color: app.theme_cls.bg_normal # 設置背景顏色為應用程式主題的標準背景色
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: "48dp"
+        spacing: "10dp"
+        # padding: [0, dp(10), 0, dp(10)] # 垂直方向的padding, 這裡可以移除，因為 MDLabel 已獨立
 
-        # 頂部應用程式欄 (App Bar) - 與首頁保持一致，但標題為「帳本」
+        MDLabel:
+            text: "日期"
+            adaptive_size: True
+            font_size: "16sp"
+            pos_hint: {'center_y': 0.5}
+            font_name: "NotoSansCJK" 
+
+        MDLabel:
+            id: date_display_label
+            text: "" # 由 Python 代碼設置
+            adaptive_size: True
+            font_size: "16sp"
+            pos_hint: {'center_y': 0.5}
+            font_name: "NotoSansCJK" 
+
+        MDIconButton:
+            icon: "calendar"
+            pos_hint: {'center_y': 0.5}
+            on_release: root.show_date_picker()
+
+    MDLabel:
+        text: "金額" # 新增：金額的獨立標籤
+        adaptive_height: True
+        font_name: "NotoSansCJK"
+        font_size: "16sp"
+    MDTextField:
+        id: amount_input
+        # hint_text: "請輸入金額" # 移除 hint_text
+        mode: "rectangle"
+        input_type: "number" # 限制為數字輸入
+        size_hint_y: None
+        height: "48dp"
+        text: root.search_amount # 綁定屬性
+        font_name: "NotoSansCJK" 
+        hint_text_font_name: "NotoSansCJK" 
+    
+    # 新增：類別輸入項目
+    MDLabel:
+        text: "類別" # 新增：類別的獨立標籤
+        adaptive_height: True
+        font_name: "NotoSansCJK"
+        font_size: "16sp"
+    MDTextField:
+        id: category_input
+        # hint_text: "請輸入類別" # 移除 hint_text
+        mode: "rectangle"
+        size_hint_y: None
+        height: "48dp"
+        text: root.search_category # 綁定屬性
+        font_name: "NotoSansCJK"
+        hint_text_font_name: "NotoSansCJK"
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        size_hint_y: None
+        height: self.minimum_height
+        spacing: "10dp"
+
+        MDLabel:
+            text: "科目"
+            adaptive_size: True
+            font_size: "16sp"
+            font_name: "NotoSansCJK" 
+
+        MDGridLayout:
+            id: tags_layout
+            cols: 2 # 兩列佈局
+            adaptive_height: True
+            spacing: "8dp" # 標籤間距
+            padding: "5dp"
+
+            # 用於添加新標籤的輸入框
+            MDBoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: "36dp" # 調整高度以適應 MDChip
+                spacing: "5dp"
+
+                MDTextField:
+                    id: new_tag_input
+                    hint_text: "新增科目標籤" # 這個 hint_text 可以保留，因為它不是獨立的 MDLabel
+                    mode: "rectangle"
+                    size_hint_x: 0.8
+                    on_text_validate: root.add_tag_from_input(self) # 按下 Enter 添加標籤
+                    font_name: "NotoSansCJK" 
+                    hint_text_font_name: "NotoSansCJK" 
+
+                MDIconButton:
+                    icon: "plus"
+                    size_hint_x: 0.2
+                    on_release: root.add_tag_from_input(new_tag_input) # 點擊加號添加標籤
+
+<JournalScreen>:
+    name: 'journal_screen'  # 賦予此畫面一個名稱，用於 ScreenManager 進行切換 
+
+    MDBoxLayout:
+        orientation: 'vertical' 
+        md_bg_color: app.theme_cls.bg_normal # 設置背景顏色為應用程式主題的標準背景色 
+
+        # 頂部應用程式欄 (App Bar) - 與首頁保持一致，但標題為「帳本」 
         MDTopAppBar:
-            title: "帳本" # <-- 標題文字更改為「帳本」
-            pos_hint: {'top': 1} # 放在頂部
-            elevation: 2 # 陰影效果
-            # 左側動作按鈕 (返回箭頭)
-            left_action_items: [["arrow-left", lambda x: setattr(app.root, 'current', 'home')]] # <--- 已修改為正確的返回語法
-            # 右側動作按鈕 (放大鏡和齒輪圖標)
-            right_action_items: [["magnify", lambda x: root.search_button_pressed()], ["cog", lambda x: root.settings_button_pressed()]]
-            radius: [0, 0, 0, 0] # 沒有圓角
+            title: "帳本" 
+            pos_hint: {'top': 1} 
+            elevation: 2 
+            # 左側動作按鈕 (返回箭頭) 
+            left_action_items: [["arrow-left", lambda x: setattr(app.root, 'current', 'home')]] 
+            # 右側動作按鈕 (放大鏡和齒輪圖標) 
+            right_action_items: [["magnify", lambda x: root.show_search_dialog()], ["cog", lambda x: root.settings_button_pressed()]] 
+            radius: [0, 0, 0, 0] 
 
-        # 內容滾動視圖 (Scrollable Content Area) - 包含帳本條目
+        # 內容滾動視圖 (Scrollable Content Area) - 包含帳本條目 
         ScrollView:
             MDBoxLayout:
-                orientation: 'vertical'
-                spacing: "15dp" # 垂直方向元素間距
-                padding: "15dp" # 內部邊距
-                adaptive_height: True # 高度自動適應內容 (配合 ScrollView)
-                size_hint_y: None # 必須設置為 None 才能讓 adaptive_height 工作
-                height: self.minimum_height # 必須設置為 minimum_height 才能讓 adaptive_height 工作
+                orientation: 'vertical' 
+                spacing: "15dp" 
+                padding: "15dp" 
+                adaptive_height: True 
+                size_hint_y: None 
+                height: self.minimum_height 
 
-                # MDList 用於顯示 Journal 的動態數據 (每個條目由 Python 創建的 MDCard)
+                # MDList 用於顯示 Journal 的動態數據 (每個條目由 Python 創建的 MDCard) 
                 MDList:
-                    id: journal_list # <-- JournalScreen.py 會將內容添加到此 ID
-                    padding: 0 # MDList 內部填充為0，讓卡片填滿
-                    spacing: "15dp" # MDList 項目間距，這裡用於卡片間距
-                    adaptive_height: True
-                    size_hint_y: None
-                    height: self.minimum_height
+                    id: journal_list 
+                    padding: 0 
+                    spacing: "15dp" 
+                    adaptive_height: True 
+                    size_hint_y: None 
+                    height: self.minimum_height 
 
-                # 底部填充空間，防止內容與底部導航欄重疊
-                # 這個高度要足夠讓 FAB 和底部導航欄有空間
+                # 底部填充空間，防止內容與底部導航欄重疊 
                 MDBoxLayout:
-                    size_hint_y: None
-                    height: "80dp" # 底部導航欄的高度 + FAB 的垂直偏移量
+                    size_hint_y: None 
+                    height: "80dp" 
 
-        # 底部導航欄 (MDBottomNavigation 會自動將項目均勻分佈)
+        # 底部導航欄 (MDBottomNavigation 會自動將項目均勻分佈) 
         MDBottomNavigation:
-            panel_color: "#ffffffff"
-            # 移除 id: bottom_nav_bar 和 panel_color: app.theme_cls.bg_normal
-            # 直接在每個 MDBottomNavigationItem 中處理 on_tab_press 事件
-            size_hint:(1,.2)
+            panel_color: "#ffffffff" 
+            size_hint:(1,.2) 
 
-            # 導航項目：Home
+            # 導航項目：Home 
             MDBottomNavigationItem:
-                name: 'home_nav' # 唯一的名稱
-                text: 'Home'
-                icon: 'home'
-                on_tab_press: app.root.current = 'home' # <-- 已新增
+                name: 'home_nav' 
+                text: 'Home' 
+                icon: 'home' 
+                on_tab_press: app.root.current = 'home'
 
-            # 導航項目：Journal
+            # 導航項目：Journal 
             MDBottomNavigationItem:
-                name: 'journal_nav'
-                text: 'Journal'
-                icon: 'book-open-variant'
-                on_tab_press: app.root.current = 'journal_screen' # <-- 已新增
+                name: 'journal_nav' 
+                text: 'Journal' 
+                icon: 'book-open-variant' 
+                on_tab_press: app.root.current = 'journal_screen'
 
-            # 導航項目：Report
+            # 導航項目：Report 
             MDBottomNavigationItem:
-                name: 'report_nav'
-                text: 'Report'
-                icon: 'chart-bar'
-                on_tab_press: print("跳轉到 Report 頁面 (未實作)") # <-- 已新增
+                name: 'report_nav' 
+                text: 'Report' 
+                icon: 'chart-bar' 
+                on_tab_press: print("跳轉到 Report 頁面 (未實作)")
 
-            # 導航項目：Settings
+            # 導航項目：Settings 
             MDBottomNavigationItem:
-                name: 'settings_nav'
-                text: 'Settings'
-                icon: 'cog'
-                on_tab_press: print("跳轉到 Settings 頁面 (未實作)") # <-- 已新增
+                name: 'settings_nav' 
+                text: 'Settings' 
+                icon: 'cog' 
+                on_tab_press: print("跳轉到 Settings 頁面 (未實作)")
 
-    # 懸浮動作按鈕 (Floating Action Button - FAB) - 相機圖標
+    # 懸浮動作按鈕 (Floating Action Button - FAB) - 相機圖標 
     MDFloatingActionButton:
-        icon: "camera"
-        md_bg_color: 0, 0, 0, 1
-        pos_hint: {'center_x': 0.5, 'center_y': 0.1}
-        size_hint: None, None
-        size: "48dp", "48dp"
-        elevation: 6
-        on_release: root.go_to_camera_screen() # <--- 已修改為呼叫 go_to_camera_screen 方法
+        icon: "camera" 
+        md_bg_color: 0, 0, 0, 1 
+        pos_hint: {'center_x': 0.5, 'center_y': 0.1} 
+        size_hint: None, None 
+        size: "48dp", "48dp" 
+        elevation: 6 
+        on_release: root.go_to_camera_screen()

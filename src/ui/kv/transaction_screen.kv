@@ -1,0 +1,608 @@
+# ui/kv/transaction_screen.kv
+
+#:kivy 2.2.1
+
+#:import MDBottomNavigation kivymd.uix.bottomnavigation.MDBottomNavigation
+#:import MDBottomNavigationItem kivymd.uix.bottomnavigation.MDBottomNavigationItem
+#:import MDTopAppBar kivymd.uix.toolbar.MDTopAppBar
+#:import MDBoxLayout kivymd.uix.boxlayout.MDBoxLayout
+#:import MDCard kivymd.uix.card.MDCard
+#:import MDLabel kivymd.uix.label.MDLabel
+#:import MDFloatingActionButton kivymd.uix.button.MDFloatingActionButton
+#:import MDIconButton kivymd.uix.button.MDIconButton
+#:import ScrollView kivy.uix.scrollview.ScrollView
+#:import MDList kivymd.uix.list.MDList
+#:import IconRightWidget kivymd.uix.list.IconRightWidget
+#:import dp kivy.metrics.dp
+#:import MDTextField kivymd.uix.textfield.MDTextField
+#:import MDRaisedButton kivymd.uix.button.MDRaisedButton
+#:import MDCheckbox kivymd.uix.selectioncontrol.MDCheckbox
+#:import MDChip kivymd.uix.chip.MDChip
+#:import MDTextButton kivymd.uix.button.MDTextButton
+#:import FloatLayout kivy.uix.floatlayout.FloatLayout
+#:import MDStackLayout kivymd.uix.stacklayout.MDStackLayout
+#:import MDDialog kivymd.uix.dialog.MDDialog
+
+#:set NTS_BOLD "NotoSansCJK"
+#:set NTS_REGULAR "NotoSansCJK"
+
+# 借方輸入欄位 - 保持不變
+<CreditorInputField>:
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: dp(48)
+    spacing: dp(10)
+    padding: dp(10), 0
+
+    MDLabel:
+        id: field_label
+        text: root.field_name
+        size_hint_x: None
+        width: dp(80)
+        halign: 'left'
+        valign: 'center'
+        font_name: NTS_REGULAR
+        color: 0, 0, 0, 1
+
+    MDTextField:
+        id: text_input
+        text: root.field_value
+        hint_text: root.hint_text # 使用新的 hint_text 屬性
+        multiline: False
+        mode: "rectangle"
+        size_hint_x: 1
+        on_text: root.field_value = self.text
+        font_name: NTS_REGULAR
+        text_color: 0, 0, 0, 1
+        # Added a bottom line indicator
+        # line_color_focus: app.theme_cls.primary_color
+        # line_color_normal: 0.8, 0.8, 0.8, 1
+
+
+# 行業標籤 - 保持不變
+<IndustryTag>:
+    size_hint_x: None
+    height: dp(32)
+    width: self.texture_size[0] + dp(40) # 文本寬度 + 左右 padding + icon 寬度
+    text: root.tag_text
+    icon: "close-circle"
+    radius: [dp(16)]
+    md_bg_color: app.theme_cls.primary_color
+    text_color: 1, 1, 1, 1
+    font_name: NTS_REGULAR
+    on_release: root.remove_callback(self) if root.remove_callback else None
+
+# 借方編輯區塊 (主機構或分支機構) - 重構為更整齊的佈局
+<CreditorSection>:
+    orientation: 'vertical'
+    size_hint_y: None
+    height: self.minimum_height
+    padding: dp(10)
+    spacing: dp(5)
+    
+    # MDLabel:
+    #     id: section_title # 將此標題移動到 CreditorDetailWidget 中
+    #     text: "主要機構" if root.id == 'main_organization_section' else "分支機構"
+    #     size_hint_y: None
+    #     height: self.texture_size[1]
+    #     font_name: NTS_BOLD
+    #     color: 0, 0, 0, 1
+
+    # 名稱輸入框與 "同總機構" 複選框放在一起
+    MDBoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: dp(48)
+        padding: 0 # 內邊距已由 CreditorSection 提供
+        spacing: dp(10)
+        
+        MDLabel: # "名稱" 標籤
+            text: "名稱"
+            size_hint_x: None
+            width: dp(80)
+            halign: 'left'
+            valign: 'center'
+            font_name: NTS_REGULAR
+            color: 0, 0, 0, 1
+
+        MDTextField: # 名稱輸入框
+            id: name_input
+            text: root.name_value
+            hint_text: "輸入名稱"
+            multiline: False
+            mode: "rectangle"
+            size_hint_x: 1
+            on_text: root.name_value = self.text
+            font_name: NTS_REGULAR
+            text_color: 0, 0, 0, 1
+
+    CreditorInputField:
+        field_name: "統一編號"
+        field_value: root.uniform_number_value
+        hint_text: "輸入統一編號"
+        on_field_value: root.uniform_number_value = args[1] # 確保數據綁定
+
+    CreditorInputField:
+        field_name: "營業人"
+        field_value: root.business_person_value
+        hint_text: "輸入營業人名稱"
+        on_field_value: root.business_person_value = args[1]
+
+    MDBoxLayout: # 行業標籤輸入和顯示區域
+        orientation: 'vertical'
+        size_hint_y: None
+        height: self.minimum_height
+        spacing: dp(5)
+        padding: dp(10), dp(5) # 調整內邊距
+
+        MDLabel:
+            text: "行業"
+            size_hint_y: None
+            height: self.texture_size[1]
+            font_name: NTS_REGULAR
+            color: 0, 0, 0, 1
+
+        MDStackLayout: # 使用 MDStackLayout 來實現標籤自動換行
+            id: industry_tags_layout
+            orientation: 'lr-tb' # left-right, top-bottom (從左到右，從上到下堆疊)
+            spacing: dp(8) # 標籤間距
+            padding: 0, dp(5), 0, dp(5) # 內部 padding
+            size_hint_y: None
+            height: self.minimum_height
+            adaptive_height: True
+
+            MDBoxLayout: # 用於行業標籤輸入的框
+                size_hint_x: None
+                width: dp(180) # 給輸入框一個固定寬度
+                size_hint_y: None
+                height: dp(48)
+                orientation: 'horizontal'
+                padding: dp(5), 0, dp(5), 0 # 內部 padding
+                MDTextField:
+                    id: industry_tag_input
+                    hint_text: "新增行業標籤"
+                    multiline: False
+                    mode: "rectangle"
+                    size_hint_x: 1
+                    font_name: NTS_REGULAR
+                    text_color: 0, 0, 0, 1
+                    on_text_validate: root.add_industry_tag(self.text); self.text = '' # 回車添加標籤
+                    on_focus: if not self.focus and self.text: root.add_industry_tag(self.text); self.text = '' # 失去焦點添加標籤
+                MDIconButton:
+                    icon: "plus-circle"
+                    size_hint_x: None
+                    width: dp(36)
+                    on_release: root.add_industry_tag(industry_tag_input.text); industry_tag_input.text = ''
+
+# 借方編輯主對話框內容 - 完全按照圖片設計重構
+<CreditorDetailWidget>:
+    orientation: 'vertical'
+    size_hint_y: None
+    height: self.minimum_height # 讓高度自適應內容
+    spacing: dp(15) # 區塊間距
+    padding: dp(20) # 整體邊距
+
+    # 主要機構區塊
+    MDBoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: dp(40)
+        MDLabel:
+            text: "借方" # 圖片中的 "借方" 標題
+            font_name: NTS_BOLD
+            font_size: "20sp"
+            size_hint_x: 1
+            halign: 'left'
+            valign: 'center'
+            color: 0, 0, 0, 1
+        MDIconButton:
+            icon: "plus-circle"
+            size_hint_x: None
+            width: dp(36)
+            pos_hint: {'center_y': .5}
+            on_release: print("新增借方功能待實作") # 這裡可以添加新增借方實體的功能
+
+
+    CreditorSection:
+        id: main_organization_section
+        # 綁定屬性以更新 CreditorDetailWidget 的相應屬性
+        name_value: root.main_org_name
+        uniform_number_value: root.main_org_uniform_number
+        business_person_value: root.main_org_business_person
+        industry_tags: root.main_org_industry_tags
+
+    MDBoxLayout: # "同總機構" Checkbox 行
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: dp(36) # 適當高度
+        padding: dp(10), 0 # 與輸入框對齊
+
+        MDCheckbox:
+            id: main_org_checkbox
+            size_hint: None, None
+            size: dp(36), dp(36) # 調整大小
+            pos_hint: {'center_y': 0.5}
+            active: root.main_org_is_main_organization # 綁定到 CreditorDetailWidget 的屬性
+            color: app.theme_cls.primary_color # 設定顏色
+            on_active: root._on_main_org_checkbox_change(self, self.active)
+
+        MDLabel:
+            text: "同總機構"
+            font_name: NTS_REGULAR
+            color: 0, 0, 0, 1
+            halign: 'left'
+            valign: 'center'
+            size_hint_x: 1 # 佔據剩餘空間
+
+    MDLabel: # 分支機構標題
+        id: branch_title_label
+        text: "總機構"
+        font_name: NTS_BOLD
+        font_size: "20sp"
+        size_hint_y: None
+        height: self.texture_size[1]
+        halign: 'left'
+        valign: 'center'
+        color: 0, 0, 0, 1
+        opacity: 0 # 預設隱藏
+        height: 0 # 預設隱藏
+        padding: dp(10), 0, 0, 0 # 與下方輸入框對齊
+
+    CreditorSection:
+        id: branch_organization_section
+        name_value: root.branch_org_name
+        uniform_number_value: root.branch_org_uniform_number
+        business_person_value: root.branch_org_business_person
+        industry_tags: root.branch_org_industry_tags
+        disabled: True
+        opacity: 0
+        height: 0 # 初始隱藏分支機構
+
+    MDBoxLayout: # 底部按鈕區塊
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: dp(50) # 為按鈕預留空間
+        spacing: dp(10)
+        padding: 0 # 與外層 padding 對齊
+
+        MDFlatButton:
+            text: "取消"
+            font_name: NTS_REGULAR
+            size_hint_x: 1
+            on_release: root.cancel_callback()
+
+        MDRaisedButton:
+            text: "儲存"
+            font_name: NTS_REGULAR
+            size_hint_x: 1
+            on_release: root.save_callback()
+            md_bg_color: app.theme_cls.primary_color
+
+
+# 交易項目 - 品項分類改為可編輯 MDTextField
+<TransactionItem>:
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: dp(60) # 增加高度以容納輸入框
+    padding: dp(10)
+    spacing: dp(10)
+
+    MDLabel:
+        text: root.item_name
+        size_hint_x: 0.4
+        halign: 'left'
+        valign: 'center'
+        font_name: NTS_REGULAR
+        color: 0, 0, 0, 1
+
+    MDTextField: # 將 MDLabel 改為 MDTextField
+        id: tag_text_input
+        text: root.tag_text
+        hint_text: "分類標籤"
+        multiline: False
+        mode: "rectangle" # 簡潔模式
+        size_hint_x: 0.4
+        font_name: NTS_REGULAR
+        text_color: 0.5, 0.5, 0.5, 1
+        # on_text: root.tag_text = self.text # 不需要這行，因為直接綁定到了 tag_text 屬性
+                                          # 但在 get_creditor_data 時會從 ids.tag_text_input.text 取值
+
+    MDLabel:
+        text: root.amount
+        size_hint_x: 0.2
+        halign: 'right'
+        valign: 'center'
+        font_name: NTS_REGULAR
+        color: 0, 0, 0, 1
+
+# 交易帳戶項目 - 品項分類改為可編輯 MDTextField
+<TransactionAccountItem>:
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: dp(60) # 增加高度以容納輸入框
+    padding: dp(10)
+    spacing: dp(10)
+    md_bg_color: (0.9, 0.9, 0.9, 1) if root.can_edit else (0.95, 0.95, 0.95, 1)
+
+    MDLabel:
+        text: root.account_name
+        size_hint_x: 0.4
+        halign: 'left'
+        valign: 'center'
+        font_name: NTS_REGULAR
+        color: 0, 0, 0, 1
+
+    MDTextField: # 將 MDLabel 改為 MDTextField
+        id: tag_text_input
+        text: root.tag_text
+        hint_text: "分類標籤"
+        multiline: False
+        mode: "rectangle"
+        size_hint_x: 0.4
+        font_name: NTS_REGULAR
+        text_color: 0.5, 0.5, 0.5, 1
+        # on_text: root.tag_text = self.text # 同上，不需要
+
+    MDLabel:
+        text: root.amount
+        size_hint_x: 0.2
+        halign: 'right'
+        valign: 'center'
+        font_name: NTS_REGULAR
+        color: 0, 0, 0, 1
+
+# 交易畫面主佈局
+<TransactionScreen>:
+    name: "transaction_screen"
+
+    FloatLayout:
+        MDBoxLayout:
+            orientation: 'vertical'
+            md_bg_color: app.theme_cls.bg_normal
+
+            MDTopAppBar:
+                title: "交易"
+                pos_hint: {'top': 1}
+                elevation: 2
+                left_action_items: [["arrow-left", lambda x: root.go_back_to_home_and_reset()]]
+                right_action_items: [["magnify", lambda x: root.search_button_pressed()], ["cog", lambda x: root.settings_button_pressed()]]
+                radius: [0, 0, 0, 0]
+
+            ScrollView:
+                id: content_scroll_view # 為 ScrollView 添加 ID
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    spacing: "15dp"
+                    padding: "15dp"
+                    size_hint_y: None
+                    height: self.minimum_height
+
+                    MDCard: # 借方卡片
+                        size_hint_y: None
+                        height: dp(60)
+                        orientation: 'vertical'
+                        padding: dp(10)
+                        radius: [dp(8),]
+                        md_bg_color: 0.95, 0.95, 0.95, 1
+                        on_release: root.show_creditor_dialog() # 點擊卡片時打開借方對話框
+
+                        MDBoxLayout:
+                            orientation: 'horizontal'
+                            size_hint_y: None
+                            height: dp(25)
+                            spacing: dp(5)
+
+                            MDIconButton:
+                                icon: "account-box-outline"
+                                theme_text_color: "Custom"
+                                text_color: 0, 0, 0, 1
+                                pos_hint: {'center_y': .5}
+                                size_hint_x: None
+                                width: dp(24)
+
+                            MDLabel:
+                                text: "借方"
+                                font_name: NTS_REGULAR
+                                color: 0, 0, 0, 1
+                                size_hint_x: None
+                                width: dp(50)
+                                pos_hint: {'center_y': .5}
+                                halign: 'left'
+                                valign: 'middle'
+
+                            MDLabel:
+                                id: creditor_name_display
+                                text: "尚未設定"
+                                font_name: NTS_REGULAR
+                                color: 0, 0, 0, 1
+                                size_hint_x: 1
+                                text_size: self.width, None
+                                pos_hint: {'center_y': .5}
+                                halign: 'left'
+                                valign: 'middle'
+
+                            MDIconButton:
+                                icon: "pencil-outline"
+                                theme_text_color: "Custom"
+                                text_color: 0.2, 0.2, 0.2, 1
+                                pos_hint: {'center_y': .5}
+                                size_hint_x: None
+                                width: dp(24)
+                                on_release: root.show_creditor_dialog() # 點擊鉛筆圖標也打開對話框
+
+                            MDIconButton:
+                                icon: "magnify"
+                                theme_text_color: "Custom"
+                                text_color: 0.2, 0.2, 0.2, 1
+                                pos_hint: {'center_y': .5}
+                                size_hint_x: None
+                                width: dp(24)
+                                on_release: root.on_search_creditor()
+
+                    MDCard: # 時間卡片
+                        size_hint_y: None
+                        height: dp(60)
+                        orientation: 'vertical'
+                        padding: dp(10)
+                        radius: [dp(8),]
+                        md_bg_color: 0.95, 0.95, 0.95, 1
+                        on_release: root.show_time_dialog() # 點擊卡片時打開時間選擇器
+
+                        MDBoxLayout:
+                            orientation: 'horizontal'
+                            size_hint_y: None
+                            height: dp(25)
+                            spacing: dp(5)
+
+                            MDIconButton:
+                                icon: "clock-outline"
+                                theme_text_color: "Custom"
+                                text_color: 0, 0, 0, 1
+                                pos_hint: {'center_y': .5}
+                                size_hint_x: None
+                                width: dp(24)
+
+                            MDLabel:
+                                text: "時間"
+                                font_name: NTS_REGULAR
+                                color: 0, 0, 0, 1
+                                size_hint_x: None
+                                width: dp(50)
+                                pos_hint: {'center_y': .5}
+                                halign: 'left'
+                                valign: 'middle'
+
+                            MDLabel:
+                                id: transaction_time_display
+                                text: "2025-07-20 16:00"
+                                font_name: NTS_REGULAR
+                                color: 0, 0, 0, 1
+                                size_hint_x: 1
+                                text_size: self.width, None
+                                pos_hint: {'center_y': .5}
+                                halign: 'left'
+                                valign: 'middle'
+
+                            MDIconButton:
+                                icon: "pencil-outline"
+                                theme_text_color: "Custom"
+                                text_color: 0.2, 0.2, 0.2, 1
+                                pos_hint: {'center_y': .5}
+                                size_hint_x: None
+                                width: dp(24)
+                                on_release: root.show_time_dialog() # 點擊鉛筆圖標也打開時間選擇器
+                    
+                    MDList:
+                        id: transaction_items
+                        size_hint_y: None
+                        height: self.minimum_height
+
+                        TransactionItem:
+                            item_name: "印度綠無籽葡萄"
+                            tag_text: "expenses:food:groceries"
+                            amount: "NT$ 62"
+
+                        TransactionItem:
+                            item_name: "魔爪超級仙境碳酸能量飲料"
+                            tag_text: "expenses:food:drink:packaged"
+                            amount: "NT$ 41"
+
+                        TransactionItem:
+                            item_name: "歐維氏98%醇黑巧克力"
+                            tag_text: "expenses:food:treats"
+                            amount: "NT$ 25"
+
+                        TransactionAccountItem:
+                            account_name: "應收帳款"
+                            tag_text: "assets:receivable:accounts:a"
+                            amount: "NT$ 200"
+                            can_edit: True
+
+                        TransactionAccountItem:
+                            account_name: "活期存款"
+                            tag_text: "assets:current:checking"
+                            amount: "NT$ -328"
+                            can_edit: True
+
+                    MDBoxLayout: # 新增/編輯按鈕行
+                        orientation: 'horizontal'
+                        size_hint_y: None
+                        height: dp(50)
+                        padding: dp(10), 0
+                        spacing: dp(10)
+                        MDIconButton:
+                            icon: "plus-circle-outline"
+                            theme_text_color: "Custom"
+                            text_color: 0, 0, 0, 1
+                            pos_hint: {'center_y': .5}
+                            on_release: root.add_new_item()
+                        MDIconButton:
+                            icon: "pencil-outline"
+                            theme_text_color: "Custom"
+                            text_color: 0.2, 0.2, 0.2, 1
+                            pos_hint: {'center_y': .5}
+                            on_release: root.edit_last_item()
+
+            MDBoxLayout: # 底部操作按鈕 (取消/儲存)
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: dp(80)
+                padding: dp(16)
+                spacing: dp(10)
+                md_bg_color: 0.9, 0.9, 0.9, 1
+
+                MDRaisedButton:
+                    text: "取消"
+                    font_name: NTS_REGULAR
+                    size_hint_x: 1
+                    on_release: root.cancel_transaction()
+
+                MDRaisedButton:
+                    text: "儲存"
+                    font_name: NTS_REGULAR
+                    size_hint_x: 1
+                    on_release: root.save_transaction()
+                    md_bg_color: app.theme_cls.primary_color
+        
+        # 底部導航欄 (MDBottomNavigation 會自動將項目均勻分佈)
+        MDBottomNavigation:
+            panel_color: "#ffffffff"
+            size_hint:(1,.2)
+
+            # 導航項目：Home
+            MDBottomNavigationItem:
+                name: 'home_nav' # 唯一的名稱
+                text: 'Home'
+                icon: 'home'
+                on_tab_press: app.root.current = 'home'
+
+            # 導航項目：Journal
+            MDBottomNavigationItem:
+                name: 'journal_nav'
+                text: 'Journal'
+                icon: 'book-open-variant'
+                on_tab_press: app.root.current = 'journal_screen'
+
+            # 導航項目：Report
+            MDBottomNavigationItem:
+                name: 'report_nav'
+                text: 'Report'
+                icon: 'chart-bar'
+                on_tab_press: print("跳轉到 Report 頁面 (未實作)")
+
+            # 導航項目：Settings
+            MDBottomNavigationItem:
+                name: 'settings_nav'
+                text: 'Settings'
+                icon: 'cog'
+                on_tab_press: print("跳轉到 Settings 頁面 (未實作)")
+
+    # 懸浮動作按鈕 (Floating Action Button - FAB) - 相機圖標
+    MDFloatingActionButton:
+        icon: "camera"
+        md_bg_color: 0, 0, 0, 1
+        pos_hint: {'center_x': 0.5, 'center_y': 0.1}
+        size_hint: None, None
+        size: "48dp", "48dp"
+        elevation: 6
+        on_release: root.go_to_camera_screen()
