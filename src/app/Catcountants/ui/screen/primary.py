@@ -3,5 +3,5 @@ from utilities.loadkv import loadkv
 
 loadkv(__file__)
 
-class BaseScreen(MDScreen):
+class PrimaryScreen(MDScreen):
     pass
