@@ -1,8 +1,10 @@
 #:kivy 2.3.1
 
+#:import dp kivy.metrics.dp
 #:import MDBoxLayout kivymd.uix.boxlayout
 #:import MDScreen kivymd.uix.screen
 #:import CatBottomNavBar ui.component.bottomnavbar
+#:import MDFabButton kivymd.uix.button
 
 #:include ui/component/topbar.kv
 
@@ -19,3 +21,8 @@
             size_hint: 1, 1
         
         CatBottomNavBar:
+
+    MDFabButton:
+        icon: "qrcode-scan"
+        style: "standard"
+        pos: (root.width - self.width) / 2, dp(80) - self.height / 2
