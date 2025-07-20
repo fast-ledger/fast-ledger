@@ -2,11 +2,16 @@
 
 #:import dp kivy.metrics.dp
 #:import MDBoxLayout kivymd.uix.boxlayout
+#:import MDScreenManager kivymd.uix.screenmanager
 #:import MDScreen kivymd.uix.screen
 #:import CatBottomNavBar ui.component.bottomnavbar
 #:import MDFabButton kivymd.uix.button
 
 #:include ui/component/topbar.kv
+#:include ui/screen/home.kv
+#:include ui/screen/journal.kv
+#:include ui/screen/report.kv
+#:include ui/screen/settings.kv
 
 <PrimaryScreen>:
     name: "primary"
@@ -17,10 +22,15 @@
 
         CatTopBar:
 
-        MDScreen:
-            size_hint: 1, 1
+        MDScreenManager:
+            id: primary_screen_manager
+            HomeScreen:
+            JournalScreen:
+            ReportScreen:
+            SettingsScreen:
         
         CatBottomNavBar:
+            on_switch_tabs: root.on_switch_tabs(*args)
 
     MDFabButton:
         icon: "qrcode-scan"

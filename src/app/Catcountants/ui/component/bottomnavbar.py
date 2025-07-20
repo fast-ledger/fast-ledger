@@ -8,5 +8,8 @@ class CatNavigationItem(MDNavigationItem):
     icon = StringProperty()
     text = StringProperty()
 
+    def get_screen_name(self):
+        return self.text.lower()
+
 class CatBottomNavBar(MDNavigationBar):
     pass
