@@ -15,12 +15,14 @@
 
 <PrimaryScreen>:
     name: "primary"
+    title: self.ids.primary_screen_manager.current_screen.title
 
     MDBoxLayout:
         orientation: "vertical"
         md_bg_color: self.theme_cls.secondaryContainerColor
 
         CatTopBar:
+            text: root.title
 
         MDScreenManager:
             id: primary_screen_manager
