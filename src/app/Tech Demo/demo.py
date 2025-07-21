@@ -35,7 +35,7 @@ class TechDemoRoot(MDGridLayout):
     process_thread = Thread()
 
     __elapsed_time = 0
-    __run_times = 0
+    __scan_miss = 0
 
     class Item:
         def __init__(self, item):
@@ -60,16 +60,6 @@ class TechDemoRoot(MDGridLayout):
         self.capture = capture
 
         self.reset()
-
-    def reset(self, dt=None):
-        self.scan_result = None
-
-        self.ids.receipt_info_label.text = self.receipt_info_format()
-        self.items = []
-        self.reset_items()
-        
-    def reset_items(self):
-        self.ids.col_right.clear_widgets()
         
     def update(self, dt):
         ret, frame = self.capture.read()
@@ -112,11 +102,27 @@ class TechDemoRoot(MDGridLayout):
         for result in result_list:
             if result.label_name != "elec":
                 continue
-            self.__run_times = 0
+            self.__scan_miss = 0
             scan_result = self.core.qrscanner(result.image)
             scan_result.print_invoice_info()
 
             self.scan_result = scan_result
+
+    def should_reset(self, space:int):
+        if self.__scan_miss > space:
+            print('reset')
+            Clock.schedule_once(self.reset)
+            self.__scan_miss = 0
+        self.__scan_miss += 1
+
+    def reset(self, dt=None):
+        self.scan_result = None
+
+        self.ids.receipt_info_label.text = self.receipt_info_format()
+        self.reset_items()
+        
+    def reset_items(self):
+        self.ids.col_right.clear_widgets()
 
     def set_receipt_info(self):
         scan_result = self.scan_result
@@ -158,12 +164,9 @@ class TechDemoRoot(MDGridLayout):
                 self.reset_items()
                 break
         
-        self.items.clear()
-
         for item in self.scan_result.item:
             item = self.Item(item)
             if item.is_valid():
-                self.items.append(item)
                 label = TextLabel(text=textwrap.dedent(f"""\
                     {"商品:": <{text_head_bytes}}{item.name}
                     {"數量:": <{text_head_bytes}}{item.quantity: <{text_body_bytes}}
@@ -171,13 +174,6 @@ class TechDemoRoot(MDGridLayout):
                     {"總金額:": <{text_head_bytes}}{item.subtotal: <{text_body_bytes}}
                 """))
                 self.ids.col_right.add_widget(label)
-
-    def should_reset(self, space:int):
-        if self.__run_times > space:
-            print('reset')
-            Clock.schedule_once(self.reset)
-            self.__run_times = 0
-        self.__run_times += 1
     
     def on_stop(self):
         self.capture.release()
