@@ -3,6 +3,7 @@
 #:import MDGridLayout kivymd.uix.gridlayout
 #:import MDFloatLayout kivymd.uix.floatlayout
 #:import MDBoxLayout kivymd.uix.boxlayout
+#:import MDStackLayout kivymd.uix.stacklayout
 #:import Image kivy.uix.image
 
 <TechDemoRoot>:
@@ -15,7 +16,8 @@
         Image:
             id: capture_image
             pos: 0, 200
+            size: self.texture_size
 
-    MDBoxLayout:
+    MDStackLayout:
         id: col_right
-        orientation: 'vertical'
+        orientation: 'tb-lr'

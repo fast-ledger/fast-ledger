@@ -82,7 +82,7 @@ class TechDemoRoot(MDGridLayout):
         ret, frame = self.capture.read()
         if ret:
             self.set_capture_image(frame, (576, 324), 1)
-        self.set_label_text()
+        self.set_receipt_info()
 
     def processing(self, dt):
         ret, frame = self.capture.read()
@@ -90,20 +90,6 @@ class TechDemoRoot(MDGridLayout):
         if ret:
             thread = Thread(target=self.frame_process, args=(frame, ))
             self.__elapsed_time = self.do_process_thread(thread, dt, self.__elapsed_time, 0.5)
-
-    def set_label_text(self):
-        scan_result = self.scan_result
-        if scan_result is not None and scan_result.invoice_number != '':
-            self.set_item_info_text()
-            self.invoice_number = scan_result.invoice_number
-            self.invoice_date = scan_result.invoice_date
-            self.random_number = scan_result.random_number
-            self.seller_identifier = scan_result.seller_identifier
-            self.buyer_identifier = scan_result.buyer_identifier
-            self.note = scan_result.note
-        
-        invs_info_text = self.set_invs_info_text()    
-        self.invs_info_label.text = invs_info_text
 
     def do_process_thread(self, thread: Thread, dt, elapsed_time, space_time):
         if elapsed_time >= space_time:
@@ -139,7 +125,21 @@ class TechDemoRoot(MDGridLayout):
 
             self.scan_result = scan_result
 
-    def set_invs_info_text(self, text_head_bytes=6, text_body_bytes=15):
+    def set_receipt_info(self):
+        scan_result = self.scan_result
+        if scan_result is not None and scan_result.invoice_number != '':
+            self.set_item_info()
+            self.invoice_number = scan_result.invoice_number
+            self.invoice_date = scan_result.invoice_date
+            self.random_number = scan_result.random_number
+            self.seller_identifier = scan_result.seller_identifier
+            self.buyer_identifier = scan_result.buyer_identifier
+            self.note = scan_result.note
+        
+        invs_info_text = self.receipt_info_format()
+        self.invs_info_label.text = invs_info_text
+
+    def receipt_info_format(self, text_head_bytes=6, text_body_bytes=15):
         return textwrap.dedent(f"""\
             {'發票號碼:': <{text_head_bytes}}{self.invoice_number: <{text_body_bytes}}
             {'發票日期:': <{text_head_bytes}}{self.invoice_date: <{text_body_bytes}}
@@ -149,7 +149,7 @@ class TechDemoRoot(MDGridLayout):
             {'Note:': <{text_head_bytes}}{self.note: <{text_body_bytes}}
         """)
 
-    def set_item_info_text(self, text_head_bytes=5, text_body_bytes=10):
+    def set_item_info(self, text_head_bytes=5, text_body_bytes=10):
         for item in self.scan_result.item:
             name = item.get('name')
             if  name != '' and name is not None:
@@ -183,6 +183,7 @@ class TechDemoRoot(MDGridLayout):
 
 class TechDemoApp(MDApp):
     def build(self):
+        self.theme_cls.theme_style = "Light"
         return TechDemoRoot()
 
 if __name__ == "__main__":
