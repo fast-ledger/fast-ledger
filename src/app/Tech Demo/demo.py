@@ -1,5 +1,7 @@
 from qrcode_scanner import Qscanner
 from image_pipeline import ImgProcess
+from company_id import CompanyID
+
 from threading import Thread
 import textwrap
 import cv2
@@ -21,6 +23,7 @@ class DummyCore:
     """Core is the whole backend, not yet packaged, use a dummy for now"""
     img_preprocess = ImgProcess()
     qrscanner = Qscanner()
+    business_lookup = CompanyID
 
 class TextLabel(MDLabel):
     def __init__(self, **kwargs):
@@ -104,9 +107,14 @@ class TechDemoRoot(MDGridLayout):
                 continue
             self.__scan_miss = 0
             scan_result = self.core.qrscanner(result.image)
+            business_info = self.core.business_lookup.ban_lookup(
+                scan_result.seller_identifier
+            )
             scan_result.print_invoice_info()
 
             self.set_receipt_info(scan_result)
+            self.set_business_info(business_info)
+            Clock.schedule_once(lambda x: self.set_item_info(scan_result))
 
     def should_reset(self, space: int):
         if self.__scan_miss > space:
@@ -117,6 +125,7 @@ class TechDemoRoot(MDGridLayout):
 
     def reset(self, dt=None):
         self.ids.receipt_info_label.text = self.receipt_info_format()
+        self.set_business_info()
         self.reset_items()
         
     def reset_items(self):
@@ -124,7 +133,6 @@ class TechDemoRoot(MDGridLayout):
 
     def set_receipt_info(self, scan_result):
         if scan_result is not None and scan_result.invoice_number != '':
-            Clock.schedule_once(lambda x: self.set_item_info(scan_result))
             self.ids.receipt_info_label.text = self.receipt_info_format(
                 scan_result.invoice_number,
                 scan_result.invoice_date,
@@ -168,6 +176,16 @@ class TechDemoRoot(MDGridLayout):
                     {"單價："}{item.unit_price}
                     {"總價："}{item.subtotal}"""))
                 self.ids.col_right.add_widget(label)
+    
+    def set_business_info(
+            self, 
+            business_info={'business_name': "", 'business_scope': []}
+        ):
+        scope_newline = '\n　　　　　　'
+        self.ids.business_info_label.text = textwrap.dedent(f"""\
+            營業人名稱：{business_info['business_name']}
+            行　　　業：{scope_newline.join(business_info['business_scope'])}
+        """)
     
     def on_stop(self):
         self.capture.release()
