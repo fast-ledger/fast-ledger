@@ -12,7 +12,7 @@ from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivymd.uix.gridlayout import MDGridLayout
 
-Window.size = (1024, 640)
+Window.size = (800, 480)
 Window.resizable = False
 
 Builder.load_file("demo.kv")
@@ -54,24 +54,31 @@ class TechDemoRoot(MDGridLayout):
         capture.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
         capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
-        Clock.schedule_interval(self.update, 1.0 / 90.0)
-        Clock.schedule_interval(self.processing, 1.0 / 90.0)
+        Clock.schedule_interval(self.render_image_routine, 1.0 / 90.0)
+        Clock.schedule_interval(self.process_image_routine, 1.0 / 90.0)
 
         self.capture = capture
 
         self.reset()
         
-    def update(self, dt):
+    def render_image_routine(self, dt):
         ret, frame = self.capture.read()
         if ret:
             self.set_capture_image(frame, (576, 324), 1)
-        self.set_receipt_info()
+        
+    def set_capture_image(self, img, size: tuple = (0, 0), scale_ratio: float | int = 1):
+        img = cv2.resize(img, size, fx=scale_ratio, fy=scale_ratio)
+        buf = cv2.flip(img, -1).tobytes()
+        shape = img.shape
+        texture = Texture.create(size=(shape[1], shape[0]), colorfmt="bgr")
+        texture.blit_buffer(buf, colorfmt="bgr", bufferfmt="ubyte")
+        self.ids.capture_image.texture = texture
 
-    def processing(self, dt):
+    def process_image_routine(self, dt):
         ret, frame = self.capture.read()
         self.__elapsed_time += dt
         if ret:
-            thread = Thread(target=self.frame_process, args=(frame, ))
+            thread = Thread(target=self.process_image, args=(frame, ))
             self.__elapsed_time = self.do_process_thread(thread, dt, self.__elapsed_time, 0.5)
 
     def do_process_thread(self, thread: Thread, dt, elapsed_time, space_time):
@@ -88,15 +95,7 @@ class TechDemoRoot(MDGridLayout):
             
         return elapsed_time
         
-    def set_capture_image(self, img, size: tuple = (0, 0), scale_ratio: float | int = 1):
-        img = cv2.resize(img, size, fx=scale_ratio, fy=scale_ratio)
-        buf = cv2.flip(img, -1).tobytes()
-        shape = img.shape
-        texture = Texture.create(size=(shape[1], shape[0]), colorfmt="bgr")
-        texture.blit_buffer(buf, colorfmt="bgr", bufferfmt="ubyte")
-        self.ids.capture_image.texture = texture
-        
-    def frame_process(self, frame):
+    def process_image(self, frame):
         self.should_reset(10)
         result_list = self.core.img_preprocess(frame, 2)
         for result in result_list:
@@ -106,9 +105,9 @@ class TechDemoRoot(MDGridLayout):
             scan_result = self.core.qrscanner(result.image)
             scan_result.print_invoice_info()
 
-            self.scan_result = scan_result
+            self.set_receipt_info(scan_result)
 
-    def should_reset(self, space:int):
+    def should_reset(self, space: int):
         if self.__scan_miss > space:
             print('reset')
             Clock.schedule_once(self.reset)
@@ -116,18 +115,15 @@ class TechDemoRoot(MDGridLayout):
         self.__scan_miss += 1
 
     def reset(self, dt=None):
-        self.scan_result = None
-
         self.ids.receipt_info_label.text = self.receipt_info_format()
         self.reset_items()
         
     def reset_items(self):
         self.ids.col_right.clear_widgets()
 
-    def set_receipt_info(self):
-        scan_result = self.scan_result
+    def set_receipt_info(self, scan_result):
         if scan_result is not None and scan_result.invoice_number != '':
-            self.set_item_info()
+            self.set_item_info(scan_result)
             self.ids.receipt_info_label.text = self.receipt_info_format(
                 scan_result.invoice_number,
                 scan_result.invoice_date,
@@ -157,14 +153,14 @@ class TechDemoRoot(MDGridLayout):
             {'Note:': <{text_head_bytes}}{note: <{text_body_bytes}}
         """)
 
-    def set_item_info(self, text_head_bytes=5, text_body_bytes=10):
-        for item in self.scan_result.item:
+    def set_item_info(self, scan_result, text_head_bytes=5, text_body_bytes=10):
+        for item in scan_result.item:
             name = item.get('name')
             if  name != '' and name is not None:
                 self.reset_items()
                 break
         
-        for item in self.scan_result.item:
+        for item in scan_result.item:
             item = self.Item(item)
             if item.is_valid():
                 label = TextLabel(text=textwrap.dedent(f"""\
