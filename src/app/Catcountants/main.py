@@ -15,7 +15,8 @@ class CatcountantsApp(MDApp):
         
         LabelBase.register(
             name="NotoSansCJK",
-            fn_regular=str(Path(__file__).parent / "fonts/NotoSansCJK-Regular.ttf")
+            fn_regular=str(Path(__file__).parent / "fonts/NotoSansCJK-Regular.ttf"),
+            fn_bold=str(Path(__file__).parent / "fonts/NotoSansCJK-Bold.ttc"),
         )
         # Change app font to NotoSansCJK
         for style in self.theme_cls.font_styles:
