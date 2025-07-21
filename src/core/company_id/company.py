@@ -8,9 +8,10 @@ class CompanyID:
     BUSINESS_DATA_PATH = "data/BGMOPEN1.csv"
     @staticmethod
     def fetch_business_data(path=BUSINESS_DATA_PATH):
+        FETCH_PATH = "https://eip.fia.gov.tw/data/BGMOPEN1.csv"
 
-        businessDataUrl = f"https://eip.fia.gov.tw/data/BGMOPEN1.csv"
-        response = requests.get(businessDataUrl)
+        print(f"Fetching data from {FETCH_PATH}")
+        response = requests.get(FETCH_PATH)
 
         if response.status_code == 200:
             Path(path).parent.mkdir(parents=True, exist_ok=True)
@@ -27,6 +28,9 @@ class CompanyID:
         tax_id_set = set(tax_id_list)
         target_indices = [1, 3, 9, 11, 13, 15]  # 0-based 索引
         results = []
+        
+        if not Path(CompanyID.BUSINESS_DATA_PATH).is_file():
+            CompanyID.fetch_business_data()
 
         with open("data/BGMOPEN1.csv", newline='', encoding='utf-8') as csvfile:
             reader = csv.reader(csvfile)
