@@ -123,7 +123,7 @@ class TechDemoRoot(MDGridLayout):
 
     def set_receipt_info(self, scan_result):
         if scan_result is not None and scan_result.invoice_number != '':
-            self.set_item_info(scan_result)
+            Clock.schedule_once(lambda x: self.set_item_info(scan_result))
             self.ids.receipt_info_label.text = self.receipt_info_format(
                 scan_result.invoice_number,
                 scan_result.invoice_date,
