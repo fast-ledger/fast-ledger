@@ -17,6 +17,11 @@ Window.resizable = False
 
 Builder.load_file("demo.kv")
 
+class DummyCore:
+    """Core is the whole backend, not yet packaged, use a dummy for now"""
+    img_preprocess = ImgProcess()
+    qrscanner = Qscanner()
+
 class TextLabel(MDLabel):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -26,8 +31,7 @@ class TextLabel(MDLabel):
 
 # fmt: off
 class TechDemoRoot(MDGridLayout):
-    process = ImgProcess()
-    scanner = Qscanner()
+    core = DummyCore()
     process_thread = Thread()
 
     __elapsed_time = 0
@@ -109,12 +113,12 @@ class TechDemoRoot(MDGridLayout):
         
     def frame_process(self, frame):
         self.should_reset(10)
-        result_list = self.process(frame, 2)
+        result_list = self.core.img_preprocess(frame, 2)
         for result in result_list:
             if result.label_name != "elec":
                 continue
             self.__run_times = 0
-            scan_result = self.scanner(result.image)
+            scan_result = self.core.qrscanner(result.image)
             scan_result.print_invoice_info()
 
             self.scan_result = scan_result
