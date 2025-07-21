@@ -65,13 +65,7 @@ class TechDemoRoot(MDGridLayout):
     def reset(self, dt=None):
         self.scan_result = None
 
-        self.invoice_number = "AA00000000"
-        self.invoice_date = "0000000"
-        self.seller_identifier = "00000000"
-        self.buyer_identifier = "00000000"
-        self.random_number = "0000"
-        self.note = "**********"
-
+        self.invs_info_label.text = self.receipt_info_format()
         self.items = []
         self.reset_items()
         
@@ -129,24 +123,33 @@ class TechDemoRoot(MDGridLayout):
         scan_result = self.scan_result
         if scan_result is not None and scan_result.invoice_number != '':
             self.set_item_info()
-            self.invoice_number = scan_result.invoice_number
-            self.invoice_date = scan_result.invoice_date
-            self.random_number = scan_result.random_number
-            self.seller_identifier = scan_result.seller_identifier
-            self.buyer_identifier = scan_result.buyer_identifier
-            self.note = scan_result.note
-        
-        invs_info_text = self.receipt_info_format()
-        self.invs_info_label.text = invs_info_text
+            self.invs_info_label.text = self.receipt_info_format(
+                scan_result.invoice_number,
+                scan_result.invoice_date,
+                scan_result.random_number,
+                scan_result.seller_identifier,
+                scan_result.buyer_identifier,
+                scan_result.note,
+            )
 
-    def receipt_info_format(self, text_head_bytes=6, text_body_bytes=15):
+    def receipt_info_format(
+            self,
+            receipt_number="AA00000000",
+            receipt_date="0000000",
+            seller_ban="00000000",
+            buyer_ban="00000000",
+            random_number="0000",
+            note="**********",
+            text_head_bytes=6,
+            text_body_bytes=15
+        ):
         return textwrap.dedent(f"""\
-            {'發票號碼:': <{text_head_bytes}}{self.invoice_number: <{text_body_bytes}}
-            {'發票日期:': <{text_head_bytes}}{self.invoice_date: <{text_body_bytes}}
-            {'賣方統編:': <{text_head_bytes}}{self.seller_identifier: <{text_body_bytes}}
-            {'買方統編:': <{text_head_bytes}}{self.buyer_identifier: <{text_body_bytes}}
-            {'隨機碼:': <{text_head_bytes}}{self.random_number: <{text_body_bytes}}
-            {'Note:': <{text_head_bytes}}{self.note: <{text_body_bytes}}
+            {'發票號碼:': <{text_head_bytes}}{receipt_number: <{text_body_bytes}}
+            {'發票日期:': <{text_head_bytes}}{receipt_date: <{text_body_bytes}}
+            {'賣方統編:': <{text_head_bytes}}{seller_ban: <{text_body_bytes}}
+            {'買方統編:': <{text_head_bytes}}{buyer_ban: <{text_body_bytes}}
+            {'隨機碼:': <{text_head_bytes}}{random_number: <{text_body_bytes}}
+            {'Note:': <{text_head_bytes}}{note: <{text_body_bytes}}
         """)
 
     def set_item_info(self, text_head_bytes=5, text_body_bytes=10):
