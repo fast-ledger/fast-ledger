@@ -4,10 +4,10 @@ from company_id import CompanyID
 tax_id_list = ['54757116', '88398574', '24511257']
 
 # 確保最新檔案
-CompanyID.fetch_sheet()
+# CompanyID.fetch_sheet()
 
 # 查詢公司對應資訊
-company_info = CompanyID.extract_multiple_taxids(tax_id_list)
+company_info = CompanyID.ban_lookups(tax_id_list)
 
 # 顯示結果
 # for info in company_info:
