@@ -1,11 +1,50 @@
 from image_pipeline import ImgProcess
-from qrcode_scanner import Q_result
 from pathlib import Path
 import numpy as np
 import unicodedata
 import zxingcpp
 import cv2
 
+class Q_result:
+    def __init__(
+        self,
+        s_id: str,
+        b_id: str,
+        i_number: str,
+        r_number: str,
+        date: str,
+        note: str,
+        qrcode: list[str],
+        item: list[dict],
+    ):
+        self.seller_identifier: str = s_id
+        self.buyer_identifier: str = b_id
+        self.invoice_number: str = i_number
+        self.random_number: str = r_number
+        self.invoice_date: str = date
+        self.note: str = note
+        self.qrcode: list[str] = qrcode
+        self.item: list[dict] = item
+
+    def print_invoice_info(self):
+        # print("=========================================================")
+        # for q in self.qrcode:
+        #     print(q)
+        # print("=========================================================")
+        print("=========================================================")
+        print("發票號碼:", self.invoice_number)
+        print("發票日期:", self.invoice_date)
+        print("隨機碼:", self.random_number)
+        print("買方統編:", self.buyer_identifier)
+        print("賣方統編:", self.seller_identifier)
+        print("Note:", self.note)
+        print("=========================================================")
+        for item in self.item:
+            print("商品:", item["name"])
+            print("數量:", item["amount"])
+            print("金額:", item["price"])
+            print("總金額:", item["total"])
+            print("=========================================================")
 
 # fmt: off
 class Qscanner:
@@ -74,9 +113,7 @@ class Qscanner:
                     text = text[1:]
                 self.save_merchandise_info(text)
 
-        q_result = Q_result()
-
-        return q_result(
+        return Q_result(
             self.seller_identifier,
             self.buyer_identifier,
             self.invoice_number,
