@@ -5,12 +5,12 @@ import csv
 
 class CompanyID:
 
-    TESTPOSTINGS_PATH = "data/BGMOPEN1.csv"
+    BUSINESS_DATA_PATH = "data/BGMOPEN1.csv"
     @staticmethod
-    def fetch_sheet(path=TESTPOSTINGS_PATH):
+    def fetch_business_data(path=BUSINESS_DATA_PATH):
 
-        sheetUrl = f"https://eip.fia.gov.tw/data/BGMOPEN1.csv"
-        response = requests.get(sheetUrl)
+        businessDataUrl = f"https://eip.fia.gov.tw/data/BGMOPEN1.csv"
+        response = requests.get(businessDataUrl)
 
         if response.status_code == 200:
             Path(path).parent.mkdir(parents=True, exist_ok=True)
