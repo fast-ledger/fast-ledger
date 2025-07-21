@@ -28,6 +28,7 @@ class TextLabel(MDLabel):
         self.color = (0, 0, 0, 1)
         self.font_name = "src/ui/fonts/NotoSansCJK-Regular.ttf"
         self.font_size = 20
+        self.size_hint_y = None
 
 # fmt: off
 class TechDemoRoot(MDGridLayout):
