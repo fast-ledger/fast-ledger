@@ -53,3 +53,6 @@ class CompanyID:
 
         return company_info
         
+    @staticmethod
+    def ban_lookup(ban):
+        return CompanyID.ban_lookups([ban])[0]
