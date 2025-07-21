@@ -142,19 +142,17 @@ class TechDemoRoot(MDGridLayout):
             buyer_ban="00000000",
             random_number="0000",
             note="**********",
-            text_head_bytes=6,
-            text_body_bytes=15
         ):
         return textwrap.dedent(f"""\
-            {'發票號碼:': <{text_head_bytes}}{receipt_number: <{text_body_bytes}}
-            {'發票日期:': <{text_head_bytes}}{receipt_date: <{text_body_bytes}}
-            {'賣方統編:': <{text_head_bytes}}{seller_ban: <{text_body_bytes}}
-            {'買方統編:': <{text_head_bytes}}{buyer_ban: <{text_body_bytes}}
-            {'隨機碼:': <{text_head_bytes}}{random_number: <{text_body_bytes}}
-            {'Note:': <{text_head_bytes}}{note: <{text_body_bytes}}
+            {'發票號碼：'}{receipt_number}
+            {'發票日期：'}{receipt_date}
+            {'賣方統編：'}{seller_ban}
+            {'買方統編：'}{buyer_ban}
+            {'　隨機碼：'}{random_number}
+            {'備　　註：'}{note}
         """)
 
-    def set_item_info(self, scan_result, text_head_bytes=5, text_body_bytes=10):
+    def set_item_info(self, scan_result):
         for item in scan_result.item:
             name = item.get('name')
             if  name != '' and name is not None:
@@ -165,11 +163,10 @@ class TechDemoRoot(MDGridLayout):
             item = self.Item(item)
             if item.is_valid():
                 label = TextLabel(text=textwrap.dedent(f"""\
-                    {"商品:": <{text_head_bytes}}{item.name}
-                    {"數量:": <{text_head_bytes}}{item.quantity: <{text_body_bytes}}
-                    {"金額:": <{text_head_bytes}}{item.unit_price: <{text_body_bytes}}
-                    {"總金額:": <{text_head_bytes}}{item.subtotal: <{text_body_bytes}}
-                """))
+                    {"商品："}{item.name}
+                    {"數量："}{item.quantity}
+                    {"單價："}{item.unit_price}
+                    {"總價："}{item.subtotal}"""))
                 self.ids.col_right.add_widget(label)
     
     def on_stop(self):
