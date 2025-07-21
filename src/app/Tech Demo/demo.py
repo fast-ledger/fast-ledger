@@ -50,10 +50,6 @@ class TechDemoRoot(MDGridLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        invs_info_label = TextLabel(pos=(20, -200), text="")
-
-        self.ids.col_left.add_widget(invs_info_label)
-
         capture = cv2.VideoCapture(0)
         capture.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
         capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
@@ -62,14 +58,13 @@ class TechDemoRoot(MDGridLayout):
         Clock.schedule_interval(self.processing, 1.0 / 90.0)
 
         self.capture = capture
-        self.invs_info_label = invs_info_label
 
         self.reset()
 
     def reset(self, dt=None):
         self.scan_result = None
 
-        self.invs_info_label.text = self.receipt_info_format()
+        self.ids.receipt_info_label.text = self.receipt_info_format()
         self.items = []
         self.reset_items()
         
@@ -127,7 +122,7 @@ class TechDemoRoot(MDGridLayout):
         scan_result = self.scan_result
         if scan_result is not None and scan_result.invoice_number != '':
             self.set_item_info()
-            self.invs_info_label.text = self.receipt_info_format(
+            self.ids.receipt_info_label.text = self.receipt_info_format(
                 scan_result.invoice_number,
                 scan_result.invoice_date,
                 scan_result.random_number,
