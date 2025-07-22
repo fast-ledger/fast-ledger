@@ -180,7 +180,11 @@ if __name__ == "__main__":
         # Evaluation
         for j, journal in enumerate(journals):
             print("[Validating] embedder: {},\tjournal: {}".format(item_embedder.__name__, journal))
-            y = postings[journal]
+            
+            # Filter out rows without y
+            X_prime = X[postings[journal].notna()]
+            y = postings[postings[journal].notna()][journal]
+            
             results[i]["journal"][j] = {
                 "name": journal,
                 "true": y,
@@ -189,7 +193,7 @@ if __name__ == "__main__":
                         weights='distance',
                         n_neighbors=3,
                         metric_params={'w': KNN_weights}),
-                    X,
+                    X_prime,
                     y),
             }
 
