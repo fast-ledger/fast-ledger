@@ -7,11 +7,12 @@ import textwrap
 import cv2
 
 from kivy.graphics.texture import Texture
-from kivymd.uix.label import MDLabel
 from kivy.core.window import Window
+from kivy.core.text import LabelBase
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivymd.app import MDApp
+from kivymd.uix.label import MDLabel
 from kivymd.uix.gridlayout import MDGridLayout
 
 Window.size = (800, 480)
@@ -26,12 +27,7 @@ class DummyCore:
     business_lookup = CompanyID
 
 class TextLabel(MDLabel):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.color = (0, 0, 0, 1)
-        self.font_name = "src/ui/fonts/NotoSansCJK-Regular.ttf"
-        self.font_size = 20
-        self.size_hint_y = None
+    pass
 
 # fmt: off
 class TechDemoRoot(MDGridLayout):
@@ -194,6 +190,10 @@ class TechDemoRoot(MDGridLayout):
 class TechDemoApp(MDApp):
     def build(self):
         self.theme_cls.theme_style = "Light"
+        LabelBase.register(
+            "NotoSansCJK",
+            fn_regular="src/ui/fonts/NotoSansCJK-Regular.ttf",
+        )
         return TechDemoRoot()
 
 if __name__ == "__main__":
