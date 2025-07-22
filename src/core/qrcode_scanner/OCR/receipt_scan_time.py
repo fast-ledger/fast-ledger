@@ -40,7 +40,7 @@ def extract_time_from_image(image):
     # Regex for HH:MM:SS or H:MM:SS
     pattern = re.compile(r"(\d{1,2}:\d{2}:\d{2})")
     matches = pattern.findall(text)
-    return matches[0] if matches else None
+    return matches[0] if matches else ""
 
 
 if __name__ == "__main__":

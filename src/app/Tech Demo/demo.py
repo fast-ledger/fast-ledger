@@ -132,6 +132,7 @@ class TechDemoRoot(MDGridLayout):
             self.ids.receipt_info_label.text = self.receipt_info_format(
                 scan_result.invoice_number,
                 scan_result.invoice_date,
+                scan_result.invoice_time,
                 scan_result.random_number,
                 scan_result.seller_identifier,
                 scan_result.buyer_identifier,
@@ -142,6 +143,7 @@ class TechDemoRoot(MDGridLayout):
             self,
             receipt_number="AA00000000",
             receipt_date="0000000",
+            receipt_time="00:00:00",
             seller_ban="00000000",
             buyer_ban="00000000",
             random_number="0000",
@@ -149,7 +151,8 @@ class TechDemoRoot(MDGridLayout):
         ):
         return textwrap.dedent(f"""\
             {'發票號碼：'}{receipt_number}
-            {'發票日期：'}{receipt_date}
+            {'日　　期：'}{receipt_date}
+            {'時　　間：'}{receipt_time}
             {'賣方統編：'}{seller_ban}
             {'買方統編：'}{buyer_ban}
             {'　隨機碼：'}{random_number}

@@ -1,12 +1,13 @@
 import os
 import re
-from image_pipeline import ImgProcess
 from pathlib import Path
 import numpy as np
 import zxingcpp
 import cv2
+from image_pipeline import ImgProcess
+from OCR.receipt_scan_time import extract_time_from_image
 
-class Q_result:
+class ScanResult:
     def __init__(
         self,
         raw: str="",
@@ -15,6 +16,7 @@ class Q_result:
         i_number: str="",
         r_number: str="",
         date: str="",
+        time: str="",
         note: str="",
         item: list[dict]=[],
     ):
@@ -24,13 +26,15 @@ class Q_result:
         self.invoice_number: str = i_number
         self.random_number: str = r_number
         self.invoice_date: str = date
+        self.invoice_time: str = time
         self.note: str = note
         self.item: list[dict] = item
 
     def print_invoice_info(self):
         print(self.raw)
         print("發票號碼:", self.invoice_number)
-        print("發票日期:", self.invoice_date)
+        print("日　　期:", self.invoice_date)
+        print("時　　間:", self.invoice_time)
         print("　隨機碼:", self.random_number)
         print("買方統編:", self.buyer_identifier)
         print("賣方統編:", self.seller_identifier)
@@ -53,12 +57,13 @@ class Qscanner:
         self.invoice_number = ""
         self.random_number = ""
         self.invoice_date = ""
+        self.invoice_time = ""
         self.note = ""
 
         self.raw = ""
         self.item = []
 
-    def __call__(self, src: Path | str | np.ndarray, debug=False) -> Q_result:
+    def __call__(self, src: Path | str | np.ndarray, debug=False) -> ScanResult:
         self.__init__()
 
         src = ImgProcess.get_src(ImgProcess, src, True)
@@ -68,10 +73,12 @@ class Qscanner:
         gray = cv2.cvtColor(src, cv2.COLOR_RGBA2GRAY)
 
         reader = zxingcpp.read_barcodes(gray)
+        self.invoice_time = extract_time_from_image(gray)
+
         if len(reader) < 2:
             # Failed to detect 2 QRCode
             if len(reader) == 0:
-                return Q_result()
+                return ScanResult()
             self.raw += reader[0].text  # Try parse single QR Code
         else:
             # Concat contents of 2 QRCodes into self.raw
@@ -81,7 +88,7 @@ class Qscanner:
                 self.raw = reader[1].text + reader[0].text[2:]
             else:
                 # Invalid einvoice QR Code
-                return Q_result(reader[0].text + reader[1].text)
+                return ScanResult(reader[0].text + reader[1].text)
 
         # Parse self.raw
         try:
@@ -118,13 +125,14 @@ class Qscanner:
         if not re.match(r'\d{8}', self.seller_identifier):
             self.seller_identifier = ""
 
-        return Q_result(
+        return ScanResult(
             self.raw,
             self.seller_identifier,
             self.buyer_identifier,
             self.invoice_number,
             self.random_number,
             self.invoice_date,
+            self.invoice_time,
             self.note,
             self.item   
         )
