@@ -15,7 +15,7 @@ class ImgProcess:
     __id_list = []
     __src_list = []
     __seg_model_label_name_list = []
-    __step_result_dict = {'first': [], 'second': [], 'third': [], 'fourth': [], 'final': []}
+    __step_result_dict = {'mask': [], 'first': [], 'second': [], 'third': [], 'fourth': [], 'final': []}
 
     __base_dir = Path(__file__).resolve().parent
     __seg_invoice = 'seg_invoice3.pt'
@@ -157,6 +157,7 @@ class ImgProcess:
 
                 mask = mask_tansor.cpu().numpy().astype(np.uint8) * 255
                 mask = cv2.resize(mask, (image_shape[1], image_shape[0]))
+                self.__step_result_dict['mask'].append(mask)
 
                 image = self.merge_mask(image, mask)
                 self.__step_result_dict['first'].append(image)
