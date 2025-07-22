@@ -10,7 +10,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import LeaveOneOut, KFold
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sentence_transformers import SentenceTransformer
-from recommender import transformer
+import transformer
 from datasets import fetch_dataset
 import warnings
 
@@ -131,9 +131,11 @@ if __name__ == "__main__":
 
     # Tested journals
     journals = [
-        "ljavuras",
+        # "ljavuras",
         # "nelly",
-        "hsuan",
+        # "hsuan",
+        "standard zh-TW",
+        # "standard en-US",
     ]
 
     results = [None] * len(item_embed_strategies)
