@@ -6,7 +6,15 @@
 #:import MDStackLayout kivymd.uix.stacklayout
 #:import Image kivy.uix.image
 
+<TextLabel>:
+    theme_font_name: "Custom"
+    theme_font_size: "Custom"
+    font_name: "NotoSansCJK"
+    font_size: 20
+    size_hint_y: None
+
 <TechDemoRoot>:
+    md_bg_color: app.theme_cls.backgroundColor
     cols: 2
     rows: 1
 

@@ -1,0 +1,40 @@
+#:kivy 2.3.1
+
+#:import dp kivy.metrics.dp
+#:import MDBoxLayout kivymd.uix.boxlayout
+#:import MDScreenManager kivymd.uix.screenmanager
+#:import MDScreen kivymd.uix.screen
+#:import CatBottomNavBar ui.component.bottomnavbar
+#:import MDFabButton kivymd.uix.button
+
+#:include ui/component/topbar.kv
+#:include ui/screen/home.kv
+#:include ui/screen/journal.kv
+#:include ui/screen/report.kv
+#:include ui/screen/settings.kv
+
+<PrimaryScreen>:
+    name: "primary"
+    title: self.ids.primary_screen_manager.current_screen.title
+
+    MDBoxLayout:
+        orientation: "vertical"
+        md_bg_color: self.theme_cls.secondaryContainerColor
+
+        CatTopBar:
+            text: root.title
+
+        MDScreenManager:
+            id: primary_screen_manager
+            HomeScreen:
+            JournalScreen:
+            ReportScreen:
+            SettingsScreen:
+        
+        CatBottomNavBar:
+            on_switch_tabs: root.on_switch_tabs(*args)
+
+    MDFabButton:
+        icon: "qrcode-scan"
+        style: "standard"
+        pos: (root.width - self.width) / 2, dp(80) - self.height / 2
