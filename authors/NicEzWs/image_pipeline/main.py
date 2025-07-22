@@ -7,7 +7,7 @@ base_dir = Path(__file__).parent
 process = ImgProcess()
 
 img: str | Path = "picture1.png"
-step_list: list[str] = ["1first", "2second", "3third", "4fourth", "5final"]
+step_list: list[str] = ["1first", "2second", "3third", "4fourth", "5final", "9mask"]
 step_result: list[P_Result] = []
 
 
