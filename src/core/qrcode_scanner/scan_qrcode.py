@@ -5,7 +5,7 @@ import numpy as np
 import zxingcpp
 import cv2
 from image_pipeline import ImgProcess
-from OCR.receipt_scan_time import extract_time_from_image
+from .OCR.receipt_scan_time import extract_time_from_image
 
 class ScanResult:
     def __init__(
@@ -106,6 +106,10 @@ class Qscanner:
             # btext[1] # 左右兩個二維條碼記載消費品目筆數
             # btext[2] # 該張發票記載消費品目總筆數
             # btext[3] # Chinese encoding, 0=Big5; 1=UTF-8; 2=Base64
+
+            # Special case, remove t which only contains whitespace
+            # ...:1:1:1:           :{item}:{amount}:{price}
+            btext = [t for t in btext if not re.match(r'^\s*$', t)]
 
             for n in range((len(btext) - 4) // 3):
                 self.add_item(btext[(4+3*n):(7+3*n)])
