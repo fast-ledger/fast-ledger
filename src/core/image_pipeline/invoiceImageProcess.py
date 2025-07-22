@@ -18,11 +18,11 @@ class ImgProcess:
     __step_result_dict = {'first': [], 'second': [], 'third': [], 'fourth': [], 'final': []}
 
     __base_dir = Path(__file__).resolve().parent
-    __seg_invoice = 'seg_invoice.pt'
-    __cls_angle = 'cls_angle.pt'
+    __seg_invoice = 'seg_invoice3.pt'
+    __cls_angle = 'cls_angle2.pt'
 
-    _seg_invoice_model_pt = __base_dir/'model'/__seg_invoice
-    _cls_angle_model_pt=__base_dir/'model'/__cls_angle
+    _seg_invoice_model_pt = __base_dir/'models'/__seg_invoice
+    _cls_angle_model_pt=__base_dir/'models'/__cls_angle
     _seg_invoice_model = YOLO(_seg_invoice_model_pt, 'segment')
     _cls_angle_model = YOLO(_cls_angle_model_pt, 'classify')
 
@@ -31,8 +31,8 @@ class ImgProcess:
     
     def __init__(
         self, 
-        seg_invoice_model_pt: str | Path = 'seg_invoice.pt',
-        cls_angle_model_pt: str | Path = 'cls_angle.pt',
+        seg_invoice_model_pt: str | Path = 'seg_invoice3.pt',
+        cls_angle_model_pt: str | Path = 'cls_angle2.pt',
         msg: bool = True
     ):
         '''
