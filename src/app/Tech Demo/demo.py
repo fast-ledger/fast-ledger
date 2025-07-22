@@ -41,6 +41,9 @@ class TechDemoRoot(MDGridLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+        core.set_template("standard zh-TW")
+        core.load_journal()  # TODO: load user journal
+
         capture = cv2.VideoCapture(0)
         capture.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
         capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
@@ -92,10 +95,20 @@ class TechDemoRoot(MDGridLayout):
         result = core.scanner.scan(frame)
         if result.is_success():
             self.__scan_miss = 0
-            result.receipt_info.print_invoice_info()
+            recommend_accounts = core.recommender.suggest_receipt(result)
 
+            # Print to console
+            result.receipt_info.print_invoice_info()
+            print(recommend_accounts)
+
+            # Display
             self.set_receipt_info(result.receipt_info)
-            Clock.schedule_once(lambda x: self.set_item_info(result.receipt_info))
+            Clock.schedule_once(
+                lambda x: self.set_item_info(
+                    result.receipt_info,
+                    recommend_accounts
+                )
+            )
             self.set_business_info(result.business_info)
 
     def should_reset(self, space: int):
@@ -145,8 +158,8 @@ class TechDemoRoot(MDGridLayout):
             {'備　　註：'}{note}
         """)
 
-    def set_item_info(self, scan_result):
-        for item in scan_result.item:
+    def set_item_info(self, scan_result, recommend_accounts):
+        for (item, account) in zip(scan_result.item, recommend_accounts):
             name = item.get('name')
             if name != '' and name is not None:
                 self.reset_items()
@@ -156,8 +169,9 @@ class TechDemoRoot(MDGridLayout):
             item = self.Item(item)
             if item.is_valid():
                 label = TextLabel(text=textwrap.dedent(f"""\
-                    {"商品："}{item.name}
-                    {"數量："}{item.quantity}　{"單價："}{item.unit_price}　{"總價："}{item.subtotal}"""))
+                    商品：{item.name}
+                    數量：{item.quantity}　單價：{item.unit_price}　總價：{item.subtotal}
+                    建議科目：{account}"""))
                 self.ids.col_right.add_widget(label)
     
     def set_business_info(
