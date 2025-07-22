@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 import zxingcpp
 import cv2
-from image_pipeline import ImgProcess
+from ..image_pipeline import ImgProcess
 from .OCR.receipt_scan_time import extract_time_from_image
 
 class ScanResult:

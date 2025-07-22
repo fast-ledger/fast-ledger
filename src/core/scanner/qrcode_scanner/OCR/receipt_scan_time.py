@@ -26,7 +26,11 @@ import pytesseract
 
 try:
     # fmt: off
-    pytesseract.pytesseract.tesseract_cmd = (Path(__file__).parent / "../../../../bin/Tesseract-OCR/tesseract.exe").resolve()
+    parts = Path(__file__).parts
+    index = parts.index("src")
+    pytesseract.pytesseract.tesseract_cmd = (
+        Path("\\".join(parts[:index])) / "bin/Tesseract-OCR/tesseract.exe"
+    ).resolve()
     # fmt: on
 except Exception as e:  # 上面這東西可能會出問題我柳個註解在這
     print(e)

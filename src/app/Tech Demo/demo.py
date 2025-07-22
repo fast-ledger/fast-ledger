@@ -87,21 +87,16 @@ class TechDemoRoot(MDGridLayout):
         return elapsed_time
         
     def process_image(self, frame):
+        """Send image to core, and display result"""
         self.should_reset(10)
-        result_list = core.img_preprocess(frame, 2)
-        for result in result_list:
-            if result.label_name != "elec":
-                continue
+        result = core.scanner.scan(frame)
+        if result.is_success():
             self.__scan_miss = 0
-            scan_result = core.qrscanner(result.image)
-            business_info = core.business_lookup.ban_lookup(
-                scan_result.seller_identifier
-            )
-            scan_result.print_invoice_info()
+            result.receipt_info.print_invoice_info()
 
-            self.set_receipt_info(scan_result)
-            self.set_business_info(business_info)
-            Clock.schedule_once(lambda x: self.set_item_info(scan_result))
+            self.set_receipt_info(result.receipt_info)
+            Clock.schedule_once(lambda x: self.set_item_info(result.receipt_info))
+            self.set_business_info(result.business_info)
 
     def should_reset(self, space: int):
         if self.__scan_miss > space:
