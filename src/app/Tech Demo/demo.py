@@ -1,7 +1,3 @@
-from qrcode_scanner import Qscanner
-from image_pipeline import ImgProcess
-from company_id import CompanyID
-
 from threading import Thread
 import textwrap
 import cv2
@@ -15,23 +11,18 @@ from kivymd.app import MDApp
 from kivymd.uix.label import MDLabel
 from kivymd.uix.gridlayout import MDGridLayout
 
+from core import core
+
 Window.size = (800, 480)
 Window.resizable = False
 
 Builder.load_file("demo.kv")
-
-class DummyCore:
-    """Core is the whole backend, not yet packaged, use a dummy for now"""
-    img_preprocess = ImgProcess()
-    qrscanner = Qscanner()
-    business_lookup = CompanyID
 
 class TextLabel(MDLabel):
     pass
 
 # fmt: off
 class TechDemoRoot(MDGridLayout):
-    core = DummyCore()
     process_thread = Thread()
 
     __elapsed_time = 0
@@ -97,13 +88,13 @@ class TechDemoRoot(MDGridLayout):
         
     def process_image(self, frame):
         self.should_reset(10)
-        result_list = self.core.img_preprocess(frame, 2)
+        result_list = core.img_preprocess(frame, 2)
         for result in result_list:
             if result.label_name != "elec":
                 continue
             self.__scan_miss = 0
-            scan_result = self.core.qrscanner(result.image)
-            business_info = self.core.business_lookup.ban_lookup(
+            scan_result = core.qrscanner(result.image)
+            business_info = core.business_lookup.ban_lookup(
                 scan_result.seller_identifier
             )
             scan_result.print_invoice_info()
@@ -162,7 +153,7 @@ class TechDemoRoot(MDGridLayout):
     def set_item_info(self, scan_result):
         for item in scan_result.item:
             name = item.get('name')
-            if  name != '' and name is not None:
+            if name != '' and name is not None:
                 self.reset_items()
                 break
         
@@ -171,9 +162,7 @@ class TechDemoRoot(MDGridLayout):
             if item.is_valid():
                 label = TextLabel(text=textwrap.dedent(f"""\
                     {"商品："}{item.name}
-                    {"數量："}{item.quantity}
-                    {"單價："}{item.unit_price}
-                    {"總價："}{item.subtotal}"""))
+                    {"數量："}{item.quantity}　{"單價："}{item.unit_price}　{"總價："}{item.subtotal}"""))
                 self.ids.col_right.add_widget(label)
     
     def set_business_info(
