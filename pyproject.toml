@@ -13,9 +13,6 @@ version = "0.1.0"
 
 [tool.poetry]
 packages = [
-  {include = "image_pipeline", from = "src/core"},
-  {include = "recommender", from = "src/core"},
-  {include = "qrcode_scanner", from = "src/core"},
   {include = "ui", from = "src"},
 ]
 

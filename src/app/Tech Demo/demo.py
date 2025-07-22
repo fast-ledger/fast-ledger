@@ -1,7 +1,3 @@
-from qrcode_scanner import Qscanner
-from image_pipeline import ImgProcess
-from company_id import CompanyID
-
 from threading import Thread
 import textwrap
 import cv2
@@ -15,23 +11,18 @@ from kivymd.app import MDApp
 from kivymd.uix.label import MDLabel
 from kivymd.uix.gridlayout import MDGridLayout
 
+from core import core
+
 Window.size = (800, 480)
 Window.resizable = False
 
 Builder.load_file("demo.kv")
-
-class DummyCore:
-    """Core is the whole backend, not yet packaged, use a dummy for now"""
-    img_preprocess = ImgProcess()
-    qrscanner = Qscanner()
-    business_lookup = CompanyID
 
 class TextLabel(MDLabel):
     pass
 
 # fmt: off
 class TechDemoRoot(MDGridLayout):
-    core = DummyCore()
     process_thread = Thread()
 
     __elapsed_time = 0
@@ -96,21 +87,16 @@ class TechDemoRoot(MDGridLayout):
         return elapsed_time
         
     def process_image(self, frame):
+        """Send image to core, and display result"""
         self.should_reset(10)
-        result_list = self.core.img_preprocess(frame, 2)
-        for result in result_list:
-            if result.label_name != "elec":
-                continue
+        result = core.scanner.scan(frame)
+        if result.is_success():
             self.__scan_miss = 0
-            scan_result = self.core.qrscanner(result.image)
-            business_info = self.core.business_lookup.ban_lookup(
-                scan_result.seller_identifier
-            )
-            scan_result.print_invoice_info()
+            result.receipt_info.print_invoice_info()
 
-            self.set_receipt_info(scan_result)
-            self.set_business_info(business_info)
-            Clock.schedule_once(lambda x: self.set_item_info(scan_result))
+            self.set_receipt_info(result.receipt_info)
+            Clock.schedule_once(lambda x: self.set_item_info(result.receipt_info))
+            self.set_business_info(result.business_info)
 
     def should_reset(self, space: int):
         if self.__scan_miss > space:
@@ -132,6 +118,7 @@ class TechDemoRoot(MDGridLayout):
             self.ids.receipt_info_label.text = self.receipt_info_format(
                 scan_result.invoice_number,
                 scan_result.invoice_date,
+                scan_result.invoice_time,
                 scan_result.random_number,
                 scan_result.seller_identifier,
                 scan_result.buyer_identifier,
@@ -142,6 +129,7 @@ class TechDemoRoot(MDGridLayout):
             self,
             receipt_number="AA00000000",
             receipt_date="0000000",
+            receipt_time="00:00:00",
             seller_ban="00000000",
             buyer_ban="00000000",
             random_number="0000",
@@ -149,7 +137,8 @@ class TechDemoRoot(MDGridLayout):
         ):
         return textwrap.dedent(f"""\
             {'發票號碼：'}{receipt_number}
-            {'發票日期：'}{receipt_date}
+            {'日　　期：'}{receipt_date}
+            {'時　　間：'}{receipt_time}
             {'賣方統編：'}{seller_ban}
             {'買方統編：'}{buyer_ban}
             {'　隨機碼：'}{random_number}
@@ -159,7 +148,7 @@ class TechDemoRoot(MDGridLayout):
     def set_item_info(self, scan_result):
         for item in scan_result.item:
             name = item.get('name')
-            if  name != '' and name is not None:
+            if name != '' and name is not None:
                 self.reset_items()
                 break
         
@@ -168,9 +157,7 @@ class TechDemoRoot(MDGridLayout):
             if item.is_valid():
                 label = TextLabel(text=textwrap.dedent(f"""\
                     {"商品："}{item.name}
-                    {"數量："}{item.quantity}
-                    {"單價："}{item.unit_price}
-                    {"總價："}{item.subtotal}"""))
+                    {"數量："}{item.quantity}　{"單價："}{item.unit_price}　{"總價："}{item.subtotal}"""))
                 self.ids.col_right.add_widget(label)
     
     def set_business_info(
