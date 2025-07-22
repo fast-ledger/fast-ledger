@@ -18,26 +18,23 @@ Requirements:
         Install via: pip install pillow pytesseract
 """
 
-import sys
 import re
+from pathlib import Path
 from PIL import Image
 import pytesseract
 
-# 🔧 手動指定 tesseract.exe 路徑（請確認這個路徑正確）
+
 try:
     # fmt: off
-    pytesseract.pytesseract.tesseract_cmd =  r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+    pytesseract.pytesseract.tesseract_cmd = (Path(__file__).parent / "../../../../bin/Tesseract-OCR/tesseract.exe").resolve()
     # fmt: on
 except Exception as e:  # 上面這東西可能會出問題我柳個註解在這
     print(e)
     FileExistsError("可能需要把 'tesseract.exe' 放進這裡的資料夾 然後改路徑")
 
 
-def extract_time_from_image(img_path):
-    # Open image
-    image = Image.open(img_path)
-    # Run OCR (Traditional Chinese + English)
-    text = pytesseract.image_to_string(image, lang="chi_tra+eng")
+def extract_time_from_image(image):
+    text = pytesseract.image_to_string(image)
     # Normalize fullwidth colon to ASCII
     text = text.replace("：", ":")
     # Regex for HH:MM:SS or H:MM:SS
@@ -47,13 +44,11 @@ def extract_time_from_image(img_path):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print(f"用法: {sys.argv[0]} <image_path>")
-        sys.exit(1)
-
-    img_path = sys.argv[1]
-    time_str = extract_time_from_image(img_path)
-    if time_str:
-        print(f"時間：{time_str}")
-    else:
-        print("時間：未偵測到時間")
+    import cv2
+    
+    test_path = Path(__file__) / "../images"
+    for img_path in test_path.iterdir():
+        if not img_path.is_file(): continue
+        image = cv2.imread(img_path)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        print(extract_time_from_image(image))
