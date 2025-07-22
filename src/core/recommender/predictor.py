@@ -5,7 +5,7 @@ from sklearn.preprocessing import FunctionTransformer
 from sklearn.compose import ColumnTransformer
 from sklearn.neighbors import KNeighborsClassifier
 from sentence_transformers import SentenceTransformer
-from transformer import company_scope_item_labeled, time_cyclic_transformer
+from .transformer import company_scope_item_labeled, time_cyclic_transformer
 import time
 
 class Predictor:
