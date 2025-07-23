@@ -1,4 +1,4 @@
-from image_pipeline import ImgProcess, P_Result
+from scanner.image_pipeline import ImgProcess, P_Result
 from pathlib import Path
 import cv2
 
