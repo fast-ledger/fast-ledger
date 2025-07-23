@@ -1,0 +1,814 @@
+2025/06/25 * 全家便利商店股份有限公司板橋龍江分公司
+    expenses:food:drinks            1 @ $35.00    ; 純粹喝重乳拿鐵
+    Assets:Cash                     $-35.00
+    ; receipt-time: 2025/06/25T12:20:00
+    ; seller-tax-id: 28425176
+
+2025/06/22 * 黃巾飲品鋪大安店
+    expenses:food:drinks            1 @ $60.00    ; 飲料費
+    Assets:Cash                     $-60.00
+    ; receipt-time: 2025/06/22T20:52:00
+    ; seller-tax-id: 88398574
+
+2025/06/29 * 統一百華股份有限公司台北分公司
+    expenses:shopping:outfits:clothes&shoes  1 @ $790.00    ; 服飾雜貨
+    Assets:Cash                     $-790.00
+    ; receipt-time: 2025/06/29T21:08:00
+    ; seller-tax-id: 28994845
+
+2025/06/22 * 統一超商股份有限公司台北市第八八五分公司
+    expenses:food:meals             1 @ $42.00    ; 托斯卡尼雙餡吐司
+    Assets:Cash                     $-42.00
+    ; receipt-time: 2025/06/22T22:52:00
+    ; seller-tax-id: 51442535
+
+2025/06/12 * 主富服裝股份有限公司忠孝旗艦分公司
+    expenses:shopping:outfits:clothes&shoes  1 @ $859.00    ; 1100261604
+    Assets:Cash                     $-859.00
+    ; receipt-time: 2025/06/12T21:35:00
+    ; seller-tax-id: 83478107
+
+2025/05/25 * 目民有限公司
+    expenses:shopping:daily necessities  1 @ $80.00    ; CONE-眠豆乳
+    Assets:Cash                     $-80.00
+    ; receipt-time: 2025/05/25T15:42:00
+    ; seller-tax-id: 91086955
+
+2025/05/21 * 鶴茶樓商行
+    expenses:food:drinks            1 @ $65.00    ; 鶴記鴛鴦凍奶茶
+    Assets:Cash                     $-65.00
+    ; receipt-time: 2025/05/21T21:44:00
+    ; seller-tax-id: 76403159
+
+2025/05/20 * 好初早餐店
+    expenses:food:meals             1 @ $70.00    ; 培根（三）
+    expenses:food:drinks            1 @ $50.00    ; 塩紅-少冰
+    Assets:Cash                     $-120.00
+    ; receipt-time: 2025/05/20T12:10:00
+    ; seller-tax-id: 26727528
+
+2025/05/21 * 秦朝餐飲有限公司
+    expenses:food:meals             1 @ $100.00    ; 西紅柿雞蛋麵
+    Assets:Cash                     $-100.00
+    ; receipt-time: 2025/05/21T12:20:00
+    ; seller-tax-id: 96786400
+
+2025/06/14 * 同松企業社
+    expenses:food:meals             1 @ $209.00    ; 金沙牛奶鍋
+    Assets:Cash                     $-209.00
+    ; receipt-time: 2025/06/14T12:20:00
+    ; seller-tax-id: 94868031
+
+2025/06/21 * 大安是一紅茶店
+    expenses:food:drinks            1 @ $40.00    ; 黑糖粉圓烏龍(大)
+    Assets:Cash                     $-40.00
+    ; receipt-time: 2025/06/21T20:22:00
+    ; seller-tax-id: 88378248
+
+2025/06/20 * 等你開心有限公司
+    expenses:food:drinks            1 @ $75.00    ; 山茶花紅韻烏龍拿鐵
+    Assets:Cash                     $-75.00
+    ; receipt-time: 2025/06/20T22:44:00
+    ; seller-tax-id: 96802485
+
+2025/06/02 * 吃好吃食堂
+    expenses:food:meals             1 @ $70.00    ; 滷肉飯+蛋(份)
+    Assets:Cash                     $-70.00
+    ; receipt-time: 2025/06/02T22:17:00
+    ; seller-tax-id: 88291398
+
+2025/05/03 * 統康生活事業股份有限公司忠孝分公司
+    expenses:food:drinks            1 @ $34.00    ; 光全無加糖黑豆漿
+    expenses:food:fruits            1 @ $79.00    ; 履歷玉女番茄/盒
+    expenses:food:drinks            1 @ $82.00    ; 福樂一番鮮低脂鮮乳
+    Assets:Cash                     $-195.00
+    ; receipt-time: 2025/05/03T21:54:00
+    ; seller-tax-id: 86384069
+
+2025/06/11 * 全越運動事業股份有限公司信義運動中心
+    expenses:living:fitness         1 @ $1,360.00    ; Kpop Random
+    Assets:Cash                     $-1,360.00
+    ; receipt-time: 2025/06/11T12:46:00
+    ; seller-tax-id: 88327086
+
+2025/06/07 * 家福股份有限公司台北桂林分公司
+    expenses:food:drinks            1 @ $149.00    ; WA!COOKIES紅水烏龍
+    expenses:food:snacks            1 @ $98.00    ; 芋頭牛奶雪糕
+    expenses:food:snacks            1 @ $98.00    ; 金典雪糕-紅豆粉粿
+    expenses:food:snacks            1 @ $147.00    ; 阿奇儂憶起開心果雪
+    Assets:Cash                     $-492.00
+    ; receipt-time: 2025/06/07T23:43:00
+    ; seller-tax-id: 27946803
+
+2025/04/23 * 祥昌電子股份有限公司新生營業三所
+    expenses:shopping:electronics:accessories  1 @ $124.00    ; HDMI19+1芯 4K60HZ 1M
+    Assets:Cash                     $-124.00
+    ; receipt-time: 2025/04/23T17:47:00
+    ; seller-tax-id: 10384265
+
+2025/05/27 * 水成禾股份有限公司
+    expenses:entertainment:tickets:concerts  1 @ $500.00    ; (預購)-吾夜生活節 WooYeh |躺玩野餐墊
+    Assets:Cash                     $-500.00
+    ; receipt-time: 2025/05/27T23:13:00
+    ; seller-tax-id: 90424253
+
+2025/05/18 * 三商餐飲股份有限公司峨嵋分公司
+    expenses:food:meals             1 @ $109.00    ; 原牛109
+    Assets:Cash                     $-109.00
+    ; receipt-time: 2025/05/18T16:01:00
+    ; seller-tax-id: 84703399
+
+2025/04/05 * 東引快刀手企業社
+    expenses:food:meals             1 @ $20.00    ; 豆干
+    expenses:food:meals             1 @ $30.00    ; 海帶
+    expenses:food:meals             1 @ $30.00    ; 滷蛋
+    expenses:food:meals             1 @ $65.00    ; 蛋包飯
+    Assets:Cash                     $-145.00
+    ; receipt-time: 2025/04/05T16:01:00
+    ; seller-tax-id: 93186754
+
+2025/05/25 * 富邦媒體科技股份有限公司
+    expenses:food:meals             1 @ $109.00    ; 【漢堡王】期間限定★雙層火烤牛肉堡 買一送一 喜客券
+    Assets:Cash                     $-109.00
+    ; receipt-time: 2025/05/25T23:59:00
+    ; seller-tax-id: 27365925
+
+2025/05/26 * 富邦媒體科技股份有限公司
+    income:discount:food discount   $-66.00    ; 紅利金/點數兌換
+    Income:Unknown                  $66.00
+    ; receipt-time: 2025/05/26T23:59:00
+    ; seller-tax-id: 27365925
+
+2025/05/14 * 聲勢食品有限公司重慶店
+    expenses:food:meals             1 @ $658.00    ; 內用-吃到飽
+    Assets:Cash                     $-658.00
+    ; receipt-time: 2025/05/14T20:21:00
+    ; seller-tax-id: 93176714
+
+2025/05/05 * 寶雅國際股份有限公司台北南西分公司
+    expenses:living:stationery      1 @ $28.00    ; 雄獅瞬間膠膠狀3g(藍)
+    Assets:Cash                     $-28.00
+    ; receipt-time: 2025/05/05T18:55:00
+    ; seller-tax-id: 54915375
+
+2025/05/02 * 誠品生活股份有限公司板橋第一分公司
+    expenses:shopping:outfits:clothes&shoes  1 @ $200.00    ; 台灣極沃 2ND STREET， 二手服飾， 正價品
+    Assets:Cash                     $-200.00
+    ; receipt-time: 2025/05/02T15:14:00
+    ; seller-tax-id: 16448272
+
+2025/05/29 * 微風置地股份有限公司南京分公司
+    expenses:shopping:outfits:clothes&shoes  1 @ $200.00    ; 服飾-2nd STREET
+    Assets:Cash                     $-200.00
+    ; receipt-time: 2025/05/29T18:11:00
+    ; seller-tax-id: 53676565
+
+2025/06/30 * 誠品生活股份有限公司
+    expenses:shopping:ebooks        1 @ $293.00    ; 理由(2023年新版)(電子書)
+    expenses:shopping:ebooks        1 @ $284.00    ; 林肯公路
+    expenses:shopping:ebooks        1 @ $257.00    ; 莫斯科紳士
+    Assets:Cash                     $-834.00
+    ; receipt-time: 2025/06/30T14:46:00
+    ; seller-tax-id: 27952966
+
+2025/06/29 * 全聯實業股份有限公司中和南勢角分公司
+    expenses:food:ingredients       1 @ $42.00    ; 溫室小黃瓜
+    expenses:food:ingredients       1 @ $48.00    ; 馬鈴薯
+    expenses:food:ingredients       1 @ $79.00    ; 野生沙蝦仁
+    expenses:food:snacks            1 @ $89.00    ; 優意思牛奶優格
+    expenses:food:drinks            1 @ $116.00    ; 正逢檸檬汁
+    Assets:Cash                     $-374.00
+    ; receipt-time: 2025/06/29T12:53:00
+    ; seller-tax-id: 51809358
+
+2025/02/07 * 基隆金證企業社
+    expenses:shopping:toys         1 @ $650.00    ; 吉伊卡哇絨毛吊飾-兔兔
+    expenses:shopping:toys         1 @ $110.00    ; 3吋排球少年-動物款
+    Assets:Cash                     $-760.00
+    ; receipt-time: 2025/02/07T17:46:00
+    ; seller-tax-id: 87326882
+
+2025/02/09 * 薩摩亞商羚邦亞洲有限公司台灣分公司
+    expenses:shopping:toys         1 @ $120.00    ; 我英S7鑰匙圈 
+    Assets:Cash                     $-120.00
+    ; receipt-time: 2025/02/09T17:31:00
+    ; seller-tax-id: 28996359
+
+2025/01/02 * 台灣屈臣氏個人用品商店股份有限公司統領分公司
+    expenses:shopping:beauty products  1 @ $499.00    ; 575星歐日拋軟性隱形眼鏡-50片裝
+    expenses:shopping:beauty products  1 @ $169.00    ; 卡翠絲亮顏水潤遮瑕液036
+    Assets:Cash                     $-668.00
+    ; receipt-time: 2025/01/02T20:15:00
+    ; seller-tax-id: 86382843
+
+2025/02/01 * 和德昌股份有限公司中和興南分公司
+    expenses:food:meals             1 @ $127.00    ; 餐-帕瑪森牛肉堡
+    expenses:food:drinks            1 @ $38.00    ; 零卡可樂-中
+    expenses:food:meals             1 @ $43.00    ; 配-經典大薯
+    expenses:food:meals             1 @ $45.00    ; 加購勁辣翅
+    Assets:Cash                     $-253.00
+    ; receipt-time: 2025/02/01T12:22:00
+    ; seller-tax-id: 16082230
+
+2025/01/02 * 新加坡商蝦皮娛樂電商有限公司台灣分公司
+    expenses:shopping:delivery      1 @ $45.00    ; 物流費
+    income:discount:product discount  $-30.00    ; 蝦皮折扣(蝦幣)
+    expenses:shopping:hobby:music merchandise  1 @ $2,345.00    ; ONE OK ROCK演唱會周邊
+    Assets:Cash                     $-2,360.00
+    ; receipt-time: 2025/01/02T14:43:00
+    ; seller-tax-id: 56801904
+
+2025/01/31 * 微風場站開發股份有限公司
+    expenses:food:meals             1 @ $309.00    ; 餐飲
+    Assets:Cash                     $-309.00
+    ; receipt-time: 2025/01/31T19:39:00
+    ; seller-tax-id: 28441577
+
+2025/01/07 * 歐立食品股份有限公司南勢角門市部
+    expenses:food:drinks            1 @ $40.00    ; 玻璃-樹頂蘋果汁300ml
+    expenses:food:meals             1 @ $39.00    ; 肉鬆堡
+    expenses:food:snacks            1 @ $68.00    ; 脆皮泡芙(草莓)
+    Assets:Cash                     $-147.00
+    ; receipt-time: 2025/01/07T15:18:00
+    ; seller-tax-id: 91601740
+
+2025/05/15 * 主富服裝股份有限公司忠孝旗艦分公司
+    expenses:shopping:outfits:clothes&shoes  1 @ $159.00    ; 1976601801
+    Assets:Cash                     $-159.00
+    ; receipt-time: 2025/05/15T20:31:00
+    ; seller-tax-id: 83478107
+
+2025/06/30 * 全家便利商店股份有限公司板橋龍江分公司
+    expenses:food:drinks            1 @ $30.00    ; 左岸咖啡館拿鐵咖啡
+    Assets:Cash                     $-30.00
+    ; receipt-time: 2025/06/30T08:46:00
+    ; seller-tax-id: 28425176
+
+2025/06/28 * 永郁企業有限公司
+    expenses:food:meals             1 @ $0.00    ; 華山單人獨享餐
+    expenses:food:meals             1 @ $160.00    ; 黃金炸牛堡
+    expenses:food:drinks            1 @ $120.00    ; 冰奶茶
+    expenses:food:service fees      1 @ $28.00    ; 服務費
+    Assets:Cash                     $-308.00
+    ; receipt-time: 2025/06/28T20:24:00
+    ; seller-tax-id: 90648248
+
+2025/05/13 * 統一超商股份有限公司新北市第一三七九分公司
+    expenses:food:drinks            1 @ $15.00    ; 統一UNI water純水PET330
+    Assets:Cash                     $-15.00
+    ; receipt-time: 2025/05/13T09:55:00
+    ; seller-tax-id: 83159173
+
+2025/06/05 * 台灣壽司郎股份有限公司台北松江長安店
+    expenses:food:meals             1 @ $140.00    ; 140元碗
+    expenses:food:meals             1 @ $40.00    ; 40元盤子
+    expenses:food:meals             1 @ $120.00    ; 120元商品
+    Assets:Cash                     $-300.00
+    ; receipt-time: 2025/06/05T21:50:00
+    ; seller-tax-id: 76858539
+
+2025/05/25 * 統康生活事業股份有限公司忠孝分公司
+    expenses:shopping:daily necessities  1 @ $2.00    ; 北市兩用袋中
+    expenses:food:meals             1 @ $39.00    ; 盛香珍斯娜普蛋酥
+    expenses:food:drinks            1 @ $69.00    ; 鈣多多低脂936ml
+    Assets:Cash                     $-110.00
+    ; receipt-time: 2025/05/25T23:02:00
+    ; seller-tax-id: 86384069
+
+2025/06/13 * 等你開心有限公司
+    expenses:food:drinks            1 @ $69.00    ; 黑糖珍珠聖代
+    Assets:Cash                     $-69.00
+    ; receipt-time: 2025/06/13T22:30:00
+    ; seller-tax-id: 96802485
+
+2025/05/10 * 忠喬有限公司
+    expenses:food:drinks            1 @ $75.00    ; 深焙烏龍歐雷
+    Assets:Cash                     $-75.00
+    ; receipt-time: 2025/05/10T14:11:00
+    ; seller-tax-id: 96782072
+
+2025/06/30 * 站前冷飲店
+    expenses:food:drinks            1 @ $55.00    ; 仙草凍奶茶
+    expenses:food:drinks            1 @ $55.00    ; 珍珠奶茶
+    Assets:Cash                     $-110.00
+    ; receipt-time: 2025/06/30T17:38:00
+    ; seller-tax-id: 42434892
+
+2025/06/27 * 富利餐飲股份有限公司台北石牌二門市部
+    expenses:food:drinks            1 @ $33.00    ; 冰檸檬紅茶(小)
+    expenses:food:drinks            1 @ $33.00    ; 無糖綠茶(小)
+    Assets:Cash                     $-66.00
+    ; receipt-time: 2025/06/27T18:55:00
+    ; seller-tax-id: 93110690
+
+2025/06/18 * 新加坡商蝦皮娛樂電商有限公司台灣分公司
+    expenses:shopping:electronics:accessories  1 @ $480.00    ; 居牛盾 Mod NX 保護殼 IPHONE 8 XS 11 12 13 14 15 MINI PRO MAX PLUS
+    income:discount:product discount  $-2.00    ; 蝦皮折扣(蝦幣)
+    Assets:Cash                     $-478.00
+    ; receipt-time: 2025/06/18T18:12:00
+    ; seller-tax-id: 56801904
+
+2025/05/18 * 柏文健康事業股份有限公司台北石牌分公司
+    expenses:living:fitness         1 @ $299.00    ; 入會費
+    expenses:living:fitness         1 @ $1,000.00    ; 手續費
+    expenses:living:fitness         1 @ $888.00    ; 月費
+    Assets:Cash                     $-2,187.00
+    ; receipt-time: 2025/05/18T20:36:00
+    ; seller-tax-id: 83557025
+
+2025/05/12 * 和雲行動服務股份有限公司
+    expenses:living:rent            1 @ $6.00    ; 租金及綜合服務
+    Assets:Cash                     $-6.00
+    ; receipt-time: 2025/05/12T23:25:00
+    ; seller-tax-id: 50885758
+
+2025/04/25 * 台灣屈臣氏個人用品商店股份有限公司
+    expenses:shopping:beauty products  1 @ $179.00    ; 妮維雅男士止汗爽身乳
+    Assets:Cash                     $-179.00
+    ; receipt-time: 2025/04/25T19:27:00
+    ; seller-tax-id: 54391721
+
+2025/05/28 * 臺北大學運動中心
+    expenses:living:fitness         1 @ $300.00    ; 暢打專案
+    Assets:Cash                     $-300.00
+    ; receipt-time: 2025/05/28T17:18:00
+    ; seller-tax-id: 82328968
+
+2025/06/21 * 統一超商股份有限公司台北縣第58分公司
+    expenses:living:printing        1 @ $6.00    ; A4黑白列印ibon
+    Assets:Cash                     $-6.00
+    ; receipt-time: 2025/06/21T12:56:00
+    ; seller-tax-id: 23471122
+
+2025/06/10 * 全聯實業股份有限公司中和南勢角分公司
+    expenses:food:drinks            1 @ $56.00    ; 晶典小品-咖啡
+    expenses:shopping:daily necessities  1 @ $90.00    ; 75%酒精液
+    Assets:Cash                     $-146.00
+    ; receipt-time: 2025/06/10T19:02:00
+    ; seller-tax-id: 51809358
+
+2025/05/14 * 易百文具有限公司中和分公司
+    expenses:living:stationery      1 @ $25.00    ; 大理石紋禮物袋
+    expenses:shopping:hobby:toys    1 @ $198.00    ; 造型鑰匙圈
+    expenses:shopping:hobby:toys    1 @ $159.00    ; 蠟筆小新壓克力鑰匙圈
+    expenses:shopping:hobby:toys    1 @ $28.00    ; 水彩動物正常卡 熊貓
+    Assets:Cash                     $-410.00
+    ; receipt-time: 2025/05/14T11:53:00
+    ; seller-tax-id: 95491239
+
+2025/05/07 * 新加坡商蝦皮娛樂電商有限公司台灣分公司
+    expenses:shopping:health supplements  1 @ $719.00    ; Unichi小熊軟糖
+    Assets:Cash                     $-719.00
+    ; receipt-time: 2025/05/07T18:41:00
+    ; seller-tax-id: 56801904
+
+2024/10/28 * 欣欣天然氣股份有限公司
+    expenses:living:utilities       1 @ $372.00    ; 從量費
+    expenses:living:utilities       1 @ $200.00    ; 基本費
+    Assets:Cash                     $-572.00
+    ; receipt-time: 2024/10/28T16:24:00
+    ; seller-tax-id: 33665843
+
+2024/10/12 * 易百文具有限公司中和分公司
+    expenses:living:stationery      1 @ $5.00    ; E310板片
+    expenses:living:stationery      1 @ $13.00    ; 經典0.5自動中性筆-黑色
+    expenses:living:stationery      1 @ $153.00    ; 百樂50F 3+1輕油筆0.7酒紅
+    Assets:Cash                     $-171.00
+    ; receipt-time: 2024/10/12T12:21:00
+    ; seller-tax-id: 95491239
+
+2025/05/23 * 五大國際唱片股份有限公司西門分公司
+    expenses:shopping:hobby:music album  1 @ $578.00    ; NMIXX第四張迷你專輯(韓國進口版)
+    expenses:shopping:hobby:music album  1 @ $178.00    ; tripleS第二張正規專輯(韓國進口版)
+    Assets:Cash                     $-756.00
+    ; receipt-time: 2025/05/23T13:25:00
+    ; seller-tax-id: 27307741
+
+2024/10/04 * 笑笑笑國際股份有限公司台北永和分公司
+    expenses:shopping:daily necessities  1 @ $109.00    ; 仙蒂綿羊油潤髮乳1000ml
+    Assets:Cash                     $-109.00
+    ; receipt-time: 2024/10/04T12:38:00
+    ; seller-tax-id: 53607603
+
+2024/09/13 * 博客來數位科技股份有限公司
+    expenses:shopping:books         1 @ $690.00    ; 渺小一生(上、下冊)
+    Assets:Cash                     $-690.00
+    ; receipt-time: 2024/09/13T22:00:00
+    ; seller-tax-id: 96922355
+
+2025/05/17 * 全家便利商店股份有限公司振華分公司
+    expenses:food:meals             1 @ $35.00    ; 一配鹽蔥燒肉飯糰
+    income:discount:product discount  $-10.00    ; 友善時光折扣
+    Assets:Cash                     $-25.00
+    ; receipt-time: 2025/05/17T18:43:00
+    ; seller-tax-id: 28422662
+
+2025/05/17 * 全家便利商店股份有限公司振華分公司
+    expenses:food:snacks            1 @ $49.00    ; 蜂蜜柚橘霜淇淋
+    income:discount:product discount  $-49.00    ; 康康五促
+    Assets:Cash                     $-0.00
+    ; receipt-time: 2025/05/17T18:37:00
+    ; seller-tax-id: 28422662
+
+2024/05/23 * 台灣電力股份有限公司台北南區營業處
+    expenses:living:utilities       1 @ $12,022.00    ; 電費
+    Assets:Cash                     $-12,022.00
+    ; receipt-time: 2024/05/23T18:15:00
+    ; seller-tax-id: 4860092
+
+2025/04/18 * 藍格印刷國際企業有限公司
+    expenses:living:printing        65 @ $5.00    ; 150g特級雙銅紙A4單面0.65*500
+    expenses:shopping:delivery      1 @ $98.00    ; 運費
+    Assets:Cash                     $-423.00
+    ; receipt-time: 2025/04/18T10:54:00
+    ; seller-tax-id: 22076600
+
+2025/03/20 * 九易宇軒股份有限公司
+    expenses:shopping:beauty products  1 @ $256.00    ; Solone榛果訂製貓舌底妝刷
+    Assets:Cash                     $-256.00
+    ; receipt-time: 2025/03/20T13:00:00
+    ; seller-tax-id: 54361439
+
+2025/07/01 * 全國加油站股份有限公司全國思源路加油站
+    expenses:living:transportation:fuel  1 @ $52.00    ; 95汽油
+    Assets:Cash                     $-52.00
+    ; receipt-time: 2025/07/01T17:57:00
+    ; seller-tax-id: 34903273
+
+2025/06/30 * 威秀影城股份有限公司京站分公司
+    expenses:entertainment:tickets:service fees  1 @ $40.00    ; 訂票手續費
+    Assets:Cash                     $-40.00
+    ; receipt-time: 2025/06/30T15:18:00
+    ; seller-tax-id: 28984678
+
+2023/10/16 * 沐悅有限公司
+    expenses:shopping:outfits       1 @ $621.00    ; 機動快俠包-木炭黑 x1
+    Assets:Cash                     $-621.00
+    ; receipt-time: 2023/10/16T16:54:00
+    ; seller-tax-id: 54179903
+
+2023/10/17 * 沐悅有限公司
+    expenses:shopping:outfits:clothes&shoes  1 @ $1,059.00    ; 機能可收納外套-杉林綠-S x1
+    Assets:Cash                     $-1,059.00
+    ; receipt-time: 2023/10/17T16:54:00
+    ; seller-tax-id: 54179903
+
+2023/10/18 * 沐悅有限公司
+    expenses:shopping:daily necessities  1 @ $0.00    ; 【MORR最罩】抗菌透氣口罩套-尊爵灰 x1
+    Assets:Cash                     $-0.00
+    ; receipt-time: 2023/10/18T16:54:00
+    ; seller-tax-id: 54179903
+
+2025/05/11 * 統一超商股份有限公司台南市第二十五分公司
+    expenses:shopping:service fees  1 @ $60.00    ; 手續費
+    Assets:Cash                     $-60.00
+    ; receipt-time: 2025/05/11T13:42:00
+    ; seller-tax-id: 22956746
+
+2025/05/12 * 統一超商股份有限公司台南市第二十五分公司
+    expenses:shopping:daily necessities  1 @ $0.00    ; 當筆購-統一生機甘栗70g特價33元 x99
+    Assets:Cash                     $-0.00
+    ; receipt-time: 2025/05/12T13:42:00
+    ; seller-tax-id: 22956746
+
+2025/05/13 * 統一超商股份有限公司台南市第二十五分公司
+    expenses:shopping:daily necessities  1 @ $0.00    ; 當筆購-好來抗敏專用牙刷買1送1 x99
+    Assets:Cash                     $-0.00
+    ; receipt-time: 2025/05/13T13:42:00
+    ; seller-tax-id: 22956746
+
+2019/05/12 * 台灣中油股份有限公司油品行銷事業部台南營業處東門路加油站
+    expenses:living:transportation:fuel  1 @ $100.00    ; 九二無鉛 x3.47
+    Assets:Cash                     $-100.00
+    ; receipt-time: 2019/05/12T17:30:00
+    ; seller-tax-id: 68073514
+
+2017/06/02 * 文中資訊股份有限公司
+    expenses:living:information services:cloud storage  1 @ $10,000.00    ; 資訊服務費 x1
+    Assets:Cash                     $-10,000.00
+    ; receipt-time: 2017/06/02T10:20:00
+    ; seller-tax-id: 12563089
+
+2025/05/28 * 霓寶貝髮飾精品百貨有限公司
+    expenses:shopping:outfits       1 @ $182.00    ; 飾品 x1
+    Assets:Cash                     $-182.00
+    ; receipt-time: 2025/05/28T00:00:00
+    ; seller-tax-id: 90591955
+
+2025/04/20 * 弘鈺生活館有限公司
+    expenses:shopping:daily necessities  1 @ $69.00    ; Panasonic碳鋅3號
+    Assets:Cash                     $-69.00
+    ; receipt-time: 2025/04/20T13:27:00
+    ; seller-tax-id: 12803996
+
+2025/04/14 * 台灣海德沃福股份有限公司台南永康分公司
+    expenses:shopping:outfits:clothes&shoes  1 @ $50.00    ; 14女裝
+    Assets:Cash                     $-50.00
+    ; receipt-time: 2025/04/14T15:37:00
+    ; seller-tax-id: 90277533
+
+2025/07/04 * 台灣電力股份有公司台北南區營業處
+    expenses:living:utilities       1 @ $1,694.00    ; 電費
+    Assets:Cash                     $-1,694.00
+    ; receipt-time: 2025/07/04T09:54:00
+    ; seller-tax-id: 4860092
+
+2025/07/03 * 台灣自來水股份有限公司第十二區管理處板橋服務所
+    expenses:living:utilities       1 @ $247.00    ; 水費
+    Assets:Cash                     $-247.00
+    ; receipt-time: 2025/07/03T02:17:00
+    ; seller-tax-id: 1889546
+
+2025/05/31 * 才寶有限公司赤峰門市
+    expenses:shopping:hobby:card    56 @ $0.89    ; 韓國正版 POPCORN 爆米花 HARD 50入 卡膜 卡套 紫款(56*87mm)
+    income:discount:product discount  $-5.00    ; 應稅折扣
+    Assets:Cash                     $-45.00
+    ; receipt-time: 2025/05/31T18:00:00
+    ; seller-tax-id: 583347
+
+2025/05/28 * 全聯實業股份有限公司三峽和平分公司
+    expenses:shopping:daily necessities  1 @ $84.00    ; 好來纖柔牙刷
+    Assets:Cash                     $-84.00
+    ; receipt-time: 2025/05/28T21:50:00
+    ; seller-tax-id: 53650158
+
+2025/01/03 * 嘉晟數位彩色輸出有限公司
+    expenses:living:printing        1 @ $45.00    ; 印刷
+    Assets:Cash                     $-45.00
+    ; receipt-time: 2025/01/03T19:38:00
+    ; seller-tax-id: 89119620
+
+2024/11/13 * 新加坡商蝦皮娛樂電商有限公司台灣分公司
+    income:discount:product discount  $-20.00    ; 蝦皮折扣(優惠券)
+    income:discount:product discount  $-3.00    ; 蝦皮折扣(蝦幣)
+    expenses:shopping:daily necessities  1 @ $499.00    ; 舒爽抽取式衛生紙100抽x84包(箱)[愛買]
+    Income:Unknown                  $-476.00
+    ; receipt-time: 2024/11/13T14:34:00
+    ; seller-tax-id: 56801904
+
+2025/02/27 * 財團法人台灣設計研究院
+    expenses:entertainment:tickets  1 @ $100.00    ; 兩館暢遊一日券
+    Assets:Cash                     $-100.00
+    ; receipt-time: 2025/02/27T12:53:00
+    ; seller-tax-id: 99330539
+
+2025/02/24 * 新加坡商蝦皮娛樂電商有限公司台灣分公司
+    expenses:shopping:daily necessities  30 @ $0.00    ; 家樂適 極細纖維擦拭布 30*32cm 超吸水抹布 洗車布 萬用抹布 細緻抹布 防刮傷抗污抹布
+    income:discount:product discount  $-10.00    ; 蝦皮折扣(優惠券)
+    income:discount:product discount  $-9.00    ; 蝦皮折扣(蝦幣)
+    expenses:shopping:daily necessities  1 @ $352.00    ; (一單限4罐)柔蝶 瞬效修護護髮霜系列-5款 髮廊御用推薦 維他命B5修護 燙染修護 受損髮專用 頭皮SPA
+    Assets:Cash                     $-333.00
+    ; receipt-time: 2025/02/24T18:36:00
+    ; seller-tax-id: 56801904
+
+2025/02/17 * 冠展生活館有限公司
+    expenses:shopping:daily necessities  1 @ $55.00    ; 濾網 28cm
+    Assets:Cash                     $-55.00
+    ; receipt-time: 2025/02/17T13:49:00
+    ; seller-tax-id: 61913387
+
+2025/02/13 * 威秀影城股份有限公司台南東區分公司
+    expenses:entertainment:tickets:service fees  1 @ $20.00    ; 訂票手續費
+    Assets:Cash                     $-20.00
+    ; receipt-time: 2025/02/13T16:43:00
+    ; seller-tax-id: 54393381
+
+2025/02/03 * 九乘九文具股份有限公司台南成大店
+    expenses:living:stationery      1 @ $38.00    ; 歐文OVAL修正帶替帶5mm*6M(灰)
+    Assets:Cash                     $-38.00
+    ; receipt-time: 2025/02/03T15:13:00
+    ; seller-tax-id: 89049110
+
+2025/07/14 * 新加坡商蝦皮娛樂電商有限公司台灣分公司
+    expenses:shopping:daily necessities:kitchenware  1 @ $360.00    ; [日本 SANSO LIFE]TPU 防霉抗菌砧板-共4款《WUZ屋子-台北》砧板 防霉 抗菌 料理工具 切菜版
+    income:discount:product discount  $-25.00    ; 賣家折扣
+    income:discount:product discount  $-22.00    ; 蝦皮折扣(蝦幣)
+    Assets:Cash                     $-313.00
+    ; receipt-time: 2025/07/14T20:28:00
+    ; seller-tax-id: 56801904
+
+2025/05/28 * 新加坡商蝦皮娛樂電商有限公司台灣分公司
+    expenses:shopping:outfits:clothes&shoes  1 @ $468.00    ; 固定杯運動內衣 一體式胸墊 高強度防震跑步 瑜伽 聚攏運動 bra 大尺碼薄款 鏤空 美背 透氣舒適 運動文胸
+    income:discount:product discount  $-21.00    ; 蝦皮折扣(蝦幣)
+    expenses:shopping:delivery      1 @ $40.00    ; 物流費
+    Assets:Cash                     $-487.00
+    ; receipt-time: 2025/05/28T22:15:00
+    ; seller-tax-id: 56801904
+
+2025/01/30 * 三中港奧特萊斯股份有限公司
+    expenses:shopping:outfits:clothes&shoes  1 @ $1,940.00    ; 運動休閒
+    Assets:Cash                     $-1,940.00
+    ; receipt-time: 2025/01/30T16:48:00
+    ; seller-tax-id: 43861751
+
+2022/12/08 * 新加坡商蝦皮娛樂電商有限公司台灣分公司
+    expenses:shopping:daily necessities  1 @ $199.00    ; 現貨 升級中文/觸控彈窗版 真無線藍芽耳 機適用蘋果iPhone/安卓 雙耳藍芽耳機 運 $199 動藍牙耳機耳機音質好附發票
+    income:discount:product discount  $-100.00    ; 蝦皮折扣(折價券)
+    Assets:Cash                     $-99.00
+    ; receipt-time: 2022/12/08T19:24:00
+    ; seller-tax-id: 56801904
+
+2022/12/20 * 忠欣股份有限公司
+    expenses:education:language:TOEIC  1 @ $2,300.00    ; 2021-71-70 TOEIC Speaking Test
+    Assets:Cash                     $-2,300.00
+    ; receipt-time: 2022/12/20T02:05:00
+    ; seller-tax-id: 20592312
+
+2023/02/14 * 寶雅國際股份有限公司板橋雙十分公司
+    expenses:shopping:beauty products  1 @ $280.00    ; Biore含水防曬保濕水凝乳50g
+    expenses:shopping:beauty products  1 @ $655.00    ; 珂潤Curel潤浸保濕化粧水III(潤澤型)150ml
+    expenses:shopping:beauty products  1 @ $489.00    ; 萊雅三合一卸妝潔顏水_保濕型400ml
+    income:discount:product discount  $-489.00    ; 折扣金額
+    Assets:Cash                     $-935.00
+    ; receipt-time: 2023/02/14T21:37:00
+    ; seller-tax-id: 51303604
+
+2023/03/01 * 學思行數位行銷股份有限公司
+    expenses:shopping:books         1 @ $210.00    ; Google、臉書、微軟專家教你的66堂科技趨勢必修課
+    expenses:shopping:books         1 @ $219.00    ; 投資最重要的事:一本股神巴菲特讀了兩遍的書
+    expenses:shopping:books         1 @ $452.00    ; 變化中的世界秩序:橋水基金應對國家興衰的原則
+    Assets:Cash                     $-881.00
+    ; receipt-time: 2023/03/01T06:52:00
+    ; seller-tax-id: 24342999
+
+2023/04/25 * 明曜百貨股份有限公司
+    expenses:shopping:daily necessities  1 @ $350.00    ; 08108
+    Assets:Cash                     $-350.00
+    ; receipt-time: 2023/04/25T12:31:00
+    ; seller-tax-id: 22444507
+
+2023/12/22 * 金石堂圖書股份有限公司板橋文化分公司
+    expenses:living:stationery      1 @ $45.00    ; Databank 高透明A4 20入資料本
+    income:discount:product discount  $-32.00    ; 總折價
+    Assets:Cash                     $-13.00
+    ; receipt-time: 2023/12/22T21:24:00
+    ; seller-tax-id: 16433215
+
+2024/11/11 * 新加坡商蝦皮娛樂電商有限公司台灣分公司
+    expenses:shopping:daily necessities  1 @ $109.00    ; 【蝦皮直營特選】蝦小編抽取式衛生紙抽x12包/串揪探吉
+    Assets:Cash                     $-109.00
+    ; receipt-time: 2024/11/11T15:02:00
+    ; seller-tax-id: 56801904
+
+2022/12/30 * 學思行數位行銷股份有限公司
+    expenses:shopping:books         1 @ $325.00    ; 哈佛商學院的雙贏談判課
+    expenses:shopping:books         1 @ $90.00    ; 史丹佛給你讀得懂的經濟學給零基礎的你, 36個濟法則關鍵詞
+    Assets:Cash                     $-415.00
+    ; receipt-time: 2022/12/30T10:04:00
+    ; seller-tax-id: 24342999
+
+2024/12/21 * 酷澎股份有限公司
+    expenses:shopping:beauty products  1 @ $179.00    ; lilybyred持久捲翹防水睫毛膏6g,Choco Brown, 1支
+    expenses:shopping:beauty products  1 @ $117.00    ; 3M Nexcare 痘痘隱形貼 綜合型 超值加量分享包,92顆,1盒
+    expenses:shopping:beauty products  1 @ $513.00    ; so natural FIXX 長效保濕控油加強定妝噴霧,75ml,1瓶
+    expenses:shopping:beauty products  1 @ $126.00    ; THe SaeM 得鮮 自然柔順特色眉筆 0.2g,03灰棕色,3支
+    expenses:shopping:beauty products  1 @ $179.00    ; MISSHA 高保濕氣墊粉餅15g,No21,1個
+    expenses:shopping:beauty products  1 @ $254.00    ; THe SaeM 得鮮 絲滑柔順滑柔順三色遮瑕膏,#01,1個
+    Assets:Cash                     $-1,368.00
+    ; receipt-time: 2024/12/21T16:03:00
+    ; seller-tax-id: 91002999
+
+2024/12/23 * 環球黑膠唱片行
+    expenses:shopping:hobby:music album  1 @ $499.00    ; 權志龍G-Dragon(BIGBANG)-正規二輯:COUP D'ETAT (CD)
+    expenses:shopping:hobby:music album  1 @ $790.00    ; 權志龍G-Dragon(BIGBANG)-迷你二輯:KWONJI YONG(USB版|數位專輯)
+    income:discount:product discount  $-39.00    ; 訂單折扣(應稅)
+    expenses:shopping:delivery      1 @ $70.00    ; 運費
+    Assets:Cash                     $-1,320.00
+    ; receipt-time: 2024/12/23T22:04:00
+    ; seller-tax-id: 91836508
+
+2024/12/23 * 新加坡商蝦皮娛樂電商有限公司台灣分公司
+    income:discount:product discount  $-15.00    ; 賣家折扣
+    expenses:shopping:health supplements  1 @ $330.00    ; SIS電解質發泡錠sis電解質發泡錠 HYDROTABLETS 能量發泡錠能量補給品健身補給電子發票
+    Income:Unknown                  $-315.00
+    ; receipt-time: 2024/12/23T22:33:00
+    ; seller-tax-id: 56801904
+
+2025/01/10 * 正能量運動股份有限公司
+    expenses:shopping:outfits:bag   1 @ $250.00    ; MW0000032 防潑水衣保袋 紅
+    Assets:Cash                     $-250.00
+    ; receipt-time: 2025/01/10T10:48:00
+    ; seller-tax-id: 65966808
+
+2025/01/03 * 賽恩斯博股份有限公司
+    expenses:shopping:delivery      1 @ $65.00    ; FamilyMart 全家店到店
+    expenses:shopping:health supplements  1 @ $350.00    ; GO等滲透能量膠-單支
+    income:discount:product discount  $-18.00    ; Hi!Cindy折扣碼
+    Assets:Cash                     $-397.00
+    ; receipt-time: 2025/01/03T09:09:00
+    ; seller-tax-id: 93728097
+
+2025/04/21 * 新加坡商蝦皮娛樂電商有限公司台灣分公司
+    expenses:shopping:outfits:clothes&shoes  1 @ $213.00    ; 網孔運動短褲 腰顯瘦效果 速乾短褲健身 瑜伽跑步 防走光雙層設計 運動短褲
+    Assets:Cash                     $-213.00
+    ; receipt-time: 2025/04/21T17:04:00
+    ; seller-tax-id: 56801904
+
+2025/04/21 * 新加坡商蝦皮娛樂電商有限公司台灣分公司
+    expenses:shopping:outfits:clothes&shoes  1 @ $199.00    ; 台灣出貨 防走光運動短褲 有口袋瑜珈褲 腰顯瘦效果 速乾短短褲 健身瑜伽跑步 防走光雙層設計 運動短褲人魚朵朵
+    expenses:shopping:outfits:clothes&shoes  1 @ $20.00    ; 寬版針織髮帶 台灣出貨 現貨 運動頭帶 簡約髮帶 洗臉 韓系髮飾 百搭簡約 素面針織 休閒運動純色 人魚朵朵
+    Assets:Cash                     $-219.00
+    ; receipt-time: 2025/04/21T15:35:00
+    ; seller-tax-id: 56801904
+
+2025/06/18 * 遠東百貨股份有限公司板橋新站分公司
+    expenses:shopping:daily necessities  1 @ $299.00    ; 寶可夢環保杯綁-卡比獸-蒂芙尼藍
+    Assets:Cash                     $-299.00
+    ; receipt-time: 2025/06/18T19:26:00
+    ; seller-tax-id: 53014088
+
+2025/04/14 * 衣璐成衣店
+    expenses:shopping:outfits:clothes&shoes  1 @ $50.00    ; B13
+    expenses:shopping:outfits:clothes&shoes  1 @ $390.00    ; 366
+    expenses:shopping:outfits:clothes&shoes  1 @ $273.00    ; 9006
+    expenses:shopping:outfits:clothes&shoes  1 @ $390.00    ; 671
+    Assets:Cash                     $-1,103.00
+    ; receipt-time: 2025/04/14T17:12:00
+    ; seller-tax-id: 39774761
+
+2024/12/28 * 澎派生活商行
+    expenses:shopping:daily necessities  1 @ $10.00    ; 蠟燭
+    Assets:Cash                     $-10.00
+    ; receipt-time: 2024/12/28T14:21:00
+    ; seller-tax-id: 31995360
+
+2025/07/18 * Ｇｏｏｇｌｅ　　Ａｓｉａ　　Ｐａｃｉｆｉｃ　　Ｐｔｅ　Ｌｔｄ
+    expenses:entertainment:video:YouTube  1 @ $190.00    ; YouTube
+    Assets:Cash                     $-190.00
+    ; receipt-time: 2025/07/18T00:56:00
+    ; seller-tax-id: 42523557
+
+2025/07/16 * 全聯實業股份有限公司永和永安分公司
+    expenses:shopping:daily necessities  1 @ $37.00    ; 潔霜浴廁清潔劑
+    expenses:shopping:daily necessities  1 @ $158.00    ; 莊臣快速通樂
+    Assets:Cash                     $-195.00
+    ; receipt-time: 2025/07/16T22:05:00
+    ; seller-tax-id: 28428954
+
+2025/07/13 * 好市多股份有限公司中和分公司
+    expenses:shopping:daily necessities  1 @ $369.00    ; KS抽取式衛生紙
+    Assets:Cash                     $-369.00
+    ; receipt-time: 2025/07/13T19:02:00
+    ; seller-tax-id: 80033968
+
+2025/06/29 * 月眉國際開發股份有限公司
+    expenses:shopping:beauty products  1 @ $390.00    ; 390元花顆粒膠帽(專櫃)
+    Assets:Cash                     $-390.00
+    ; receipt-time: 2025/06/29T13:30:00
+    ; seller-tax-id: 96867183
+
+2025/06/26 * 金興發股份有限公司永和分公司
+    expenses:shopping:daily necessities  1 @ $190.00    ; GATSBY體用抗菌濕巾 (冰涼皂香)超值包30張
+    expenses:shopping:beauty products  1 @ $129.00    ; 韓國isLeaf蘆薈保濕凝凍300ml_玻尿酸
+    Assets:Cash                     $-319.00
+    ; receipt-time: 2025/06/26T21:37:00
+    ; seller-tax-id: 53350379
+
+2025/06/26 * 全聯實業股份有限公司永和永平分公司
+    expenses:shopping:daily necessities  1 @ $59.00    ; Tempo 濕式迷你
+    Assets:Cash                     $-59.00
+    ; receipt-time: 2025/06/26T21:34:00
+    ; seller-tax-id: 191166
+
+2025/06/26 * 台灣屈臣氏個人用品商店股份有限公司樂華分公司
+    expenses:shopping:daily necessities  1 @ $169.00    ; GATSBY體用抗菌濕巾極凍冰橙超值包
+    expenses:shopping:beauty products  1 @ $330.00    ; 凱婷 3D造型眉彩餅顯色服貼款 EX-5
+    Assets:Cash                     $-499.00
+    ; receipt-time: 2025/06/26T19:45:00
+    ; seller-tax-id: 16747644
+
+2025/06/25 * Ｎｅｔｆｌｉｘ　Ｐｔｅ．　Ｌｔｄ．
+    expenses:entertainment:video:Netflix  1 @ $460.00    ; Subscription
+    Assets:Cash                     $-460.00
+    ; receipt-time: 2025/06/25T23:59:00
+    ; seller-tax-id: 88122703
+
+2025/06/19 * 好市多股份有限公司新莊分公司
+    expenses:shopping:daily necessities  1 @ $779.00    ; ARIEL 4D洗衣膠囊
+    Assets:Cash                     $-779.00
+    ; receipt-time: 2025/06/19T14:32:00
+    ; seller-tax-id: 24804859
+
+2025/06/18 * 遠東百貨股份有限公司板橋新站分公司
+    expenses:shopping:hobby:anime figures  1 @ $249.00    ; 卡比獸公仔
+    Assets:Cash                     $-249.00
+    ; receipt-time: 2025/06/18T19:27:00
+    ; seller-tax-id: 53014088
+
+2025/06/18 * 全聯實業股份有限公司永和永平分公司
+    expenses:shopping:daily necessities  1 @ $124.00    ; 多芬桃悅沐浴補
+    Assets:Cash                     $-124.00
+    ; receipt-time: 2025/06/18T21:20:00
+    ; seller-tax-id: 191166
+
+2025/06/13 * 金興發股份有限公司永和分公司
+    expenses:shopping:daily necessities  1 @ $139.00    ; 高露潔全效牙膏150g 清淨薄荷
+    expenses:shopping:daily necessities  1 @ $69.00    ; 菲力家族棉花棒細軸 600入
+    expenses:shopping:daily necessities  1 @ $139.00    ; GATSBY潔面濕紙巾(冰爽型)42枚入
+    expenses:shopping:daily necessities  1 @ $190.00    ; GATSBY體用抗菌濕巾 (冰涼皂香)超值包30張
+    expenses:shopping:daily necessities  1 @ $69.00    ; 舒潔迪士尼袖珍面紙10抽*24包
+    expenses:shopping:daily necessities:others  1 @ $2.00    ; J*F背心袋_7斤(販售)
+    Assets:Cash                     $-608.00
+    ; receipt-time: 2025/06/13T19:49:00
+    ; seller-tax-id: 53350379
+
