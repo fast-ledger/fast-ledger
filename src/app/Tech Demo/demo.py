@@ -13,13 +13,15 @@ from kivymd.uix.gridlayout import MDGridLayout
 
 from core import core
 
-Window.size = (800, 480)
+Window.size = (1024, 600)
 Window.resizable = False
 
 Builder.load_file("demo.kv")
 
+
 class TextLabel(MDLabel):
     pass
+
 
 # fmt: off
 class TechDemoRoot(MDGridLayout):
@@ -187,6 +189,7 @@ class TechDemoRoot(MDGridLayout):
         self.capture.release()
 # fmt: on
 
+
 class TechDemoApp(MDApp):
     def build(self):
         self.theme_cls.theme_style = "Light"
@@ -195,6 +198,7 @@ class TechDemoApp(MDApp):
             fn_regular="src/ui/fonts/NotoSansCJK-Regular.ttf",
         )
         return TechDemoRoot()
+
 
 if __name__ == "__main__":
     TechDemoApp().run()
