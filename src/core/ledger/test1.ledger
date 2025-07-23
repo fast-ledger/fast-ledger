@@ -1,0 +1,14 @@
+2025/05/21 * 鶴茶樓商行
+    expenses:food:drink:tea shop    1 @ $65.00    ; 鶴記鴛鴦凍奶茶
+    Assets:Cash                     $-65.00
+    ; receipt-number: LK22222265
+    ; receipt-time: 2025/05/21T21:44:00
+    ; seller-tax-id: 76403159
+
+2025/05/20 * 好初早餐店
+    expenses:food:dining:lunch      1 @ $70.00    ; 培根（三）
+    expenses:food:dining:lunch      1 @ $50.00    ; 塩紅-少冰
+    Assets:Cash                     $-120.00
+    ; receipt-number: GR12345699
+    ; receipt-time: 2025/05/20T12:10:00
+    ; seller-tax-id: 26727528
