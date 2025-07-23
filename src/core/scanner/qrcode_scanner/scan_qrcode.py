@@ -4,21 +4,22 @@ from pathlib import Path
 import numpy as np
 import zxingcpp
 import cv2
-from ..image_pipeline import ImgProcess
+from scanner.image_pipeline import ImgProcess
 from .OCR.receipt_scan_time import extract_time_from_image
+
 
 class ScanResult:
     def __init__(
         self,
-        raw: str="",
-        s_id: str="",
-        b_id: str="",
-        i_number: str="",
-        r_number: str="",
-        date: str="",
-        time: str="",
-        note: str="",
-        item: list[dict]=[],
+        raw: str = "",
+        s_id: str = "",
+        b_id: str = "",
+        i_number: str = "",
+        r_number: str = "",
+        date: str = "",
+        time: str = "",
+        note: str = "",
+        item: list[dict] = [],
     ):
         self.raw: str = raw
         self.seller_identifier: str = s_id
@@ -31,6 +32,7 @@ class ScanResult:
         self.item: list[dict] = item
 
     def print_invoice_info(self):
+        print("---------------------------------------------------------")
         print(self.raw)
         print("發票號碼:", self.invoice_number)
         print("日　　期:", self.invoice_date)
@@ -39,12 +41,14 @@ class ScanResult:
         print("買方統編:", self.buyer_identifier)
         print("賣方統編:", self.seller_identifier)
         print("備　　註:", self.note)
-        print("---------------------------------------------------------")
+        print("=========================================================")
         for item in self.item:
             print("商品:", item["name"])
             print("數量:", item["amount"])
             print("單價:", item["price"])
             print("總價:", item["total"])
+            print("=========================================================")
+
 
 # fmt: off
 class Qscanner:
@@ -52,16 +56,16 @@ class Qscanner:
     item = []
 
     def __init__(self):
-        self.seller_identifier = ""
-        self.buyer_identifier = ""
-        self.invoice_number = ""
-        self.random_number = ""
-        self.invoice_date = ""
-        self.invoice_time = ""
-        self.note = ""
+        self.seller_identifier: str = ""
+        self.buyer_identifier: str = ""
+        self.invoice_number: str = ""
+        self.random_number: str = ""
+        self.invoice_date: str = ""
+        self.invoice_time: str = ""
+        self.note: str = ""
 
-        self.raw = ""
-        self.item = []
+        self.raw: str = ""
+        self.item: list[dict] = []
 
     def __call__(self, src: Path | str | np.ndarray, debug=False) -> ScanResult:
         self.__init__()
@@ -109,10 +113,11 @@ class Qscanner:
 
             # Special case, remove t which only contains whitespace
             # ...:1:1:1:           :{item}:{amount}:{price}
-            btext = [t for t in btext if not re.match(r'^\s*$', t)]
+            btext = [t for t in btext if t.strip()][4:]
+            print("btext:",btext)
 
-            for n in range((len(btext) - 4) // 3):
-                self.add_item(btext[(4+3*n):(7+3*n)])
+            for n in range(len(btext) // 3):
+                self.add_item(btext[(3*n):(3+3*n)])
 
         except:
             pass
@@ -155,7 +160,12 @@ if __name__ == "__main__":
     path = Path(__file__).parts
     index = path.index("src")
     path = (
-        Path("\\".join(path[: index + 1])) / "core" / "qrcode_scanner" / "receipt" / "*"
+        Path("\\".join(path[: index + 1]))
+        / "core"
+        / "scanner"
+        / "qrcode_scanner"
+        / "receipt"
+        / "*"
     )
     process = ImgProcess()
     scn = Qscanner()
@@ -163,7 +173,6 @@ if __name__ == "__main__":
     results = process(path, scale_ratio=2)
 
     for i, result in enumerate(results):
-        print("=========================================================")
         print(os.path.basename(result.path))
         res = scn(result.image)
         res.print_invoice_info()
