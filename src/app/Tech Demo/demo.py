@@ -179,10 +179,9 @@ class TechDemoRoot(MDGridLayout):
             business_info={'business_name': "", 'business_scope': []}
         ):
         scope_newline = '\n　　　　　　'
-        self.ids.business_info_label.text = textwrap.dedent(f"""\
-            營業人名稱：{business_info['business_name']}
-            行　　　業：{scope_newline.join(business_info['business_scope'])}
-        """)
+        self.ids.business_info_label.text = f"""\
+營業人名稱：{business_info['business_name']}
+行　　　業：{scope_newline.join(business_info['business_scope'])}"""
     
     def on_stop(self):
         self.capture.release()
