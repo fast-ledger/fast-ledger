@@ -1,4 +1,4 @@
-from ..image_pipeline import P_Result, locate_path as lctp
+from scanner.image_pipeline import P_Result, locate_path as lctp
 from ultralytics import YOLO
 from pathlib import Path
 from PIL import Image
@@ -15,11 +15,11 @@ class ImgProcess:
     __id_list = []
     __src_list = []
     __seg_model_label_name_list = []
-    __step_result_dict = {'first': [], 'second': [], 'third': [], 'fourth': [], 'final': []}
+    __step_result_dict = {'mask': [], 'first': [], 'second': [], 'third': [], 'fourth': [], 'final': []}
 
     __base_dir = Path(__file__).resolve().parent
     __seg_invoice = 'seg_invoice3.pt'
-    __cls_angle = 'cls_angle2.pt'
+    __cls_angle = 'cls_angle.pt'
 
     _seg_invoice_model_pt = __base_dir/'models'/__seg_invoice
     _cls_angle_model_pt=__base_dir/'models'/__cls_angle
@@ -32,7 +32,7 @@ class ImgProcess:
     def __init__(
         self, 
         seg_invoice_model_pt: str | Path = 'seg_invoice3.pt',
-        cls_angle_model_pt: str | Path = 'cls_angle2.pt',
+        cls_angle_model_pt: str | Path = 'cls_angle.pt',
         msg: bool = True
     ):
         '''
@@ -157,6 +157,7 @@ class ImgProcess:
 
                 mask = mask_tansor.cpu().numpy().astype(np.uint8) * 255
                 mask = cv2.resize(mask, (image_shape[1], image_shape[0]))
+                self.__step_result_dict['mask'].append(mask)
 
                 image = self.merge_mask(image, mask)
                 self.__step_result_dict['first'].append(image)

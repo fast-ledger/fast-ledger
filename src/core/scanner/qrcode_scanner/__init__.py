@@ -1,1 +1,1 @@
-from .scan_qrcode import Qscanner
+from .scan_qrcode import Qscanner, ScanResult
