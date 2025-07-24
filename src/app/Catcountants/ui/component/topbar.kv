@@ -1,0 +1,16 @@
+#:import MDTopAppBar kivymd.uix.appbar.MDTopAppBar
+
+<CatTopBar@MDTopAppBar>:
+    type: "small"
+    text: "首頁"
+
+    MDTopAppBarLeadingButtonContainer:
+        MDActionTopAppBarButton:
+            icon: "menu"
+
+    MDTopAppBarTitle:
+        text: root.text
+
+    MDTopAppBarTrailingButtonContainer:
+        MDActionTopAppBarButton:
+            icon: "dots-vertical"

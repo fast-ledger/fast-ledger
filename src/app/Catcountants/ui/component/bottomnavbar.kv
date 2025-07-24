@@ -1,0 +1,24 @@
+#:import MDNavigationBar kivymd.uix.navigationbar
+
+<CatNavigationItem>:
+    MDNavigationItemIcon:
+        icon: root.icon
+    MDNavigationItemLabel:
+        text: root.text
+
+<CatBottomNavBar>:
+    CatNavigationItem:
+        icon: "home-variant"
+        text: "Home"
+        active: True
+    CatNavigationItem:
+        icon: "notebook"
+        text: "Journal"
+    Widget:
+        size_hint_x: .35  # Make space for FAB
+    CatNavigationItem:
+        icon: "chart-line"
+        text: "Report"
+    CatNavigationItem:
+        icon: "cog"
+        text: "Settings"

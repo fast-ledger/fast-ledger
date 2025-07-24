@@ -1,0 +1,41 @@
+#:kivy 2.3.1
+
+#:import MDGridLayout kivymd.uix.gridlayout
+#:import MDFloatLayout kivymd.uix.floatlayout
+#:import MDBoxLayout kivymd.uix.boxlayout
+#:import MDStackLayout kivymd.uix.stacklayout
+#:import Image kivy.uix.image
+
+<TextLabel>:
+    theme_font_name: "Custom"
+    theme_font_size: "Custom"
+    font_name: "NotoSansCJK"
+    font_size: 20
+    size_hint_y: None
+
+<TechDemoRoot>:
+    md_bg_color: app.theme_cls.backgroundColor
+    cols: 2
+    rows: 1
+
+    MDBoxLayout:
+        id: col_left
+        orientation: 'vertical'
+
+        Image:
+            id: capture_image
+            pos: 0, 200
+            size: self.texture_size
+            size_hint_y: 2
+
+        TextLabel:
+            id: receipt_info_label
+            size_hint_y: 1
+
+        TextLabel:
+            id: business_info_label
+            size_hint_y: 1
+
+    MDStackLayout:
+        id: col_right
+        orientation: 'tb-lr'
