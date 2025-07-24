@@ -1,0 +1,23 @@
+# .github/workflows/close-feature-to-main-prs.yml
+name: Close feature PRs to main
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  close-feature-pr:
+    if: startsWith(github.head_ref, 'feature/')
+    permissions:
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Close PR
+        run: gh pr close $NUMBER --comment "$COMMENT"
+        env:
+          NUMBER: ${{ github.event.pull_request.number }}
+          COMMENT: 請改至 develop branch 提交 pull request，謝謝
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
