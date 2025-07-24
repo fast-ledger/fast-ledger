@@ -1,0 +1,19 @@
+pip install -r requirements.txt
+pip install -e .
+chcp 65001
+$env:PYTHONIOENCODING = 'utf-8'
+
+python -m main test1.ledger --balance
+python -m main test1.ledger --income
+python -m main test1.ledger --cashflow
+
+python -m main test1.ledger --tx
+python -m main test1.ledger --tx --index 1
+python -m main test1.ledger --tx --seller-id <seller-tax-id> --fields date,amount,receipt_number
+python -m main test1.ledger --tx --items-only
+python -m main test1.ledger --tx --item "<item>"
+python -m main test1.ledger --tx --item "<item>" --items-only
+
+python -m main test1.ledger --tx
+python -m main test1.ledger --tx --receipt-time 2025-05-21T21:44:00
+python -m main test1.ledger --tx --date 2025-05-21 --payee 鶴茶樓商行 --account expenses:food:drink:tea shop
