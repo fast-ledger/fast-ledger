@@ -32,7 +32,7 @@ class ScanResult:
         self.item: list[dict] = item
 
     def print_invoice_info(self):
-        print("---------------------------------------------------------")
+        print("=========================================================")
         print(self.raw)
         print("發票號碼:", self.invoice_number)
         print("日　　期:", self.invoice_date)
@@ -41,13 +41,13 @@ class ScanResult:
         print("買方統編:", self.buyer_identifier)
         print("賣方統編:", self.seller_identifier)
         print("備　　註:", self.note)
-        print("=========================================================")
+        print("---------------------------------------------------------")
         for item in self.item:
             print("商品:", item["name"])
             print("數量:", item["amount"])
             print("單價:", item["price"])
             print("總價:", item["total"])
-            print("=========================================================")
+            print("---------------------------------------------------------")
 
 
 # fmt: off
@@ -70,6 +70,10 @@ class Qscanner:
     def __call__(self, src: Path | str | np.ndarray, debug=False) -> ScanResult:
         self.__init__()
 
+        # check if a string contains Chinese characters
+        def check_ch(text):
+            return bool(re.search(r'[\u4e00-\u9fff]', text))
+
         src = ImgProcess.get_src(ImgProcess, src, True)
         if isinstance(src, (str | Path)):
             src = cv2.imread(src)
@@ -86,13 +90,36 @@ class Qscanner:
             self.raw += reader[0].text  # Try parse single QR Code
         else:
             # Concat contents of 2 QRCodes into self.raw
-            if reader[1].text[:2] == "**":
-                self.raw = reader[0].text + reader[1].text[2:]
-            elif reader[0].text[:2] == "**":
-                self.raw = reader[1].text + reader[0].text[2:]
-            else:
-                # Invalid einvoice QR Code
-                return ScanResult(reader[0].text + reader[1].text)
+            QRcode = 'BarcodeFormat.QRCode'
+            for read in reader:
+                fmt = str(read.format)
+                text: str = read.text
+                
+                if fmt == QRcode:
+                    
+                    if text[:2] == "**":
+                        self.raw = self.raw + text[2:]
+                    else:
+                        text_1 = text.split(':')[0]
+                        if check_ch(text_1):
+                            pass
+                        self.raw = text + self.raw
+
+                
+            
+            # Invalid einvoice QR Code
+            if self.raw == '':
+                for read in reader:
+                    self.raw += read.text
+                return ScanResult(self.raw)
+                
+            
+            # if reader[1].text[:2] == "**":
+            #     self.raw = reader[0].text + reader[1].text[2:]
+            # elif reader[0].text[:2] == "**":
+            #     self.raw = reader[1].text + reader[0].text[2:]
+            # else:
+            #     return ScanResult(reader[0].text + reader[1].text)
 
         # Parse self.raw
         try:

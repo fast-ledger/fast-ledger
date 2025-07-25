@@ -2,7 +2,7 @@ from scanner.image_pipeline import ImgProcess, P_Result
 from scanner.qrcode_scanner import Qscanner, ScanResult
 from company_id import CompanyID
 
-img_preprocess = ImgProcess()
+img_preprocess = ImgProcess(msg=False)
 qrscanner = Qscanner()
 
 
