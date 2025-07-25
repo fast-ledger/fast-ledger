@@ -4,9 +4,11 @@ import cv2
 
 base_dir = Path(__file__).parent
 
-process = ImgProcess()
+process = ImgProcess(
+    seg_invoice_model_pt="src/core/scanner/image_pipeline/models/seg_invoice3.pt"
+)
 
-img: str | Path = "picture1.png"
+img: str | Path = "picture5.jpg"
 step_list: list[str] = ["1first", "2second", "3third", "4fourth", "5final", "9mask"]
 step_result: list[P_Result] = []
 
